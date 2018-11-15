@@ -1,20 +1,28 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import {HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
-import {MatToolbarModule} from '@angular/material';
+import {MatToolbarModule, MatListModule, MatIconModule} from '@angular/material';
+import {ToxiproxyService} from './services/toxiproxy.service';
+import {ProxiesComponent} from './proxies/proxies.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    ProxiesComponent
   ],
   imports: [
     BrowserModule,
-    MatToolbarModule
+    HttpClientModule,
+    MatToolbarModule,
+    MatListModule,
+    MatIconModule
   ],
-  providers: [],
+  providers: [ToxiproxyService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

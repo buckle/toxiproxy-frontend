@@ -1,0 +1,8 @@
+<mat-list>
+  <h3 mat-subheader>Proxies</h3>
+  <mat-list-item *ngFor="let proxy of proxies">
+    <mat-icon mat-list-icon>{{proxy.enabled ? 'radio_button_checked' : 'radio_button_unchecked'}}</mat-icon>
+    <h4 mat-line>{{proxy.name}}</h4>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+</mat-list>
