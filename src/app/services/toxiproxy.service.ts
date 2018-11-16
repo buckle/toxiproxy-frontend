@@ -11,6 +11,10 @@ export class ToxiproxyService {
     this.host = 'http://localhost:8474';
   }
 
+  getProxyVersion(): Observable<string> {
+    return this.http.get(this.host + '/version', {responseType: 'text'});
+  }
+
   getProxies(): Observable<object> {
     return this.http.get<object>(this.host + '/proxies');
   }

@@ -14,9 +14,9 @@
       "kebab-case"
     ],
     "whitespace": [
-      true,
+      false,
       "nospace",
-      "check-decl",
+      "nospace",
       "check-operator",
       "nospace",
       "check-type"

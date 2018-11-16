@@ -11,7 +11,6 @@ export class ProxyResponse {
     }
   }
 
-
   get proxies(): Proxy[] {
     return this._proxies;
   }

@@ -1,0 +1,19 @@
+h2.proxy-create-title {
+  margin: auto;
+}
+
+.create-proxy-form {
+
+  mat-form-field {
+    display: block;
+  }
+
+  mat-radio-button {
+    margin-right: 15px;
+  }
+
+}
+
+mat-dialog-actions.proxy-create-buttons {
+  margin-bottom: -10px;
+}

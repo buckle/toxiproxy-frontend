@@ -1,0 +1,18 @@
+<div fxFlex fxLayout="column" fxFlexFill>
+  <h2 fxFlex="100%" class="proxy-create-title" mat-dialog-title>Create Proxy</h2>
+  <mat-dialog-content fxFlex="100%">
+    <form [formGroup]="form" class="create-proxy-form" (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <input matInput #name maxlength="100" placeholder="Name" id="name" formControlName="name" autocomplete="off">
+        <mat-hint align="end">{{name.value.length}} / 100</mat-hint>
+      </mat-form-field>
+
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions class="proxy-create-buttons" fxFlex="100%">
+    <mat-spinner *ngIf="inProgress" color="primary" [diameter]="25"></mat-spinner>
+    <button *ngIf="!inProgress" mat-raised-button [mat-dialog-close]="true">Cancel</button>
+    <button *ngIf="!inProgress" mat-raised-button color="accent" type="submit" (click)="onSubmit()" [disabled]="!form.valid">Create</button>
+  </mat-dialog-actions>
+</div>
+
