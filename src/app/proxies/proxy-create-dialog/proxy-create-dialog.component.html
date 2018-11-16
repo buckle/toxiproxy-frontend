@@ -3,10 +3,22 @@
   <mat-dialog-content fxFlex="100%">
     <form [formGroup]="form" class="create-proxy-form" (ngSubmit)="onSubmit()">
       <mat-form-field>
-        <input matInput #name maxlength="100" placeholder="Name" id="name" formControlName="name" autocomplete="off">
+        <input matInput #name maxlength="100" placeholder="Name" formControlName="name" autocomplete="off">
         <mat-hint align="end">{{name.value.length}} / 100</mat-hint>
       </mat-form-field>
-
+      <mat-form-field>
+        <input matInput #listen maxlength="100" placeholder="Listen" formControlName="listen" autocomplete="off">
+        <mat-hint align="end">{{listen.value.length}} / 100</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput #upstream maxlength="100" placeholder="Upstream" formControlName="upstream" autocomplete="off">
+        <mat-hint align="end">{{upstream.value.length}} / 100</mat-hint>
+      </mat-form-field>
+      <label class="mat-h4 radio-label">Enabled</label>
+      <mat-radio-group formControlName="enabled">
+        <mat-radio-button value="true" labelPosition="after">True</mat-radio-button>
+        <mat-radio-button value="false" labelPosition="after">False</mat-radio-button>
+      </mat-radio-group>
     </form>
   </mat-dialog-content>
   <mat-dialog-actions class="proxy-create-buttons" fxFlex="100%">

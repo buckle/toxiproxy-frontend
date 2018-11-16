@@ -4,6 +4,17 @@ h2.proxy-create-title {
 
 .create-proxy-form {
 
+  height: 275px;
+
+
+  label.radio-label {
+    color: rgba(0,0,0,.54);
+    font-size: 1em;
+    font-weight: normal;
+    display: block;
+    margin-left: 2px;
+  }
+
   mat-form-field {
     display: block;
   }

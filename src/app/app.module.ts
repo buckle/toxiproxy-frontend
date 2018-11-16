@@ -15,7 +15,10 @@ import {
   MatButtonModule,
   MatInputModule,
   MatFormFieldModule,
-  MatProgressSpinnerModule
+  MatRadioModule,
+  MatProgressSpinnerModule,
+  MatSnackBarModule,
+  MatCardModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ToxiproxyService} from './services/toxiproxy.service';
@@ -56,8 +59,11 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatRadioModule,
     BrowserAnimationsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatCardModule
   ],
   entryComponents: [ProxyCreateDialogComponent],
   providers: [ToxiproxyService],

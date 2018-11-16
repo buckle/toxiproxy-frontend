@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ToxiproxyService} from '../services/toxiproxy.service';
 import {Proxy} from '../services/Proxy';
-import {ProxyResponse} from '../services/ProxyResponse';
+import {ProxyResponse} from '../services/proxy-response';
 import {ProxyCreateDialogComponent} from './proxy-create-dialog/proxy-create-dialog.component';
 import {MatDialog} from '@angular/material';
 

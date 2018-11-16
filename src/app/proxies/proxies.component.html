@@ -1,4 +1,4 @@
-<h2>Proxies</h2> <button mat-raised-button (click)="openProxyCreate()">Create</button>
+<h2 class="mat-title">Proxies</h2> <button mat-raised-button (click)="openProxyCreate()">Create</button>
 <mat-list>
   <mat-list-item *ngFor="let proxy of proxies">
     <mat-icon mat-list-icon>{{proxy.enabled ? 'toggle_off' : 'toggle_on'}}</mat-icon>
