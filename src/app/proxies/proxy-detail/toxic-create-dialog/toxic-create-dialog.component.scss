@@ -1,0 +1,21 @@
+h2.toxic-create-title {
+  margin: auto;
+}
+
+.create-toxic-form {
+
+  height: 275px;
+
+  mat-form-field {
+    display: block;
+  }
+
+  mat-radio-button {
+    margin-right: 15px;
+  }
+
+}
+
+mat-dialog-actions.toxic-create-buttons {
+  margin-bottom: -10px;
+}

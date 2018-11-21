@@ -18,13 +18,17 @@ import {
   MatRadioModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
-  MatCardModule
+  MatCardModule,
+  MatSelectModule,
+  MatOptionModule,
+  MatTooltipModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ToxiproxyService} from './services/toxiproxy.service';
 import {ProxiesComponent} from './proxies/proxies.component';
 import {ProxyDetailComponent} from './proxies/proxy-detail/proxy-detail.component';
 import {ProxyCreateDialogComponent} from './proxies/proxy-create-dialog/proxy-create-dialog.component';
+import {ToxicCreateDialogComponent} from './proxies/proxy-detail/toxic-create-dialog/toxic-create-dialog.component';
 
 const appRoutes: Routes = [
   {path: 'proxies', component: ProxiesComponent},
@@ -42,7 +46,8 @@ const appRoutes: Routes = [
     HeaderComponent,
     ProxiesComponent,
     ProxyDetailComponent,
-    ProxyCreateDialogComponent
+    ProxyCreateDialogComponent,
+    ToxicCreateDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -63,9 +68,12 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatCardModule
+    MatCardModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatTooltipModule
   ],
-  entryComponents: [ProxyCreateDialogComponent],
+  entryComponents: [ProxyCreateDialogComponent, ToxicCreateDialogComponent],
   providers: [ToxiproxyService],
   bootstrap: [AppComponent]
 })

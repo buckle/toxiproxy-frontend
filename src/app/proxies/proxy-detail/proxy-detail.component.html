@@ -1,22 +1,22 @@
 <div *ngIf="proxy">
-  <h2 class="mat-title">{{proxy.name}}</h2>
+  <h2 class="mat-title">{{proxy.name}}</h2> <button mat-raised-button (click)="deleteProxy()">Delete</button>
   <mat-list>
-    <mat-list-item>{{proxy.name}}</mat-list-item>
-    <mat-list-item>{{proxy.listen}}</mat-list-item>
-    <mat-list-item>{{proxy.upstream}}</mat-list-item>
-    <mat-list-item>{{proxy.enabled}}</mat-list-item>
+    <mat-list-item>Name: {{proxy.name}}</mat-list-item>
+    <mat-list-item>Listen: {{proxy.listen}}</mat-list-item>
+    <mat-list-item>Upstream: {{proxy.upstream}}</mat-list-item>
+    <mat-list-item>Enabled: {{proxy.enabled}}</mat-list-item>
   </mat-list>
 
-  <h3 class="mat-title">Toxics</h3>
+  <h3 class="mat-title">Toxics</h3> <button mat-raised-button (click)="openCreateToxicDialog()">Add Toxic</button>
   <mat-card *ngFor="let toxic of proxy?.toxics">
     <mat-card-title>
       {{toxic.name}}
     </mat-card-title>
     <mat-card-content>
       <mat-list>
-        <mat-list-item>{{toxic.type}}</mat-list-item>
-        <mat-list-item>{{toxic.stream}}</mat-list-item>
-        <mat-list-item>{{toxic.toxicity}}</mat-list-item>
+        <mat-list-item>Type: {{toxic.type}}</mat-list-item>
+        <mat-list-item>Stream: {{toxic.stream}}</mat-list-item>
+        <mat-list-item>Toxicity: {{toxic.toxicity}}</mat-list-item>
       </mat-list>
     </mat-card-content>
   </mat-card>

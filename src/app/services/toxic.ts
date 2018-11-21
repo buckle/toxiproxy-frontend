@@ -4,5 +4,6 @@ export class Toxic {
   type: string;
   stream: string;
   toxicity: number;
+  attributes: object;
 
 }

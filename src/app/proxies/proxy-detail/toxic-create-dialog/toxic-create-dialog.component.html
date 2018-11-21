@@ -1,0 +1,36 @@
+<div fxFlex fxLayout="column" fxFlexFill>
+  <h2 fxFlex="100%" class="toxic-create-title" mat-dialog-title>Add Toxic</h2>
+  <mat-dialog-content fxFlex="100%">
+    <form [formGroup]="toxicForm" class="create-toxic-form" (ngSubmit)="onSubmit()">
+      <mat-select placeholder="Type" formControlName="type" (valueChange)="typeSelect($event)">
+        <mat-option *ngFor="let type of types" [value]="type.value">
+          {{type.name}}
+        </mat-option>
+      </mat-select>
+
+      <mat-select placeholder="Stream" formControlName="stream" matTooltip="Effects Upstream Or Downstream">
+        <mat-option value="upstream">Upstream</mat-option>
+        <mat-option value="downstream">Downstream</mat-option>
+      </mat-select>
+
+      <div *ngIf="selectedType" formGroupName="attributes">
+        <mat-form-field *ngFor="let attribute of selectedType.attributes">
+          <input matInput
+                 type="{{attribute.dataType}}"
+                 maxlength="100"
+                 placeholder="{{attribute.name}}"
+                 formControlName="{{attribute.value}}"
+                 autocomplete="off"
+                 matTooltip="{{attribute.tip}}">
+        </mat-form-field>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions class="toxic-create-buttons" fxFlex="100%">
+    <mat-spinner *ngIf="inProgress" color="primary" [diameter]="25"></mat-spinner>
+    <button *ngIf="!inProgress" mat-raised-button [mat-dialog-close]="true">Cancel</button>
+    <button *ngIf="!inProgress" mat-raised-button color="accent" type="submit" (click)="onSubmit()" [disabled]="!toxicForm.valid">Add</button>
+  </mat-dialog-actions>
+</div>
+

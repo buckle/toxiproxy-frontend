@@ -19,6 +19,10 @@ export class ProxiesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadProxies();
+  }
+
+  loadProxies() {
     this.proxyService
       .getProxies()
       .subscribe(value => {
@@ -28,11 +32,11 @@ export class ProxiesComponent implements OnInit {
 
   openProxyCreate(): void {
     const dialogRef = this.dialog.open(ProxyCreateDialogComponent, {
-      width: '300px',
+      width: '500px',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadProxies();
     });
   }
 }
