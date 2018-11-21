@@ -36,7 +36,7 @@ export class ProxyCreateDialogComponent implements OnInit {
     proxy.name = this.form.get('name').value;
     proxy.listen = this.form.get('listen').value;
     proxy.upstream = this.form.get('upstream').value;
-    proxy.enabled = Boolean(this.form.get('enabled').value);
+    proxy.enabled = this.form.get('enabled').value == 'true';
 
     this.proxyService
       .createProxy(proxy)

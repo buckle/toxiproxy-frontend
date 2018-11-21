@@ -4,6 +4,7 @@ import {Proxy} from '../../services/proxy';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ToxicCreateDialogComponent} from './toxic-create-dialog/toxic-create-dialog.component';
+import {Toxic} from '../../services/toxic';
 
 @Component({
   selector: 'app-proxy-detail',
@@ -43,7 +44,8 @@ export class ProxyDetailComponent implements OnInit {
             'Close',
             {duration: 8000});
         },
-        () => {});
+        () => {
+        });
   }
 
   openCreateToxicDialog() {
@@ -55,5 +57,24 @@ export class ProxyDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.loadProxy();
     });
+  }
+
+  deleteToxic(toxic: Toxic) {
+    this.proxyService
+      .deleteToxic(this.proxy, toxic)
+      .subscribe(
+        value => {
+          this.loadProxy();
+        },
+        () => {
+          this.snackBar.open(
+            'Unable to delete toxic.',
+            'Close',
+            {duration: 8000});
+        },
+        () => {
+        }
+      );
+
   }
 }

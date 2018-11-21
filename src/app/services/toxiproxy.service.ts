@@ -36,4 +36,8 @@ export class ToxiproxyService {
   addToxic(proxy: Proxy, toxic: Toxic): Observable<Proxy> {
     return this.http.post<Proxy>(this.host + '/proxies/' + proxy.name + '/toxics', toxic);
   }
+
+  deleteToxic(proxy: Proxy, toxic: Toxic): Observable<object> {
+    return this.http.delete(this.host + '/proxies/' + proxy.name + '/toxics/' + toxic.name);
+  }
 }

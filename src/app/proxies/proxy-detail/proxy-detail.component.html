@@ -10,7 +10,7 @@
   <h3 class="mat-title">Toxics</h3> <button mat-raised-button (click)="openCreateToxicDialog()">Add Toxic</button>
   <mat-card *ngFor="let toxic of proxy?.toxics">
     <mat-card-title>
-      {{toxic.name}}
+      {{toxic.name}} <button mat-icon-button matTooltip="Delete toxic" (click)="deleteToxic(toxic)"><mat-icon>close</mat-icon></button>
     </mat-card-title>
     <mat-card-content>
       <mat-list>
