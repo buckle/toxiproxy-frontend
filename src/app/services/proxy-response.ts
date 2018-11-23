@@ -1,4 +1,4 @@
-import {Proxy} from './Proxy';
+import {Proxy} from './proxy';
 
 export class ProxyResponse {
 

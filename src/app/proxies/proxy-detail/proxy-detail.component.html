@@ -1,23 +1,55 @@
-<div *ngIf="proxy">
-  <h2 class="mat-title">{{proxy.name}}</h2> <button mat-raised-button (click)="deleteProxy()">Delete</button>
-  <mat-list>
-    <mat-list-item>Name: {{proxy.name}}</mat-list-item>
-    <mat-list-item>Listen: {{proxy.listen}}</mat-list-item>
-    <mat-list-item>Upstream: {{proxy.upstream}}</mat-list-item>
-    <mat-list-item>Enabled: {{proxy.enabled}}</mat-list-item>
-  </mat-list>
+<div class="proxy-detail-container" fxLayout="column" fxLayoutAlign="start stretch" *ngIf="proxy">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <h2 fxFlex="70" class="mat-title">
+      {{proxy.name}}
+      <button mat-icon-button routerLink="/proxies">
+        <mat-icon matTooltip="Return to proxies">keyboard_return</mat-icon>
+      </button>
+    </h2>
+    <div fxFlex="30" fxLayoutAlign="end center">
+      <button mat-raised-button (click)="deleteProxy()">Delete</button>
+      <button mat-raised-button (click)="editProxy()">Edit</button>
+    </div>
+  </div>
 
-  <h3 class="mat-title">Toxics</h3> <button mat-raised-button (click)="openCreateToxicDialog()">Add Toxic</button>
-  <mat-card *ngFor="let toxic of proxy?.toxics">
-    <mat-card-title>
-      {{toxic.name}} <button mat-icon-button matTooltip="Delete toxic" (click)="deleteToxic(toxic)"><mat-icon>close</mat-icon></button>
-    </mat-card-title>
-    <mat-card-content>
-      <mat-list>
-        <mat-list-item>Type: {{toxic.type}}</mat-list-item>
-        <mat-list-item>Stream: {{toxic.stream}}</mat-list-item>
-        <mat-list-item>Toxicity: {{toxic.toxicity}}</mat-list-item>
-      </mat-list>
-    </mat-card-content>
-  </mat-card>
+  <mat-divider fxFlex="100"></mat-divider>
+
+  <div fxLayout="column" class="details">
+    <h3 class="mat-title">Details</h3>
+    <mat-list>
+      <mat-list-item><span>Listen:</span> {{proxy.listen}}</mat-list-item>
+      <mat-list-item><span>Upstream:</span> {{proxy.upstream}}</mat-list-item>
+      <mat-list-item><span>Enabled:</span> {{proxy.enabled}}</mat-list-item>
+    </mat-list>
+  </div>
+
+  <div fxLayout="column" class="toxics">
+    <div fxLayout="row" class="toxic-menu">
+      <h3 fxFlex="5" class="mat-title">Toxics</h3>
+      <div fxFlex="95">
+        <button mat-raised-button (click)="openCreateToxicDialog()">Add Toxic</button>
+      </div>
+    </div>
+    <div fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="start center" fxLayoutGap="10px grid">
+      <div fxFlex="25" *ngFor="let toxic of proxy?.toxics" class="toxic-card">
+        <mat-card>
+          <mat-card-title fxLayout="row" fxLayoutAlign="start center">
+            <span fxFlex="89">{{toxic.name}}</span>
+            <div fxFlex="11">
+              <button mat-icon-button matTooltip="Delete toxic" (click)="deleteToxic(toxic)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </mat-card-title>
+          <mat-card-content>
+            <mat-list>
+              <mat-list-item><span>Type:</span> {{toxic.type}}</mat-list-item>
+              <mat-list-item><span>Stream:</span> {{toxic.stream}}</mat-list-item>
+              <mat-list-item><span>Toxicity:</span> {{toxic.toxicity}}</mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
 </div>

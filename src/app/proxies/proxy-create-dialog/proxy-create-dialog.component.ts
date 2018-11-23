@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Proxy} from '../../services/proxy';
 import {ToxiproxyService} from '../../services/toxiproxy.service';
 import {MatDialogRef, MatSnackBar} from '@angular/material';
+import {Proxy} from '../../services/proxy';
 
 @Component({
   selector: 'app-proxy-create-dialog',

@@ -1,0 +1,44 @@
+div.proxy-detail-container {
+
+  margin: 1em;
+
+  h2 {
+    margin: 0;
+  }
+
+  h3 {
+    margin: .1em 0 .1em 0;
+    font-size: 1.2em;
+  }
+
+  mat-divider {
+    margin: .9em 0 .1em 0;
+  }
+
+  div.details {
+    margin-bottom: 1.4em;
+  }
+
+  div.toxics {
+    div.toxic-menu {
+      margin-bottom: 1.2em;
+    }
+
+    div.toxic-card {
+      min-width: 23em;
+    }
+  }
+
+  mat-list {
+    padding: 0;
+  }
+
+  mat-list-item {
+    height: 1.5em;
+
+    span {
+      font-weight: 500;
+      padding-right: .7em;
+    }
+  }
+}

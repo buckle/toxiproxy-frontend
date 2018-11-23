@@ -48,6 +48,10 @@ export class ProxyDetailComponent implements OnInit {
         });
   }
 
+  editProxy() {
+
+  }
+
   openCreateToxicDialog() {
     const dialogRef = this.dialog.open(ToxicCreateDialogComponent, {
       width: '500px',

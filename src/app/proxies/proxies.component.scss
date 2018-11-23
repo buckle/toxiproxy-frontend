@@ -8,6 +8,10 @@ div.proxy-container {
   button.create-button {
     width: 200px;
   }
+
+  mat-divider {
+    margin: .9em 0 .1em 0;
+  }
 }
 
 table.proxy-table {

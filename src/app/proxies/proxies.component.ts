@@ -3,6 +3,7 @@ import {ToxiproxyService} from '../services/toxiproxy.service';
 import {ProxyResponse} from '../services/proxy-response';
 import {ProxyCreateDialogComponent} from './proxy-create-dialog/proxy-create-dialog.component';
 import {MatDialog, MatSort, MatTableDataSource, PageEvent} from '@angular/material';
+import {Proxy} from '../services/proxy';
 
 @Component({
   selector: 'app-proxies',
@@ -11,7 +12,7 @@ import {MatDialog, MatSort, MatTableDataSource, PageEvent} from '@angular/materi
 })
 export class ProxiesComponent implements OnInit {
 
-  proxies: MatTableDataSource;
+  proxies: MatTableDataSource<Proxy>;
   displayedColumns: string[] = ['name', 'enabled', 'listen', 'upstream'];
   @ViewChild(MatSort) sort: MatSort;
   pageSize: number;
