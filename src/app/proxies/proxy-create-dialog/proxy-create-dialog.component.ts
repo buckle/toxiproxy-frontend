@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ToxiproxyService} from '../../services/toxiproxy.service';
-import {MatDialogRef, MatSnackBar} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
 import {Proxy} from '../../services/proxy';
 
 @Component({
@@ -13,18 +13,32 @@ export class ProxyCreateDialogComponent implements OnInit {
 
   inProgress: boolean | false;
   form: FormGroup;
+  isUpdate: boolean;
 
   constructor(private dialog: MatDialogRef<ProxyCreateDialogComponent>,
               private fb: FormBuilder,
               private proxyService: ToxiproxyService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              @Inject(MAT_DIALOG_DATA) public proxy: Proxy) {
 
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      listen: ['', Validators.required],
-      upstream: ['', Validators.required],
-      enabled: 'true'
-    });
+    if(proxy) {
+      this.isUpdate = true;
+      this.form = this.fb.group({
+        name: [{'value': proxy.name, 'disabled': true}, Validators.required],
+        listen: [proxy.listen, Validators.required],
+        upstream: [proxy.upstream, Validators.required],
+        enabled: proxy.enabled + ''
+
+      });
+    } else {
+      this.isUpdate = false;
+      this.form = this.fb.group({
+        name: ['', Validators.required],
+        listen: ['', Validators.required],
+        upstream: ['', Validators.required],
+        enabled: 'true'
+      });
+    }
   }
 
   ngOnInit() {
@@ -38,21 +52,41 @@ export class ProxyCreateDialogComponent implements OnInit {
     proxy.upstream = this.form.get('upstream').value;
     proxy.enabled = this.form.get('enabled').value == 'true';
 
-    this.proxyService
-      .createProxy(proxy)
-      .subscribe(
-        () => {
-          this.inProgress = false;
-          this.dialog.close();
-        },
-        () => {
-          this.inProgress = false;
-          this.snackBar.open(
-            'Unable to create proxy. Proxy name and listen ports must be unique.',
-            'Close',
-            {duration: 8000});
-        },
-        () => this.inProgress = false
-      );
+    if(this.isUpdate) {
+      this.proxyService
+        .updateProxy(proxy)
+        .subscribe(
+          () => {
+            this.inProgress = false;
+            this.dialog.close();
+          },
+          () => {
+            this.inProgress = false;
+            this.snackBar.open(
+              'Unable to update proxy.',
+              'Close',
+              {duration: 8000});
+          },
+          () => this.inProgress = false
+        );
+
+    } else {
+      this.proxyService
+        .createProxy(proxy)
+        .subscribe(
+          () => {
+            this.inProgress = false;
+            this.dialog.close();
+          },
+          () => {
+            this.inProgress = false;
+            this.snackBar.open(
+              'Unable to create proxy. Proxy name and listen ports must be unique.',
+              'Close',
+              {duration: 8000});
+          },
+          () => this.inProgress = false
+        );
+    }
   }
 }

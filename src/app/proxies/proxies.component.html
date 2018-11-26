@@ -8,13 +8,20 @@
 
   <mat-divider fxFlex="100"></mat-divider>
 
+  <div fxFlex>
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter()" placeholder="Filter" autocomplete="off" [(ngModel)]="filter">
+      <button mat-button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="filter=''; applyFilter()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
   <table mat-table [dataSource]="proxies" matSort class="mat-elevation-z8 proxy-table">
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let proxy">
-        <button mat-icon-button routerLink="/proxies/{{proxy.name}}">{{proxy.name}}</button>
-      </td>
+      <td mat-cell *matCellDef="let proxy">{{proxy.name}}</td>
     </ng-container>
 
     <ng-container matColumnDef="enabled">
@@ -33,13 +40,13 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/proxies/{{row.name}}"></tr>
   </table>
 
   <mat-paginator *ngIf="proxies"
                  [length]="totalItems"
                  [pageSize]="pageSize"
-                 [pageSizeOptions]="[5,10,25]"
+                 [pageSizeOptions]="[25,50,75]"
                  (page)="loadProxies($event)">
   </mat-paginator>
 </div>

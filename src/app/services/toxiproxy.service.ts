@@ -29,12 +29,20 @@ export class ToxiproxyService {
     return this.http.post<Proxy>(this.host + '/proxies', proxy);
   }
 
+  updateProxy(proxy: Proxy): Observable<Proxy> {
+    return this.http.post<Proxy>(this.host + '/proxies/' + name, proxy);
+  }
+
   deleteProxy(proxy: Proxy): Observable<object> {
     return this.http.delete(this.host + '/proxies/' + proxy.name);
   }
 
   addToxic(proxy: Proxy, toxic: Toxic): Observable<Proxy> {
     return this.http.post<Proxy>(this.host + '/proxies/' + proxy.name + '/toxics', toxic);
+  }
+
+  updateToxic(proxy: Proxy, toxic: Toxic): Observable<Proxy> {
+    return this.http.post<Proxy>(this.host + '/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
   }
 
   deleteToxic(proxy: Proxy, toxic: Toxic): Observable<object> {

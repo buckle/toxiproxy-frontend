@@ -13,6 +13,7 @@ import {Proxy} from '../services/proxy';
 export class ProxiesComponent implements OnInit {
 
   proxies: MatTableDataSource<Proxy>;
+  filter: string;
   displayedColumns: string[] = ['name', 'enabled', 'listen', 'upstream'];
   @ViewChild(MatSort) sort: MatSort;
   pageSize: number;
@@ -24,7 +25,7 @@ export class ProxiesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pageSize = 5;
+    this.pageSize = 25;
     this.pageIndex = 0;
     this.totalItems = 0;
     this.loadProxies(null);
@@ -50,6 +51,12 @@ export class ProxiesComponent implements OnInit {
         this.proxies = new MatTableDataSource(filteredProxies);
         this.proxies.sort = this.sort;
       });
+  }
+
+  applyFilter() {
+    if(this.proxies) {
+      this.proxies.filter = this.filter;
+    }
   }
 
   openProxyCreate(): void {

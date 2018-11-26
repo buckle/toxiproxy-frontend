@@ -24,13 +24,21 @@ div.proxy-detail-container {
       margin-bottom: 1.2em;
     }
 
-    div.toxic-card {
-      min-width: 23em;
+    td {
+      text-transform: capitalize;
+
+      span {
+        line-height: 1.5em;
+      }
+    }
+
+    p {
+      margin: 0px;
     }
   }
 
   mat-list {
-    padding: 0;
+    padding: 0px;
   }
 
   mat-list-item {
@@ -39,6 +47,7 @@ div.proxy-detail-container {
     span {
       font-weight: 500;
       padding-right: .7em;
+      text-transform: capitalize;
     }
   }
 }

@@ -10,10 +10,15 @@ div.proxy-container {
   }
 
   mat-divider {
-    margin: .9em 0 .1em 0;
+    margin: .9em 0 .4em 0;
   }
 }
 
 table.proxy-table {
   margin: 1em 0 1em 0;
+
+  tr:not(.mat-header-row):hover {
+    background: #f5f5f5;
+    cursor: pointer;
+  }
 }

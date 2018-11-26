@@ -6,6 +6,7 @@ import {Proxy} from '../../../services/proxy';
 import {ToxiproxyService} from '../../../services/toxiproxy.service';
 import {ToxicType} from './toxic-type';
 import {ToxicTypeConstants} from './toxic-type-constants';
+import {ToxicData} from './toxic-data';
 
 @Component({
   selector: 'app-toxic-create-dialog',
@@ -18,27 +19,50 @@ export class ToxicCreateDialogComponent implements OnInit {
   selectedType: ToxicType;
   toxicForm: FormGroup;
   types: ToxicType[] = ToxicTypeConstants.getToxicTypes();
+  proxy: Proxy;
+  toxic: Toxic;
+  isUpdate: boolean;
 
   constructor(private fb: FormBuilder,
-              @Inject(MAT_DIALOG_DATA) public proxy: Proxy,
+              @Inject(MAT_DIALOG_DATA) public data: ToxicData,
               private proxyService: ToxiproxyService,
               private snackBar: MatSnackBar,
               private dialog: MatDialogRef<ToxicCreateDialogComponent>) {
+
+    this.proxy = data.proxy;
+    this.toxic = data.toxic;
+    this.isUpdate = this.toxic ? true : false;
   }
 
   ngOnInit() {
-    this.toxicForm = this.fb.group({
-      type: ['', Validators.required],
-      stream: ['', Validators.required]
-    });
+    if(this.isUpdate) {
+      this.toxicForm = this.fb.group({
+        type: [{'value': this.toxic.type, 'disabled': true}, Validators.required],
+        stream: [{'value': this.toxic.stream, 'disabled': true}, Validators.required],
+        toxicity: [this.toxic.toxicity + '', Validators.required]
+      });
+
+      this.typeSelect(this.toxic.type, this.toxic);
+    } else {
+      this.toxicForm = this.fb.group({
+        type: ['', Validators.required],
+        stream: ['', Validators.required],
+        toxicity: ['1.0', Validators.required]
+      });
+    }
   }
 
-  typeSelect(selectedToxicValue) {
+  typeSelect(selectedToxicValue: string, toxic: Toxic) {
     this.selectedType = ToxicTypeConstants.getToxicTypeByValue(selectedToxicValue);
     const attributeGroup = this.fb.group({});
 
     this.selectedType.attributes.forEach(attribute => {
-      attributeGroup.addControl(attribute.value, new FormControl('', Validators.required));
+      let value = '';
+      if(toxic) {
+        value = this.toxic.attributes[attribute.value] ? this.toxic.attributes[attribute.value] : '';
+      }
+
+      attributeGroup.addControl(attribute.value, new FormControl(value + '', Validators.required));
     });
 
     this.toxicForm.removeControl('attributes');
@@ -48,6 +72,7 @@ export class ToxicCreateDialogComponent implements OnInit {
   onSubmit() {
     const type = this.toxicForm.get('type').value;
     const stream = this.toxicForm.get('stream').value;
+    const toxicity = Number(this.toxicForm.get('toxicity').value).valueOf();
     const attributes = {};
 
     this.selectedType.attributes.forEach(attribute => {
@@ -64,28 +89,49 @@ export class ToxicCreateDialogComponent implements OnInit {
     });
 
     const toxic = new Toxic();
+    toxic.name = this.isUpdate ? this.toxic.name : null;
     toxic.type = type;
     toxic.attributes = attributes;
     toxic.stream = stream;
+    toxic.toxicity = toxicity;
 
     this.inProgress = true;
-    this.proxyService
-      .addToxic(this.proxy, toxic)
-      .subscribe(
-        value => {
-          this.inProgress = false;
-          this.dialog.close();
-        },
-        () => {
-          this.inProgress = false;
-          this.snackBar.open(
-            'Unable to add toxic proxy.',
-            'Close',
-            {duration: 8000});
-        },
-        () => {
-          this.inProgress = false;
-        }
-      );
+
+    if(this.isUpdate) {
+      this.proxyService
+        .updateToxic(this.proxy, toxic)
+        .subscribe(
+          () => {
+            this.inProgress = false;
+            this.dialog.close();
+          },
+          () => {
+            this.inProgress = false;
+            this.snackBar.open(
+              'Unable to edit toxic.',
+              'Close',
+              {duration: 8000});
+          },
+          () => this.inProgress = false
+        );
+
+    } else {
+      this.proxyService
+        .addToxic(this.proxy, toxic)
+        .subscribe(
+          () => {
+            this.inProgress = false;
+            this.dialog.close();
+          },
+          () => {
+            this.inProgress = false;
+            this.snackBar.open(
+              'Unable to add toxic proxy.',
+              'Close',
+              {duration: 8000});
+          },
+          () => this.inProgress = false
+        );
+    }
   }
 }

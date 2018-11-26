@@ -25,7 +25,8 @@ import {
   MatTableModule,
   MatSortModule,
   MatPaginatorModule,
-  MatDividerModule
+  MatDividerModule,
+  MatMenuModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ToxiproxyService} from './services/toxiproxy.service';
@@ -79,7 +80,8 @@ const appRoutes: Routes = [
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatDividerModule
+    MatDividerModule,
+    MatMenuModule
   ],
   entryComponents: [ProxyCreateDialogComponent, ToxicCreateDialogComponent],
   providers: [ToxiproxyService],

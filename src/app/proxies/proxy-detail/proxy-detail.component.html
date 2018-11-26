@@ -7,8 +7,14 @@
       </button>
     </h2>
     <div fxFlex="30" fxLayoutAlign="end center">
-      <button mat-raised-button (click)="deleteProxy()">Delete</button>
-      <button mat-raised-button (click)="editProxy()">Edit</button>
+      <button mat-icon-button color="accent" [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="editProxy()">Edit Proxy</button>
+        <button mat-menu-item (click)="openCreateToxicDialog()">Add Toxic</button>
+        <button mat-menu-item (click)="deleteProxy()">Delete Proxy</button>
+      </mat-menu>
     </div>
   </div>
 
@@ -24,32 +30,58 @@
   </div>
 
   <div fxLayout="column" class="toxics">
-    <div fxLayout="row" class="toxic-menu">
-      <h3 fxFlex="5" class="mat-title">Toxics</h3>
-      <div fxFlex="95">
-        <button mat-raised-button (click)="openCreateToxicDialog()">Add Toxic</button>
-      </div>
+    <div class="toxic-menu">
+      <h3 class="mat-title">Toxics</h3>
     </div>
-    <div fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="start center" fxLayoutGap="10px grid">
-      <div fxFlex="25" *ngFor="let toxic of proxy?.toxics" class="toxic-card">
-        <mat-card>
-          <mat-card-title fxLayout="row" fxLayoutAlign="start center">
-            <span fxFlex="89">{{toxic.name}}</span>
-            <div fxFlex="11">
-              <button mat-icon-button matTooltip="Delete toxic" (click)="deleteToxic(toxic)">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-          </mat-card-title>
-          <mat-card-content>
-            <mat-list>
-              <mat-list-item><span>Type:</span> {{toxic.type}}</mat-list-item>
-              <mat-list-item><span>Stream:</span> {{toxic.stream}}</mat-list-item>
-              <mat-list-item><span>Toxicity:</span> {{toxic.toxicity}}</mat-list-item>
-            </mat-list>
-          </mat-card-content>
-        </mat-card>
-      </div>
+
+    <table *ngIf="toxicDataSource != null && toxicDataSource.data.length > 0" fxFlex mat-table [dataSource]="toxicDataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let toxic">{{toxic.name.split('_').join(' ')}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let toxic">{{toxic.type.split('_').join(' ')}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="stream">
+        <th mat-header-cell *matHeaderCellDef>Stream</th>
+        <td mat-cell *matCellDef="let toxic">{{toxic.stream}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="toxicity">
+        <th mat-header-cell *matHeaderCellDef>Toxicity</th>
+        <td mat-cell *matCellDef="let toxic">{{toxic.toxicity}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="attributes">
+        <th mat-header-cell *matHeaderCellDef>Attributes</th>
+        <td mat-cell *matCellDef="let toxic">
+          <div *ngFor="let ta of objectEntries(toxic.attributes)">
+            <span>{{ta[0].split('_').join(' ')}}:</span> {{ta[1]}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let toxic">
+          <button mat-icon-button matTooltip="Edit toxic" (click)="editToxicDialog(toxic)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete toxic" (click)="deleteToxic(toxic)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <div *ngIf="toxicDataSource == null || toxicDataSource.data.length == 0">
+      <p class="mat-body">No toxics setup, use the menu to add a toxic.</p>
     </div>
   </div>
 </div>
