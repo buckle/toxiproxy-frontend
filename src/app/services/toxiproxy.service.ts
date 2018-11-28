@@ -30,7 +30,7 @@ export class ToxiproxyService {
   }
 
   updateProxy(proxy: Proxy): Observable<Proxy> {
-    return this.http.post<Proxy>(this.host + '/proxies/' + name, proxy);
+    return this.http.post<Proxy>(this.host + '/proxies/' + proxy.name, proxy);
   }
 
   deleteProxy(proxy: Proxy): Observable<object> {

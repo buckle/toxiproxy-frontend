@@ -2,19 +2,23 @@
   <h2 fxFlex="100%" class="toxic-create-title" mat-dialog-title>Toxic</h2>
   <mat-dialog-content fxFlex="100%">
     <form [formGroup]="toxicForm" class="create-toxic-form" (ngSubmit)="onSubmit()">
-      <mat-select placeholder="Type" formControlName="type" (valueChange)="typeSelect($event)">
+      <mat-select placeholder="Type" formControlName="type" (valueChange)="typeSelect($event)" matTooltip="Toxic Type">
         <mat-option *ngFor="let type of types" [value]="type.value">
           {{type.name}}
         </mat-option>
       </mat-select>
 
-      <mat-select placeholder="Stream" formControlName="stream" matTooltip="Effects Upstream Or Downstream">
+      <mat-select placeholder="Stream" formControlName="stream" matTooltip="Stream: Effects Upstream Or Downstream">
         <mat-option value="upstream">Upstream</mat-option>
         <mat-option value="downstream">Downstream</mat-option>
       </mat-select>
 
       <mat-form-field>
-         <input matInput placeholder="Toxicity" formControlName="toxicity" type="number"/>
+         <input matInput
+                placeholder="Toxicity"
+                formControlName="toxicity"
+                type="number"
+                matTooltip="Toxicity: probability of the toxic being applied to a link (defaults to 1.0, 100%)"/>
       </mat-form-field>
 
       <div *ngIf="selectedType" formGroupName="attributes">
