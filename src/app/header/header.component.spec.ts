@@ -12,12 +12,12 @@ describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(async(() => {
-    proxyService = jasmine.createSpyObj('ToxiproxyService', ['getProxyVersion']);
+    const toxiProxySpy = jasmine.createSpyObj('ToxiproxyService', ['getProxyVersion']);
 
     TestBed.configureTestingModule({
       imports: [MatToolbarModule],
       declarations: [HeaderComponent],
-      providers: [HeaderComponent, {provide: ToxiproxyService, useValue: proxyService}]
+      providers: [HeaderComponent, {provide: ToxiproxyService, useValue: toxiProxySpy}]
     })
     .compileComponents();
   }));
