@@ -1,8 +1,19 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ProxyCreateDialogComponent } from './proxy-create-dialog.component';
-import {AppModule} from '../../app.module';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {ProxyCreateDialogComponent} from './proxy-create-dialog.component';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+  MatFormFieldModule, MatInputModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatSnackBarModule
+} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
+import {ToxiproxyService} from '../../services/toxiproxy.service';
+import {HttpClient, HttpHandler} from '@angular/common/http';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('ProxyCreateDialogComponent', () => {
   let component: ProxyCreateDialogComponent;
@@ -10,8 +21,21 @@ describe('ProxyCreateDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
+      declarations: [ProxyCreateDialogComponent],
+      imports: [
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatRadioModule,
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatInputModule,
+        NoopAnimationsModule
+      ],
       providers: [
+        ToxiproxyService,
+        HttpClient,
+        HttpHandler,
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} }
       ]

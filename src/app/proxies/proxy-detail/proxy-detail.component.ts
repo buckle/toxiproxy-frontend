@@ -31,7 +31,7 @@ export class ProxyDetailComponent implements OnInit {
   }
 
   loadProxy() {
-    const name = this.route.snapshot.paramMap.get('name');
+    const name = (this.route.snapshot && this.route.snapshot.paramMap) ? this.route.snapshot.paramMap.get('name') : '';
     this.proxyService
       .getProxy(name)
       .subscribe(value => {

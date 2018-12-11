@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ProxyDetailComponent} from './proxy-detail.component';
 import {AppModule} from '../../app.module';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('ProxyDetailComponent', () => {
   let component: ProxyDetailComponent;
@@ -10,10 +10,9 @@ describe('ProxyDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
-      providers: [
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+      imports: [
+        AppModule,
+        RouterTestingModule
       ]
     })
       .compileComponents();

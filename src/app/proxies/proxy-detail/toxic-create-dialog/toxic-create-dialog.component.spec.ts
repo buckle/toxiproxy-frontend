@@ -1,8 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ToxicCreateDialogComponent } from './toxic-create-dialog.component';
-import {AppModule} from '../../../app.module';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {ToxicCreateDialogComponent} from './toxic-create-dialog.component';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+  MatInputModule,
+  MatProgressSpinnerModule,
+  MatSelectModule,
+  MatSnackBarModule,
+  MatTooltipModule
+} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
+import {ToxiproxyService} from '../../../services/toxiproxy.service';
+import {HttpClient, HttpHandler} from '@angular/common/http';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('ToxicCreateDialogComponent', () => {
   let component: ToxicCreateDialogComponent;
@@ -10,13 +22,26 @@ describe('ToxicCreateDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule],
+      declarations: [ToxicCreateDialogComponent],
+      imports: [
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatTooltipModule,
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatInputModule,
+        NoopAnimationsModule
+      ],
       providers: [
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        ToxiproxyService,
+        HttpClient,
+        HttpHandler,
+        {provide: MatDialogRef, useValue: {}},
+        {provide: MAT_DIALOG_DATA, useValue: {}}
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
