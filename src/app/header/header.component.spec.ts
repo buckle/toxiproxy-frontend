@@ -3,17 +3,21 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {HeaderComponent} from './header.component';
 import {MatToolbarModule} from '@angular/material';
 import {ToxiproxyService} from '../services/toxiproxy.service';
-import {HttpClient, HttpHandler} from '@angular/common/http';
+import {of, throwError} from 'rxjs';
+import SpyObj = jasmine.SpyObj;
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
+  let proxyService: SpyObj<ToxiproxyService>;
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(async(() => {
+    proxyService = jasmine.createSpyObj('ToxiproxyService', ['getProxyVersion']);
+
     TestBed.configureTestingModule({
       imports: [MatToolbarModule],
       declarations: [HeaderComponent],
-      providers: [ToxiproxyService, HttpClient, HttpHandler]
+      providers: [HeaderComponent, {provide: ToxiproxyService, useValue: proxyService}]
     })
     .compileComponents();
   }));
@@ -21,10 +25,26 @@ describe('HeaderComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    proxyService = TestBed.get(ToxiproxyService);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have correct version', () => {
+    proxyService.getProxyVersion.and.returnValue(of('1.0.0'));
+    fixture.detectChanges();
+
+    let textContent = fixture.nativeElement.querySelector('.header-version').textContent;
+    expect(textContent).toBe('Version: 1.0.0');
+  });
+
+  it('should should version when version lookup fails', () => {
+    proxyService.getProxyVersion.and.returnValue(throwError("Failed to retrieve version"));
+    fixture.detectChanges();
+
+    let textContent = fixture.nativeElement.querySelector('.header-version').textContent;
+    expect(textContent).toBe('Version: ');
   });
 });
