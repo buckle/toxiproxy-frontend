@@ -5,7 +5,6 @@ import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
 import {Proxy} from '../../services/proxy';
 
 @Component({
-  selector: 'app-proxy-create-dialog',
   templateUrl: './proxy-create-dialog.component.html',
   styleUrls: ['./proxy-create-dialog.component.scss']
 })

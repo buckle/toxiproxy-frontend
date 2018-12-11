@@ -11,11 +11,11 @@ import {
   MatToolbarModule,
   MatListModule,
   MatIconModule,
-  MatDialogModule,
   MatButtonModule,
   MatInputModule,
   MatFormFieldModule,
   MatRadioModule,
+  MatDialogModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
   MatCardModule,
@@ -28,6 +28,7 @@ import {
   MatDividerModule,
   MatMenuModule
 } from '@angular/material';
+
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {ToxiproxyService} from './services/toxiproxy.service';
 import {ProxiesComponent} from './proxies/proxies.component';

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToxicCreateDialogComponent } from './toxic-create-dialog.component';
+import {AppModule} from '../../../app.module';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 describe('ToxicCreateDialogComponent', () => {
   let component: ToxicCreateDialogComponent;
@@ -8,7 +10,11 @@ describe('ToxicCreateDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToxicCreateDialogComponent ]
+      imports: [AppModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
+      ]
     })
     .compileComponents();
   }));

@@ -9,7 +9,6 @@ import {ToxicTypeConstants} from './toxic-type-constants';
 import {ToxicData} from './toxic-data';
 
 @Component({
-  selector: 'app-toxic-create-dialog',
   templateUrl: './toxic-create-dialog.component.html',
   styleUrls: ['./toxic-create-dialog.component.scss']
 })
