@@ -16,18 +16,15 @@ export class ProxiesComponent implements OnInit {
   filter: string;
   displayedColumns: string[] = ['name', 'enabled', 'listen', 'upstream'];
   @ViewChild(MatSort) sort: MatSort;
-  pageSize: number;
-  pageIndex: number;
-  totalItems: number;
+  pageSize: number = 25;
+  pageIndex: number = 0;
+  totalItems: number = 0;
 
   constructor(private proxyService: ToxiproxyService,
               private dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.pageSize = 25;
-    this.pageIndex = 0;
-    this.totalItems = 0;
     this.loadProxies(null);
   }
 
