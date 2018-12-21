@@ -19,7 +19,7 @@ export class ProxiesComponent implements OnInit {
   pageSize: number = 25;
   pageIndex: number = 0;
   totalItems: number = 0;
-  createProxyDialog: MatDialogRef<ProxyCreateDialogComponent, Object>;
+  createProxyDialog: MatDialogRef<ProxyCreateDialogComponent>;
 
   constructor(private proxyService: ToxiproxyService,
               private dialog: MatDialog) {
@@ -62,6 +62,9 @@ export class ProxiesComponent implements OnInit {
       width: '500px',
     });
 
-    this.createProxyDialog.afterClosed().subscribe(() => this.loadProxies(null));
+    this.createProxyDialog.afterClosed().subscribe(result => {
+      console.log("result: " + result);
+      this.loadProxies(null)
+    });
   }
 }

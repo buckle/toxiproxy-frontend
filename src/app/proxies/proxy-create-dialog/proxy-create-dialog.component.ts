@@ -12,14 +12,20 @@ export class ProxyCreateDialogComponent implements OnInit {
 
   inProgress: boolean | false;
   form: FormGroup;
-  isUpdate: boolean;
+  isUpdate: boolean | false;
 
   constructor(private dialog: MatDialogRef<ProxyCreateDialogComponent>,
               private fb: FormBuilder,
               private proxyService: ToxiproxyService,
               private snackBar: MatSnackBar,
-              @Inject(MAT_DIALOG_DATA) public proxy: Proxy) {
+              @Inject(MAT_DIALOG_DATA) public proxy: Proxy | any) {
+  }
 
+  ngOnInit() {
+    this.initForm(this.proxy);
+  }
+
+  initForm(proxy: Proxy) {
     if(proxy) {
       this.isUpdate = true;
       this.form = this.fb.group({
@@ -27,7 +33,6 @@ export class ProxyCreateDialogComponent implements OnInit {
         listen: [proxy.listen, Validators.required],
         upstream: [proxy.upstream, Validators.required],
         enabled: proxy.enabled + ''
-
       });
     } else {
       this.isUpdate = false;
@@ -38,9 +43,6 @@ export class ProxyCreateDialogComponent implements OnInit {
         enabled: 'true'
       });
     }
-  }
-
-  ngOnInit() {
   }
 
   onSubmit() {
@@ -55,10 +57,7 @@ export class ProxyCreateDialogComponent implements OnInit {
       this.proxyService
         .updateProxy(proxy)
         .subscribe(
-          () => {
-            this.inProgress = false;
-            this.dialog.close();
-          },
+          () => this.dialog.close(),
           () => {
             this.inProgress = false;
             this.snackBar.open(
@@ -68,15 +67,11 @@ export class ProxyCreateDialogComponent implements OnInit {
           },
           () => this.inProgress = false
         );
-
     } else {
       this.proxyService
         .createProxy(proxy)
         .subscribe(
-          () => {
-            this.inProgress = false;
-            this.dialog.close();
-          },
+          () => this.dialog.close(),
           () => {
             this.inProgress = false;
             this.snackBar.open(

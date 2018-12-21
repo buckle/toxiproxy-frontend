@@ -159,7 +159,7 @@ describe('ProxiesComponent', () => {
     expect(component.proxies.filter).toBe(null);
   });
 
-  it('should open create proxy dialog and populate on close', () => {
+  it('should open create proxy dialog', () => {
     proxyService.getProxies.and.returnValue(of(proxies));
     expect(component.createProxyDialog).toBeFalsy();
     expect(component.proxies).toBeFalsy();
@@ -167,8 +167,6 @@ describe('ProxiesComponent', () => {
     component.openProxyCreate();
 
     expect(component.createProxyDialog).toBeTruthy();
-
-    component.createProxyDialog.close();
   });
 
   it('render should call create proxy', () => {
