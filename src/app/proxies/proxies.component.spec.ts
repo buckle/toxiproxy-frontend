@@ -75,14 +75,14 @@ describe('ProxiesComponent', () => {
     proxies['BarkerProxy'] = {
       'name': 'BarkerProxy',
       'listen': 'localhost:5002',
-      'upstream': 'mbp-stacyp.bkedev.com:5003',
+      'upstream': 'somedomain.com:5003',
       'enabled': false,
       'toxics': []
     };
     proxies['Bobs Burgers'] = {
       'name': 'Bobs Burgers',
       'listen': '127.0.0.1:7779',
-      'upstream': 'mbp-stacyp.bkedev.com:8000',
+      'upstream': 'somdomain.com:8000',
       'enabled': true,
       'toxics': []
     };
