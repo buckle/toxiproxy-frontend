@@ -14,6 +14,7 @@ import {ProxyCreateDialogComponent} from '../proxy-create-dialog/proxy-create-di
 })
 export class ProxyDetailComponent implements OnInit {
 
+  proxyNameParam: string;
   proxy: Proxy;
   toxicDataSource: MatTableDataSource<Toxic>;
   objectEntries = Object.entries;
@@ -31,9 +32,9 @@ export class ProxyDetailComponent implements OnInit {
   }
 
   loadProxy() {
-    const name = (this.route.snapshot && this.route.snapshot.paramMap) ? this.route.snapshot.paramMap.get('name') : '';
+    this.proxyNameParam = (this.route.snapshot && this.route.snapshot.paramMap) ? this.route.snapshot.paramMap.get('name') : '';
     this.proxyService
-      .getProxy(name)
+      .getProxy(this.proxyNameParam)
       .subscribe(value => {
         this.proxy = value;
         this.toxicDataSource = new MatTableDataSource(value.toxics);
