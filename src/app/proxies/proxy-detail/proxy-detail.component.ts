@@ -14,7 +14,6 @@ import {ProxyCreateDialogComponent} from '../proxy-create-dialog/proxy-create-di
 })
 export class ProxyDetailComponent implements OnInit {
 
-  proxyNameParam: string;
   proxy: Proxy;
   toxicDataSource: MatTableDataSource<Toxic>;
   objectEntries = Object.entries;
@@ -32,21 +31,25 @@ export class ProxyDetailComponent implements OnInit {
   }
 
   loadProxy() {
-    this.proxyNameParam = (this.route.snapshot && this.route.snapshot.paramMap) ? this.route.snapshot.paramMap.get('name') : '';
-    this.proxyService
-      .getProxy(this.proxyNameParam)
-      .subscribe(
-        value => {
-          this.proxy = value;
-          this.toxicDataSource = new MatTableDataSource(value.toxics);
-        },
-        () => {
-          this.snackBar.open(
-            'Unable to load proxy.',
-            'Close',
-            {duration: 8000});
-        }
-      );
+    this.route.paramMap.subscribe(params => {
+      let proxyName = params.get('name');
+      if(proxyName) {
+        this.proxyService
+          .getProxy(proxyName)
+          .subscribe(
+            value => {
+              this.proxy = value;
+              this.toxicDataSource = new MatTableDataSource(value.toxics);
+            },
+            () => {
+              this.snackBar.open(
+                'Unable to load proxy.',
+                'Close',
+                {duration: 8000});
+            }
+          );
+      }
+    });
   }
 
   deleteProxy() {
@@ -110,8 +113,7 @@ export class ProxyDetailComponent implements OnInit {
             'Unable to delete toxic.',
             'Close',
             {duration: 8000});
-        },
-        () => {
-        });
+        }
+      );
   }
 }
