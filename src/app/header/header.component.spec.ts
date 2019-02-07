@@ -32,7 +32,7 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have correct version', () => {
+  it('render correct version', () => {
     proxyService.getProxyVersion.and.returnValue(of('1.0.0'));
     fixture.detectChanges();
 
@@ -40,7 +40,7 @@ describe('HeaderComponent', () => {
     expect(textContent).toBe('Version: 1.0.0');
   });
 
-  it('should should version when version lookup fails', () => {
+  it('render version when version lookup fails', () => {
     proxyService.getProxyVersion.and.returnValue(throwError("Failed to retrieve version"));
     fixture.detectChanges();
 

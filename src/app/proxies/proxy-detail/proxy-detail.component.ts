@@ -35,10 +35,18 @@ export class ProxyDetailComponent implements OnInit {
     this.proxyNameParam = (this.route.snapshot && this.route.snapshot.paramMap) ? this.route.snapshot.paramMap.get('name') : '';
     this.proxyService
       .getProxy(this.proxyNameParam)
-      .subscribe(value => {
-        this.proxy = value;
-        this.toxicDataSource = new MatTableDataSource(value.toxics);
-      });
+      .subscribe(
+        value => {
+          this.proxy = value;
+          this.toxicDataSource = new MatTableDataSource(value.toxics);
+        },
+        () => {
+          this.snackBar.open(
+            'Unable to load proxy.',
+            'Close',
+            {duration: 8000});
+        }
+      );
   }
 
   deleteProxy() {
@@ -53,9 +61,8 @@ export class ProxyDetailComponent implements OnInit {
             'Unable to delete proxy.',
             'Close',
             {duration: 8000});
-        },
-        () => {
-        });
+        }
+      );
   }
 
   editProxy() {
