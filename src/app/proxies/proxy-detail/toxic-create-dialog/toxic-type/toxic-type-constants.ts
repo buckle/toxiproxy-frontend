@@ -1,4 +1,5 @@
 import {ToxicType} from './toxic-type';
+import {AbstractControl} from '@angular/forms';
 
 export module ToxicTypeConstants {
 
@@ -60,6 +61,22 @@ export module ToxicTypeConstants {
   export function getToxicTypeByValue(value: string): ToxicType {
     const foundTypes = this.getToxicTypes().filter(typeValue => typeValue.value === value);
     return foundTypes.length > 0 ? foundTypes[0] : null;
+  }
+
+  export function convertFormAttributesToDataType(toxicType: ToxicType, formAttributes: AbstractControl): object {
+    const attributes = {};
+
+    toxicType.attributes.forEach(attribute => {
+      const attributeFormControl = formAttributes.get(attribute.value);
+
+      switch(attribute.dataType) {
+        case 'number':
+          attributes[attribute.value] = Number(attributeFormControl.value).valueOf();
+          break;
+      }
+    });
+
+    return attributes;
   }
 }
 

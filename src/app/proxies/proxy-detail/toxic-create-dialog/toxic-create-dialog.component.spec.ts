@@ -7,26 +7,36 @@ import {
   MatDialogRef,
   MatInputModule,
   MatProgressSpinnerModule,
-  MatSelectModule,
+  MatSelectModule, MatSnackBar,
   MatSnackBarModule,
   MatTooltipModule
 } from '@angular/material';
-import {ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ToxiproxyService} from '../../../services/toxiproxy.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {ToxicData} from './toxic-data';
 import {Proxy} from '../../../services/proxy';
 import {Toxic} from '../../../services/toxic';
-import {ToxicTypeConstants} from './toxic-type-constants';
+import {ToxicTypeConstants} from './toxic-type/toxic-type-constants';
+import {of, throwError} from 'rxjs';
+import createSpyObj = jasmine.createSpyObj;
+import SpyObj = jasmine.SpyObj;
 
 describe('ToxicCreateDialogComponent', () => {
   let component: ToxicCreateDialogComponent;
   let fixture: ComponentFixture<ToxicCreateDialogComponent>;
+  let proxyService: SpyObj<ToxiproxyService>;
+  let dialog: SpyObj<MatDialogRef<any, any>>;
+  let snackBar: SpyObj<MatSnackBar>;
   let proxy: Proxy;
   let toxic: Toxic;
 
   beforeEach(async(() => {
+    const toxiProxySpy = createSpyObj('ToxiproxyService', ['updateToxic', 'addToxic']);
+    const matDialogRef = <SpyObj<MatDialogRef<any, any>>>createSpyObj('MatDialogRef', ['close']);
+    const snackBarSpy = createSpyObj('MatSnackBar', ['open']);
+
     TestBed.configureTestingModule({
       declarations: [ToxicCreateDialogComponent],
       imports: [
@@ -43,8 +53,11 @@ describe('ToxicCreateDialogComponent', () => {
         ToxiproxyService,
         HttpClient,
         HttpHandler,
-        {provide: MatDialogRef, useValue: {}},
-        {provide: MAT_DIALOG_DATA, useValue: {}}
+        FormBuilder,
+        {provide: MatDialogRef, useValue: matDialogRef},
+        {provide: MAT_DIALOG_DATA, useValue: {}},
+        {provide: ToxiproxyService, useValue: toxiProxySpy},
+        {provide: MatSnackBar, useValue: snackBarSpy}
       ]
     })
       .compileComponents();
@@ -54,6 +67,9 @@ describe('ToxicCreateDialogComponent', () => {
     fixture = TestBed.createComponent(ToxicCreateDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    proxyService = TestBed.get(ToxiproxyService);
+    dialog = TestBed.get(MatDialogRef);
+    snackBar = TestBed.get(MatSnackBar);
 
     proxy = {
       'name': 'BarkerProxy',
@@ -118,6 +134,11 @@ describe('ToxicCreateDialogComponent', () => {
 
     expect(component.toxicForm).toBeTruthy();
 
+    let nameControl = component.toxicForm.controls['name'];
+    expect(nameControl.value).toEqual(component.toxic.name);
+    expect(nameControl.disabled).toBeTruthy();
+    expect(nameControl.validator).toEqual(Validators.required);
+
     let typeControl = component.toxicForm.controls['type'];
     expect(typeControl.value).toEqual(component.toxic.type);
     expect(typeControl.disabled).toBeTruthy();
@@ -142,6 +163,10 @@ describe('ToxicCreateDialogComponent', () => {
     component.createFormForNew();
 
     expect(component.toxicForm).toBeTruthy();
+
+    let nameControl = component.toxicForm.controls['name'];
+    expect(nameControl.value).toEqual('');
+    expect(nameControl.disabled).toBeTruthy();
 
     let typeControl = component.toxicForm.controls['type'];
     expect(typeControl.value).toEqual('');
@@ -191,5 +216,75 @@ describe('ToxicCreateDialogComponent', () => {
     expect(jitter.value).toEqual('200');
     expect(jitter.validator).toEqual(Validators.required);
   });
-  
+
+  it('should submit when updating toxic', () => {
+    let createToxicFromFromDataSpy = spyOn(component, 'createToxicFromFormData');
+    let updateToxicSpy = spyOn(component, 'updateToxic');
+    component.isUpdate = true;
+    expect(component.inProgress).toBeFalsy();
+
+    component.onSubmit();
+
+    expect(component.inProgress).toBeTruthy();
+    expect(createToxicFromFromDataSpy).toHaveBeenCalledTimes(1);
+    expect(updateToxicSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should submit when creating toxic', () => {
+    let createToxicFromFromDataSpy = spyOn(component, 'createToxicFromFormData');
+    let createToxicSpy = spyOn(component, 'createToxic');
+    component.isUpdate = false;
+    expect(component.inProgress).toBeFalsy();
+
+    component.onSubmit();
+
+    expect(component.inProgress).toBeTruthy();
+    expect(createToxicFromFromDataSpy).toHaveBeenCalledTimes(1);
+    expect(createToxicSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create toxic from form data', () => {
+    component.selectedType = ToxicTypeConstants.LATENCY;
+    component.toxicForm.setValue({
+      'name':'latency_upstream',
+      'type':'latency',
+      'stream':'upstream',
+      'toxicity':'1'
+    });
+    component.toxicForm.addControl('attributes', new FormGroup({latency: new FormControl('100'), jitter: new FormControl('101')}));
+
+    let newToxic = component.createToxicFromFormData();
+
+    expect(newToxic).toBeTruthy();
+    expect(newToxic.name).toEqual('latency_upstream');
+    expect(newToxic.type).toEqual('latency');
+    expect(newToxic.attributes).toEqual({'latency': 100, 'jitter': 101});
+    expect(newToxic.stream).toEqual('upstream');
+    expect(newToxic.toxicity).toEqual(1);
+  });
+
+  it('update toxic', () => {
+    component.proxy = proxy;
+    component.inProgress = true;
+    proxyService.updateToxic.and.returnValue(of(new Proxy()));
+
+    component.updateToxic(toxic);
+
+    expect(dialog.close).toHaveBeenCalledTimes(1);
+    expect(component.inProgress).toBeFalsy();
+    expect(proxyService.updateToxic).toHaveBeenCalledWith(proxy, toxic);
+  });
+
+  it('update toxic with error', () => {
+    component.proxy = proxy;
+    component.inProgress = true;
+    proxyService.updateToxic.and.returnValue(throwError('bad call'));
+
+    component.updateToxic(toxic);
+
+    expect(dialog.close).toHaveBeenCalledTimes(0);
+    expect(component.inProgress).toBeFalsy();
+    expect(proxyService.updateToxic).toHaveBeenCalledWith(proxy, toxic);
+    expect(snackBar.open).toHaveBeenCalledWith('Unable to edit toxic.', 'Close', {duration: 5000})
+  });
 });

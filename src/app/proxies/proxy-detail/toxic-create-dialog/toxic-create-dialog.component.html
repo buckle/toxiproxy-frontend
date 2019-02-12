@@ -2,6 +2,7 @@
   <h2 fxFlex="100%" class="toxic-create-title" mat-dialog-title>Toxic</h2>
   <mat-dialog-content fxFlex="100%">
     <form [formGroup]="toxicForm" class="create-toxic-form" (ngSubmit)="onSubmit()">
+      <input matInput formControlName="name" hidden/>
       <mat-select placeholder="Type" formControlName="type" (valueChange)="typeSelect($event)" matTooltip="Toxic Type">
         <mat-option *ngFor="let type of types" [value]="type.value">
           {{type.name}}

@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ToxiproxyService} from '../services/toxiproxy.service';
 import {ProxyResponse} from '../services/proxy-response';
 import {ProxyCreateDialogComponent} from './proxy-create-dialog/proxy-create-dialog.component';
-import {MatDialog, MatDialogRef, MatSort, MatTableDataSource, PageEvent} from '@angular/material';
+import {MatDialog, MatSort, MatTableDataSource, PageEvent} from '@angular/material';
 import {Proxy} from '../services/proxy';
 
 @Component({
@@ -19,7 +19,6 @@ export class ProxiesComponent implements OnInit {
   pageSize: number = 25;
   pageIndex: number = 0;
   totalItems: number = 0;
-  createProxyDialog: MatDialogRef<ProxyCreateDialogComponent>;
 
   constructor(private proxyService: ToxiproxyService,
               private dialog: MatDialog) {
@@ -58,12 +57,11 @@ export class ProxiesComponent implements OnInit {
   }
 
   openProxyCreate(): void {
-    this.createProxyDialog = this.dialog.open(ProxyCreateDialogComponent, {
+    let createProxyDialog = this.dialog.open(ProxyCreateDialogComponent, {
       width: '500px',
     });
 
-    this.createProxyDialog.afterClosed().subscribe(result => {
-      console.log("result: " + result);
+    createProxyDialog.afterClosed().subscribe(() => {
       this.loadProxies(null)
     });
   }

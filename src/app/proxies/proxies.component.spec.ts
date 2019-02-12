@@ -2,7 +2,9 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ProxiesComponent} from './proxies.component';
 import {
+  MatDialog,
   MatDialogModule,
+  MatDialogRef,
   MatDividerModule,
   MatFormFieldModule,
   MatIconModule,
@@ -26,15 +28,18 @@ import {By} from '@angular/platform-browser';
 import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 import {ProxyCreateDialogComponent} from './proxy-create-dialog/proxy-create-dialog.component';
 import SpyObj = jasmine.SpyObj;
+import createSpyObj = jasmine.createSpyObj;
 
 describe('ProxiesComponent', () => {
   let component: ProxiesComponent;
   let fixture: ComponentFixture<ProxiesComponent>;
   let proxyService: SpyObj<ToxiproxyService>;
+  let dialog: SpyObj<MatDialog>;
   let proxies;
 
   beforeEach(async(() => {
-    const toxiProxySpy = jasmine.createSpyObj('ToxiproxyService', ['getProxies']);
+    const toxiProxySpy = createSpyObj('ToxiproxyService', ['getProxies']);
+    const dialogSpy = createSpyObj('MatDialog', ['afterClosed', 'open']);
 
     TestBed.configureTestingModule({
       declarations: [ProxiesComponent, ProxyCreateDialogComponent],
@@ -56,6 +61,7 @@ describe('ProxiesComponent', () => {
       ],
       providers: [
         {provide: ToxiproxyService, useValue: toxiProxySpy},
+        {provide: MatDialog, useValue: dialogSpy},
         HttpClient,
         HttpHandler
       ]
@@ -70,6 +76,11 @@ describe('ProxiesComponent', () => {
     fixture = TestBed.createComponent(ProxiesComponent);
     component = fixture.componentInstance;
     proxyService = TestBed.get(ToxiproxyService);
+    dialog = TestBed.get(MatDialog);
+
+    let matDialogRef = <SpyObj<MatDialogRef<any, any>>>createSpyObj('MatDialogRef', ['afterClosed']);
+    matDialogRef.afterClosed.and.returnValue(of({}));
+    dialog.open.and.returnValue(matDialogRef);
 
     proxies = new Object();
     proxies['BarkerProxy'] = {
@@ -150,23 +161,22 @@ describe('ProxiesComponent', () => {
     expect(component.proxies.filter).toBe('Something');
   });
 
-  it('should apply filter when falsy', () => {
-    component.filter = null;
-    component.proxies = new MatTableDataSource();
+  it('should apply when no proxies', () => {
+    component.filter = 'Something';
+    component.proxies = null;
 
     component.applyFilter();
 
-    expect(component.proxies.filter).toBe(null);
+    expect(component.proxies).toBe(null);
   });
 
   it('should open create proxy dialog', () => {
-    proxyService.getProxies.and.returnValue(of(proxies));
-    expect(component.createProxyDialog).toBeFalsy();
-    expect(component.proxies).toBeFalsy();
+    let componentLoadProxySpy = spyOn(component, 'loadProxies');
 
     component.openProxyCreate();
 
-    expect(component.createProxyDialog).toBeTruthy();
+    expect(dialog.open).toHaveBeenCalledWith(ProxyCreateDialogComponent, {width: '500px'});
+    expect(componentLoadProxySpy).toHaveBeenCalledWith(null);
   });
 
   it('render should call create proxy', () => {
