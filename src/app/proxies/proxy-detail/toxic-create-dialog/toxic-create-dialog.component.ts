@@ -107,15 +107,16 @@ export class ToxicCreateDialogComponent implements OnInit {
       .addToxic(this.proxy, toxic)
       .subscribe(
         () => {
+          this.inProgress = false;
           this.dialog.close();
         },
         () => {
+          this.inProgress = false;
           this.snackBar.open(
-            'Unable to add toxic proxy.',
+            'Unable to add toxic to proxy.',
             'Close',
             {duration: 5000});
-        },
-        () => this.inProgress = false
+        }
       );
   }
 }

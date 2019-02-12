@@ -287,4 +287,29 @@ describe('ToxicCreateDialogComponent', () => {
     expect(proxyService.updateToxic).toHaveBeenCalledWith(proxy, toxic);
     expect(snackBar.open).toHaveBeenCalledWith('Unable to edit toxic.', 'Close', {duration: 5000})
   });
+
+  it('create toxic', () => {
+    component.proxy = proxy;
+    component.inProgress = true;
+    proxyService.addToxic.and.returnValue(of(new Proxy()));
+
+    component.createToxic(toxic);
+
+    expect(dialog.close).toHaveBeenCalledTimes(1);
+    expect(component.inProgress).toBeFalsy();
+    expect(proxyService.addToxic).toHaveBeenCalledWith(proxy, toxic);
+  });
+
+  it('create toxic with error', () => {
+    component.proxy = proxy;
+    component.inProgress = true;
+    proxyService.addToxic.and.returnValue(throwError('bad call'));
+
+    component.createToxic(toxic);
+
+    expect(dialog.close).toHaveBeenCalledTimes(0);
+    expect(component.inProgress).toBeFalsy();
+    expect(proxyService.addToxic).toHaveBeenCalledWith(proxy, toxic);
+    expect(snackBar.open).toHaveBeenCalledWith('Unable to add toxic to proxy.', 'Close', {duration: 5000})
+  });
 });
