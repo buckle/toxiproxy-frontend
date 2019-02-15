@@ -48,4 +48,8 @@ export class ToxiproxyService {
   deleteToxic(proxy: Proxy, toxic: Toxic): Observable<object> {
     return this.http.delete(this.host + '/proxies/' + proxy.name + '/toxics/' + toxic.name);
   }
+
+  getHost(): string {
+    return this.host;
+  }
 }

@@ -263,7 +263,7 @@ describe('ToxicCreateDialogComponent', () => {
     expect(newToxic.toxicity).toEqual(1);
   });
 
-  it('update toxic', () => {
+  it('should update toxic', () => {
     component.proxy = proxy;
     component.inProgress = true;
     proxyService.updateToxic.and.returnValue(of(new Proxy()));
@@ -275,7 +275,7 @@ describe('ToxicCreateDialogComponent', () => {
     expect(proxyService.updateToxic).toHaveBeenCalledWith(proxy, toxic);
   });
 
-  it('update toxic with error', () => {
+  it('should update toxic with error', () => {
     component.proxy = proxy;
     component.inProgress = true;
     proxyService.updateToxic.and.returnValue(throwError('bad call'));
@@ -288,7 +288,7 @@ describe('ToxicCreateDialogComponent', () => {
     expect(snackBar.open).toHaveBeenCalledWith('Unable to edit toxic.', 'Close', {duration: 5000})
   });
 
-  it('create toxic', () => {
+  it('should create toxic', () => {
     component.proxy = proxy;
     component.inProgress = true;
     proxyService.addToxic.and.returnValue(of(new Proxy()));
@@ -300,7 +300,7 @@ describe('ToxicCreateDialogComponent', () => {
     expect(proxyService.addToxic).toHaveBeenCalledWith(proxy, toxic);
   });
 
-  it('create toxic with error', () => {
+  it('should create toxic with error', () => {
     component.proxy = proxy;
     component.inProgress = true;
     proxyService.addToxic.and.returnValue(throwError('bad call'));
