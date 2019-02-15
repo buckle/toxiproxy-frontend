@@ -6,15 +6,15 @@ describe('ProxyResponse', () => {
     let proxiesKeyed = {
       "Propane Master": {
         "name": "Propane Master",
-        "listen": "mbp-stacyp.bkedev.com:8010",
-        "upstream": "mbp-stacyp.bkedev.com:8011",
+        "listen": "host:8010",
+        "upstream": "host:8011",
         "enabled": false,
         "toxics": []
       },
       "Terminator": {
         "name": "Terminator",
         "listen": "127.0.0.1:8001",
-        "upstream": "mbp-stacyp.bkedev.com:8002",
+        "upstream": "host:8002",
         "enabled": true,
         "toxics": []
       }
