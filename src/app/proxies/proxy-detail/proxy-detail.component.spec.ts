@@ -24,6 +24,7 @@ describe('ProxyDetailComponent', () => {
   let dialog: SpyObj<MatDialog>;
   let route: ActivatedRouteStub;
   let proxy: Proxy;
+  let proxyWithoutToxic: Proxy;
 
   beforeEach(async(() => {
     const toxiProxySpy = createSpyObj('ToxiproxyService', ['getProxy', 'deleteProxy', 'deleteToxic']);
@@ -68,17 +69,107 @@ describe('ProxyDetailComponent', () => {
           'attributes': {
             'rate': 123
           },
-          'name': 'bandwidth_upstream',
+          'name': 'Bandwidth Upstream',
           'type': 'bandwidth',
           'stream': 'upstream',
           'toxicity': 1
         }
       ]
     };
+
+    proxyWithoutToxic = {
+      'name': 'BarkerProxy',
+      'listen': 'localhost:5002',
+      'upstream': 'somedomain.com:5003',
+      'enabled': true,
+      'toxics': []
+    };
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('renders details without toxics', () => {
+    route.setParamMap({name: 'haha'});
+    proxyService.getProxy.and.returnValue(of(proxyWithoutToxic));
+    fixture.detectChanges();
+
+    const page = fixture.nativeElement;
+    const pageTitleText = page.querySelector('.mat-title').textContent;
+    const detailSection = page.querySelector('.details');
+    const detailSectionTitleText = detailSection.querySelector('.mat-title').textContent;
+    const detailSectionValues = detailSection.querySelectorAll('mat-list-item');
+
+    expect(pageTitleText).toMatch(proxy.name);
+    expect(detailSectionTitleText).toMatch('Details');
+    expect(detailSectionValues[0].textContent).toMatch('Listen: ' + proxy.listen);
+    expect(detailSectionValues[1].textContent).toMatch('Upstream: ' + proxy.upstream);
+    expect(detailSectionValues[2].textContent).toMatch('Enabled: ' + proxy.enabled);
+  });
+
+  it('renders toxics section without toxics', () => {
+    route.setParamMap({name: 'haha'});
+    proxyService.getProxy.and.returnValue(of(proxyWithoutToxic));
+    fixture.detectChanges();
+
+    const toxicsSection = fixture.nativeElement.querySelector('.toxics');
+    const toxicsSectionTitleText = toxicsSection.querySelector('.mat-title').textContent;
+    const toxicsSectionNoToxicsText = toxicsSection.querySelector('.mat-body').textContent;
+    const toxicsTable = toxicsSection.querySelector('table');
+
+    expect(toxicsSectionTitleText).toMatch('Toxics');
+    expect(toxicsSectionNoToxicsText).toMatch('No toxics setup, use the menu to add a toxic.');
+    expect(toxicsTable).toBeNull();
+  });
+
+  it('renders details with toxics', () => {
+    route.setParamMap({name: 'haha'});
+    proxyService.getProxy.and.returnValue(of(proxy));
+    fixture.detectChanges();
+
+    const page = fixture.nativeElement;
+    const pageTitleText = page.querySelector('.mat-title').textContent;
+    const detailSection = page.querySelector('.details');
+    const detailSectionTitleText = detailSection.querySelector('.mat-title').textContent;
+    const detailSectionValues = detailSection.querySelectorAll('mat-list-item');
+
+    expect(pageTitleText).toMatch(proxy.name);
+    expect(detailSectionTitleText).toMatch('Details');
+    expect(detailSectionValues[0].textContent).toMatch('Listen: ' + proxy.listen);
+    expect(detailSectionValues[1].textContent).toMatch('Upstream: ' + proxy.upstream);
+    expect(detailSectionValues[2].textContent).toMatch('Enabled: ' + proxy.enabled);
+  });
+
+  it('renders toxics section with toxics', () => {
+    route.setParamMap({name: 'haha'});
+    proxyService.getProxy.and.returnValue(of(proxy));
+    fixture.detectChanges();
+
+    const toxicsSection = fixture.nativeElement.querySelector('.toxics');
+    const toxicsSectionTitleText = toxicsSection.querySelector('.mat-title').textContent;
+    const tableHeaderSection = toxicsSection.querySelectorAll('.mat-header-cell');
+    const tableEntry = toxicsSection.querySelectorAll('.mat-row');
+    const tableEntryValues = toxicsSection.querySelectorAll('.mat-cell');
+
+    expect(toxicsSectionTitleText).toMatch('Toxics');
+
+    expect(tableHeaderSection[0].textContent).toMatch('Name');
+    expect(tableHeaderSection[1].textContent).toMatch('Type');
+    expect(tableHeaderSection[2].textContent).toMatch('Stream');
+    expect(tableHeaderSection[3].textContent).toMatch('Toxicity');
+    expect(tableHeaderSection[4].textContent).toMatch('Attributes');
+    expect(tableHeaderSection[5].textContent).toMatch(''); // Edit/delete column
+
+    const proxyToxic = proxy.toxics[0];
+    expect(tableEntry.length).toBe(1);
+    expect(tableEntryValues[0].textContent).toMatch(proxyToxic.name);
+    expect(tableEntryValues[1].textContent).toMatch(proxyToxic.type);
+    expect(tableEntryValues[2].textContent).toMatch(proxyToxic.stream);
+    expect(tableEntryValues[3].textContent).toMatch(String(proxyToxic.toxicity));
+    expect(tableEntryValues[4].textContent).toMatch('rate: 123');
+    expect(tableEntryValues[5].querySelectorAll('button')[0].textContent).toMatch('edit');
+    expect(tableEntryValues[5].querySelectorAll('button')[1].textContent).toMatch('close');
   });
 
   it('should load proxy', () => {

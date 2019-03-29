@@ -76,7 +76,7 @@ describe('ProxyCreateDialogComponent', () => {
   });
 
   it('should init form with proxy', () => {
-    let proxy = new Proxy();
+    const proxy = new Proxy();
     proxy.name = 'some name';
     proxy.listen = '127.0.0.1:7888';
     proxy.upstream = 'somewhere.bobbarker.com:7889';
@@ -108,9 +108,24 @@ describe('ProxyCreateDialogComponent', () => {
     expect(component.form.get('enabled').value).toBe('true');
   });
 
+  it('renders with correct inputs', () => {
+    const popup = fixture.nativeElement;
+    const titleText = popup.querySelector('.proxy-create-title').textContent;
+    const inputs = popup.querySelectorAll('input');
+    const radios = popup.querySelectorAll('mat-radio-button');
+
+    expect(titleText).toMatch('Proxy');
+    expect(inputs[0].getAttribute('placeholder')).toMatch('Name');
+    expect(inputs[1].getAttribute('placeholder')).toMatch('Listen');
+    expect(inputs[2].getAttribute('placeholder')).toMatch('Upstream');
+
+    expect(radios[0].getAttribute('value')).toMatch('true');
+    expect(radios[1].getAttribute('value')).toMatch('false');
+  });
+
   it('should send update service call for update', () => {
     proxyService.updateProxy.and.returnValue(of(null));
-    let proxy = new Proxy();
+    const proxy = new Proxy();
     proxy.name = 'some name';
     proxy.listen = 'localhost:5002';
     proxy.upstream = 'somedomain.com:5003';
@@ -150,7 +165,7 @@ describe('ProxyCreateDialogComponent', () => {
 
   it('should send create call for create', () => {
     proxyService.createProxy.and.returnValue(of(null));
-    let proxy = new Proxy();
+    const proxy = new Proxy();
     proxy.name = 'some name';
     proxy.listen = 'localhost:5002';
     proxy.upstream = 'somedomain.com:5003';
