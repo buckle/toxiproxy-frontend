@@ -87,17 +87,34 @@ describe('ToxicCreateDialogComponent', () => {
       'type': 'bandwidth',
       'stream': 'upstream',
       'toxicity': 1
-    }
+    };
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should init with toxic', () => {
-    let createFormForUpdateSpy = spyOn(component, 'createFormForUpdate');
+  it('renders the form', () => {
+    const page: HTMLElement = fixture.nativeElement;
+    const formTitle = page.querySelector('.toxic-create-title');
+    const form = page.querySelector('.create-toxic-form');
+    const typeSelection = form.querySelector('#type-selection');
+    const streamValueSelection = form.querySelector('#stream-value-selection');
 
-    let toxicData = new ToxicData();
+    expect(formTitle.textContent).toMatch('Toxic');
+    expect(form).toBeDefined();
+
+    expect(typeSelection).toBeDefined();
+    expect(typeSelection.textContent).toMatch('Type');
+
+    expect(streamValueSelection).toBeDefined();
+    expect(streamValueSelection.textContent).toMatch('Stream');
+  });
+
+  it('should init with toxic', () => {
+    const createFormForUpdateSpy = spyOn(component, 'createFormForUpdate');
+
+    const toxicData = new ToxicData();
     toxicData.toxic = toxic;
     toxicData.proxy = proxy;
     component.data = toxicData;
@@ -111,9 +128,9 @@ describe('ToxicCreateDialogComponent', () => {
   });
 
   it('should init without toxic', () => {
-    let createFormForNewSpy = spyOn(component, 'createFormForNew');
+    const createFormForNewSpy = spyOn(component, 'createFormForNew');
 
-    let toxicData = new ToxicData();
+    const toxicData = new ToxicData();
     toxicData.proxy = proxy;
     component.data = toxicData;
 
@@ -128,28 +145,28 @@ describe('ToxicCreateDialogComponent', () => {
   it('should create form for update', () => {
     component.proxy = proxy;
     component.toxic = toxic;
-    let typeSelectSpy = spyOn(component, 'typeSelect');
+    const typeSelectSpy = spyOn(component, 'typeSelect');
 
     component.createFormForUpdate();
 
     expect(component.toxicForm).toBeTruthy();
 
-    let nameControl = component.toxicForm.controls['name'];
+    const nameControl = component.toxicForm.controls['name'];
     expect(nameControl.value).toEqual(component.toxic.name);
     expect(nameControl.disabled).toBeTruthy();
     expect(nameControl.validator).toEqual(Validators.required);
 
-    let typeControl = component.toxicForm.controls['type'];
+    const typeControl = component.toxicForm.controls['type'];
     expect(typeControl.value).toEqual(component.toxic.type);
     expect(typeControl.disabled).toBeTruthy();
     expect(typeControl.validator).toEqual(Validators.required);
 
-    let streamControl = component.toxicForm.controls['stream'];
+    const streamControl = component.toxicForm.controls['stream'];
     expect(streamControl.value).toEqual(component.toxic.stream);
     expect(streamControl.disabled).toBeTruthy();
     expect(streamControl.validator).toEqual(Validators.required);
 
-    let toxicityControl = component.toxicForm.controls['toxicity'];
+    const toxicityControl = component.toxicForm.controls['toxicity'];
     expect(toxicityControl.value).toEqual(component.toxic.toxicity + '');
     expect(toxicityControl.disabled).toBeFalsy();
     expect(toxicityControl.validator).toEqual(Validators.required);
@@ -164,21 +181,21 @@ describe('ToxicCreateDialogComponent', () => {
 
     expect(component.toxicForm).toBeTruthy();
 
-    let nameControl = component.toxicForm.controls['name'];
+    const nameControl = component.toxicForm.controls['name'];
     expect(nameControl.value).toEqual('');
     expect(nameControl.disabled).toBeTruthy();
 
-    let typeControl = component.toxicForm.controls['type'];
+    const typeControl = component.toxicForm.controls['type'];
     expect(typeControl.value).toEqual('');
     expect(typeControl.disabled).toBeFalsy();
     expect(typeControl.validator).toEqual(Validators.required);
 
-    let streamControl = component.toxicForm.controls['stream'];
+    const streamControl = component.toxicForm.controls['stream'];
     expect(streamControl.value).toEqual('');
     expect(streamControl.disabled).toBeFalsy();
     expect(streamControl.validator).toEqual(Validators.required);
 
-    let toxicityControl = component.toxicForm.controls['toxicity'];
+    const toxicityControl = component.toxicForm.controls['toxicity'];
     expect(toxicityControl.value).toEqual('1.0');
     expect(toxicityControl.disabled).toBeFalsy();
     expect(toxicityControl.validator).toEqual(Validators.required);
@@ -187,39 +204,39 @@ describe('ToxicCreateDialogComponent', () => {
   it('should type select with no toxic', () => {
     component.typeSelect(ToxicTypeConstants.LATENCY.value);
 
-    let attributesControl = component.toxicForm.controls['attributes'];
+    const attributesControl = component.toxicForm.controls['attributes'];
 
-    let latency = attributesControl.get('latency');
+    const latency = attributesControl.get('latency');
     expect(latency.value).toEqual('');
     expect(latency.validator).toEqual(Validators.required);
 
-    let jitter = attributesControl.get('jitter');
+    const jitter = attributesControl.get('jitter');
     expect(jitter.value).toEqual('');
     expect(jitter.validator).toEqual(Validators.required);
   });
 
   it('should type select with toxic', () => {
-    let toxic = new Toxic();
-    toxic.type = ToxicTypeConstants.LATENCY.name;
-    toxic.attributes = {'latency':'100', 'jitter':'200'};
-    component.toxic = toxic;
+    const toxic1 = new Toxic();
+    toxic1.type = ToxicTypeConstants.LATENCY.name;
+    toxic1.attributes = {'latency':'100', 'jitter':'200'};
+    component.toxic = toxic1;
 
     component.typeSelect(ToxicTypeConstants.LATENCY.value);
 
-    let attributesControl = component.toxicForm.controls['attributes'];
+    const attributesControl = component.toxicForm.controls['attributes'];
 
-    let latency = attributesControl.get('latency');
+    const latency = attributesControl.get('latency');
     expect(latency.value).toEqual('100');
     expect(latency.validator).toEqual(Validators.required);
 
-    let jitter = attributesControl.get('jitter');
+    const jitter = attributesControl.get('jitter');
     expect(jitter.value).toEqual('200');
     expect(jitter.validator).toEqual(Validators.required);
   });
 
   it('should submit when updating toxic', () => {
-    let createToxicFromFromDataSpy = spyOn(component, 'createToxicFromFormData');
-    let updateToxicSpy = spyOn(component, 'updateToxic');
+    const createToxicFromFromDataSpy = spyOn(component, 'createToxicFromFormData');
+    const updateToxicSpy = spyOn(component, 'updateToxic');
     component.isUpdate = true;
     expect(component.inProgress).toBeFalsy();
 
@@ -231,8 +248,8 @@ describe('ToxicCreateDialogComponent', () => {
   });
 
   it('should submit when creating toxic', () => {
-    let createToxicFromFromDataSpy = spyOn(component, 'createToxicFromFormData');
-    let createToxicSpy = spyOn(component, 'createToxic');
+    const createToxicFromFromDataSpy = spyOn(component, 'createToxicFromFormData');
+    const createToxicSpy = spyOn(component, 'createToxic');
     component.isUpdate = false;
     expect(component.inProgress).toBeFalsy();
 
@@ -253,7 +270,7 @@ describe('ToxicCreateDialogComponent', () => {
     });
     component.toxicForm.addControl('attributes', new FormGroup({latency: new FormControl('100'), jitter: new FormControl('101')}));
 
-    let newToxic = component.createToxicFromFormData();
+    const newToxic = component.createToxicFromFormData();
 
     expect(newToxic).toBeTruthy();
     expect(newToxic.name).toEqual('latency_upstream');
@@ -285,7 +302,7 @@ describe('ToxicCreateDialogComponent', () => {
     expect(dialog.close).toHaveBeenCalledTimes(0);
     expect(component.inProgress).toBeFalsy();
     expect(proxyService.updateToxic).toHaveBeenCalledWith(proxy, toxic);
-    expect(snackBar.open).toHaveBeenCalledWith('Unable to edit toxic.', 'Close', {duration: 5000})
+    expect(snackBar.open).toHaveBeenCalledWith('Unable to edit toxic.', 'Close', {duration: 5000});
   });
 
   it('should create toxic', () => {
@@ -310,6 +327,6 @@ describe('ToxicCreateDialogComponent', () => {
     expect(dialog.close).toHaveBeenCalledTimes(0);
     expect(component.inProgress).toBeFalsy();
     expect(proxyService.addToxic).toHaveBeenCalledWith(proxy, toxic);
-    expect(snackBar.open).toHaveBeenCalledWith('Unable to add toxic to proxy.', 'Close', {duration: 5000})
+    expect(snackBar.open).toHaveBeenCalledWith('Unable to add toxic to proxy.', 'Close', {duration: 5000});
   });
 });

@@ -78,11 +78,11 @@ describe('ProxiesComponent', () => {
     proxyService = TestBed.get(ToxiproxyService);
     dialog = TestBed.get(MatDialog);
 
-    let matDialogRef = <SpyObj<MatDialogRef<any, any>>>createSpyObj('MatDialogRef', ['afterClosed']);
+    const matDialogRef = <SpyObj<MatDialogRef<any, any>>>createSpyObj('MatDialogRef', ['afterClosed']);
     matDialogRef.afterClosed.and.returnValue(of({}));
     dialog.open.and.returnValue(matDialogRef);
 
-    proxies = new Object();
+    proxies = {};
     proxies['BarkerProxy'] = {
       'name': 'BarkerProxy',
       'listen': 'localhost:5002',
@@ -116,9 +116,101 @@ describe('ProxiesComponent', () => {
     expect(component.proxies.data.filter(proxy => {proxy.name === 'Bobs Burgers';})).toBeTruthy();
   });
 
+  it('renders table with no proxies', () => {
+    proxyService.getProxies.and.returnValue(of(null));
+    fixture.detectChanges();
+    const page: HTMLElement = fixture.nativeElement;
+    const table = page.querySelector('.proxy-table');
+    const tableRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+
+    // Table header
+    expect(table.querySelector('.mat-column-name').textContent).toMatch('Name');
+    expect(table.querySelector('.mat-column-enabled').textContent).toMatch('Enabled');
+    expect(table.querySelector('.mat-column-listen').textContent).toMatch('Listen');
+    expect(table.querySelector('.mat-column-upstream').textContent).toMatch('Upstream');
+
+    // Table rows
+    expect(tableRows.length).toBe(0);
+  });
+
+  it('renders table with proxies', () => {
+    proxyService.getProxies.and.returnValue(of(proxies));
+    fixture.detectChanges();
+    const page: HTMLElement = fixture.nativeElement;
+    const table = page.querySelector('.proxy-table');
+    const tableRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+
+    // Table header
+    expect(table.querySelector('.mat-column-name').textContent).toMatch('Name');
+    expect(table.querySelector('.mat-column-enabled').textContent).toMatch('Enabled');
+    expect(table.querySelector('.mat-column-listen').textContent).toMatch('Listen');
+    expect(table.querySelector('.mat-column-upstream').textContent).toMatch('Upstream');
+
+    // Table rows
+    expect(tableRows.length).toBe(2);
+
+    const firstRow = tableRows[0];
+    const secondRow = tableRows[1];
+
+    expect(firstRow.querySelector('.mat-column-name').textContent).toMatch('BarkerProxy');
+    expect(firstRow.querySelector('.mat-column-enabled').textContent).toMatch('false');
+    expect(firstRow.querySelector('.mat-column-listen').textContent).toMatch('localhost:5002');
+    expect(firstRow.querySelector('.mat-column-upstream').textContent).toMatch('somedomain.com:5003');
+
+    expect(secondRow.querySelector('.mat-column-name').textContent).toMatch('Bobs Burgers');
+    expect(secondRow.querySelector('.mat-column-enabled').textContent).toMatch('true');
+    expect(secondRow.querySelector('.mat-column-listen').textContent).toMatch('127.0.0.1:7779');
+    expect(secondRow.querySelector('.mat-column-upstream').textContent).toMatch('somdomain.com:8000');
+  });
+
+  it('renders table with filtered proxies', () => {
+    proxyService.getProxies.and.returnValue(of(proxies));
+    fixture.detectChanges();
+    const page: HTMLElement = fixture.nativeElement;
+    const table = page.querySelector('.proxy-table');
+    const tableRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+
+    // Table header
+    expect(table.querySelector('.mat-column-name').textContent).toMatch('Name');
+    expect(table.querySelector('.mat-column-enabled').textContent).toMatch('Enabled');
+    expect(table.querySelector('.mat-column-listen').textContent).toMatch('Listen');
+    expect(table.querySelector('.mat-column-upstream').textContent).toMatch('Upstream');
+
+    // Table rows
+    expect(tableRows.length).toBe(2);
+
+    const firstRow = tableRows[0];
+    const secondRow = tableRows[1];
+
+    expect(firstRow.querySelector('.mat-column-name').textContent).toMatch('BarkerProxy');
+    expect(firstRow.querySelector('.mat-column-enabled').textContent).toMatch('false');
+    expect(firstRow.querySelector('.mat-column-listen').textContent).toMatch('localhost:5002');
+    expect(firstRow.querySelector('.mat-column-upstream').textContent).toMatch('somedomain.com:5003');
+
+    expect(secondRow.querySelector('.mat-column-name').textContent).toMatch('Bobs Burgers');
+    expect(secondRow.querySelector('.mat-column-enabled').textContent).toMatch('true');
+    expect(secondRow.querySelector('.mat-column-listen').textContent).toMatch('127.0.0.1:7779');
+    expect(secondRow.querySelector('.mat-column-upstream').textContent).toMatch('somdomain.com:8000');
+
+    // Type something into the filter
+    component.filter = 'Burgers';
+    component.applyFilter();
+    fixture.detectChanges();
+
+    const filteredRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+    expect(filteredRows.length).toBe(1);
+
+    const filteredRow = filteredRows[0];
+
+    expect(filteredRow.querySelector('.mat-column-name').textContent).toMatch('Bobs Burgers');
+    expect(filteredRow.querySelector('.mat-column-enabled').textContent).toMatch('true');
+    expect(filteredRow.querySelector('.mat-column-listen').textContent).toMatch('127.0.0.1:7779');
+    expect(filteredRow.querySelector('.mat-column-upstream').textContent).toMatch('somdomain.com:8000');
+  });
+
   it('should load proxies with page size', () => {
     proxyService.getProxies.and.returnValue(of(proxies));
-    let event = new PageEvent();
+    const event = new PageEvent();
     event.pageSize = 1;
     event.pageIndex = 0;
 
@@ -131,7 +223,7 @@ describe('ProxiesComponent', () => {
 
   it('should load proxies with page index', () => {
     proxyService.getProxies.and.returnValue(of(proxies));
-    let event = new PageEvent();
+    const event = new PageEvent();
     event.pageSize = 1;
     event.pageIndex = 1;
 
@@ -144,7 +236,7 @@ describe('ProxiesComponent', () => {
 
   it('should load proxies and apply sort', () => {
     proxyService.getProxies.and.returnValue(of(proxies));
-    let sort = new MatSort();
+    const sort = new MatSort();
     component.sort = sort;
 
     component.loadProxies(null);
@@ -171,7 +263,7 @@ describe('ProxiesComponent', () => {
   });
 
   it('should open create proxy dialog', () => {
-    let componentLoadProxySpy = spyOn(component, 'loadProxies');
+    const componentLoadProxySpy = spyOn(component, 'loadProxies');
 
     component.openProxyCreate();
 
@@ -181,7 +273,7 @@ describe('ProxiesComponent', () => {
 
   it('render should call create proxy', () => {
     spyOn(component, 'openProxyCreate');
-    let createButton = fixture.debugElement.query(By.css('button.create-button'));
+    const createButton = fixture.debugElement.query(By.css('button.create-button'));
     createButton.triggerEventHandler('click', null);
     expect(component.openProxyCreate).toHaveBeenCalledTimes(1);
   });

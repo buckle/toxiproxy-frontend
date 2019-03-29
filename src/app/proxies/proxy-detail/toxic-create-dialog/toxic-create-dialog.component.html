@@ -3,13 +3,13 @@
   <mat-dialog-content fxFlex="100%">
     <form [formGroup]="toxicForm" class="create-toxic-form" (ngSubmit)="onSubmit()">
       <input matInput formControlName="name" hidden/>
-      <mat-select placeholder="Type" formControlName="type" (valueChange)="typeSelect($event)" matTooltip="Toxic Type">
+      <mat-select id="type-selection" placeholder="Type" formControlName="type" (valueChange)="typeSelect($event)" matTooltip="Toxic Type">
         <mat-option *ngFor="let type of types" [value]="type.value">
           {{type.name}}
         </mat-option>
       </mat-select>
 
-      <mat-select placeholder="Stream" formControlName="stream" matTooltip="Stream: Effects Upstream Or Downstream">
+      <mat-select id="stream-value-selection" placeholder="Stream" formControlName="stream" matTooltip="Stream: Effects Upstream Or Downstream">
         <mat-option value="upstream">Upstream</mat-option>
         <mat-option value="downstream">Downstream</mat-option>
       </mat-select>
