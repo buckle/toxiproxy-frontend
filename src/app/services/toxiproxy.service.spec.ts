@@ -7,24 +7,30 @@ import SpyObj = jasmine.SpyObj;
 import {of} from 'rxjs';
 import {Proxy} from './proxy';
 import {Toxic} from './toxic';
+import {ToxiproxyLocator} from './toxiproxy-locator.service';
 
 describe('ToxiproxyService', () => {
 
   let toxiproxyService: ToxiproxyService;
   let http: SpyObj<HttpClient>;
+  let toxiproxyLocator: SpyObj<ToxiproxyLocator>;
 
   beforeEach(() => {
     let httpClientSpy = createSpyObj('HttpClient', ['get', 'post', 'delete']);
+    let toxiproxyLocatorSpy = createSpyObj('ToxiproxyLocator', ['host']);
 
     TestBed.configureTestingModule({
       providers: [
         {provide: HttpClient, useValue: httpClientSpy},
+        {provide: ToxiproxyLocator, useValue: toxiproxyLocatorSpy},
         ToxiproxyService,
         HttpHandler]
     });
 
     toxiproxyService = TestBed.get(ToxiproxyService);
     http = TestBed.get(HttpClient);
+    toxiproxyLocator = TestBed.get(ToxiproxyLocator);
+    toxiproxyLocator.host.and.returnValue('http://localhost:8474');
   });
 
   it('should be created', () => {
@@ -39,7 +45,7 @@ describe('ToxiproxyService', () => {
     proxyVersionObservable.subscribe(version => {
       expect(version).toEqual('4.3.2.1');
     });
-    expect(http.get).toHaveBeenCalledWith(toxiproxyService.getHost() + '/version', {responseType: 'text'})
+    expect(http.get).toHaveBeenCalledWith(toxiproxyLocator.host() + '/version', {responseType: 'text'})
   });
 
   it('should get proxies', () => {
@@ -50,7 +56,7 @@ describe('ToxiproxyService', () => {
     proxiesObservable.subscribe(proxies => {
       expect(proxies).toEqual({"proxy":"test"});
     });
-    expect(http.get).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies');
+    expect(http.get).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies');
   });
 
   it('should get proxy', () => {
@@ -62,7 +68,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(foundProxy => {
       expect(foundProxy).toEqual(proxy);
     });
-    expect(http.get).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies/bob');
+    expect(http.get).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies/bob');
   });
 
   it('should create proxy', () => {
@@ -74,7 +80,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(returnedProxy => {
       expect(returnedProxy).toEqual(proxy);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies', proxy);
+    expect(http.post).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies', proxy);
   });
 
   it('should update proxy', () => {
@@ -87,7 +93,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(returnedProxy => {
       expect(returnedProxy).toEqual(proxy);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies/' + proxy.name, proxy);
+    expect(http.post).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies/' + proxy.name, proxy);
   });
 
   it('should delete proxy', () => {
@@ -100,7 +106,7 @@ describe('ToxiproxyService', () => {
     observable.subscribe(value => {
       expect(value).toEqual({});
     });
-    expect(http.delete).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies/' + proxy.name);
+    expect(http.delete).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies/' + proxy.name);
   });
 
   it('should add toxic', () => {
@@ -114,7 +120,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(returnedProxy => {
       expect(returnedProxy).toEqual(proxy);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies/' + proxy.name + '/toxics', toxic);
+    expect(http.post).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies/' + proxy.name + '/toxics', toxic);
   });
 
   it('should update toxic', () => {
@@ -129,7 +135,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(returnedProxy => {
       expect(returnedProxy).toEqual(proxy);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
+    expect(http.post).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
   });
 
   it('should delete toxic', () => {
@@ -144,6 +150,6 @@ describe('ToxiproxyService', () => {
     observable.subscribe(value => {
       expect(value).toEqual({});
     });
-    expect(http.delete).toHaveBeenCalledWith(toxiproxyService.getHost() + '/proxies/' + proxy.name + '/toxics/' + toxic.name);
+    expect(http.delete).toHaveBeenCalledWith(toxiproxyLocator.host() + '/proxies/' + proxy.name + '/toxics/' + toxic.name);
   });
 });
