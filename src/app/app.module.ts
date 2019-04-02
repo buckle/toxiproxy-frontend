@@ -8,25 +8,25 @@ import {HeaderComponent} from './header/header.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-  MatToolbarModule,
-  MatListModule,
-  MatIconModule,
   MatButtonModule,
-  MatInputModule,
-  MatFormFieldModule,
-  MatRadioModule,
-  MatDialogModule,
-  MatProgressSpinnerModule,
-  MatSnackBarModule,
   MatCardModule,
-  MatSelectModule,
-  MatOptionModule,
-  MatTooltipModule,
-  MatTableModule,
-  MatSortModule,
-  MatPaginatorModule,
+  MatDialogModule,
   MatDividerModule,
-  MatMenuModule
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatOptionModule,
+  MatPaginatorModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatSelectModule,
+  MatSnackBarModule,
+  MatSortModule,
+  MatTableModule,
+  MatToolbarModule,
+  MatTooltipModule
 } from '@angular/material';
 
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -35,6 +35,7 @@ import {ProxiesComponent} from './proxies/proxies.component';
 import {ProxyDetailComponent} from './proxies/proxy-detail/proxy-detail.component';
 import {ProxyCreateDialogComponent} from './proxies/proxy-create-dialog/proxy-create-dialog.component';
 import {ToxicCreateDialogComponent} from './proxies/proxy-detail/toxic-create-dialog/toxic-create-dialog.component';
+import {ToxiproxyLocator} from './services/toxiproxy-locator.service';
 
 const appRoutes: Routes = [
   {path: 'proxies', component: ProxiesComponent},
@@ -85,7 +86,7 @@ const appRoutes: Routes = [
     MatMenuModule
   ],
   entryComponents: [ProxyCreateDialogComponent, ToxicCreateDialogComponent],
-  providers: [ToxiproxyService],
+  providers: [ToxiproxyService, ToxiproxyLocator],
   bootstrap: [AppComponent]
 })
 export class AppModule {
