@@ -16,11 +16,15 @@ export class ToxiproxyLocator {
   }
 
   generateBrowserBasedURL(): string {
-    return 'http://' + this.getBrowserHostname() + ':8474';
+    return this.getBrowserProtocol() + '//' + this.getBrowserHostname() + ':8474';
   }
 
   getBrowserHostname(): string {
     return window.location.hostname;
+  }
+
+  getBrowserProtocol(): string {
+    return window.location.protocol;
   }
 
   verifyURL(url: string): Observable<string> {

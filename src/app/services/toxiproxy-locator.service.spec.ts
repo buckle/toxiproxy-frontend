@@ -30,8 +30,15 @@ describe('ToxiproxyLocator', () => {
     expect(toxiproxyLocator.host()).toEqual('http://localhost:8474');
   });
 
-  it('should generateBrowserBasedURL', () => {
+  it('should generateBrowserBasedURL https', () => {
     spyOn(toxiproxyLocator, 'getBrowserHostname').and.returnValue('toxiproxy.domain.tld');
+    spyOn(toxiproxyLocator, 'getBrowserProtocol').and.returnValue('https:');
+    expect(toxiproxyLocator.generateBrowserBasedURL()).toEqual('https://toxiproxy.domain.tld:8474');
+  });
+
+  it('should generateBrowserBasedURL http', () => {
+    spyOn(toxiproxyLocator, 'getBrowserHostname').and.returnValue('toxiproxy.domain.tld');
+    spyOn(toxiproxyLocator, 'getBrowserProtocol').and.returnValue('http:');
     expect(toxiproxyLocator.generateBrowserBasedURL()).toEqual('http://toxiproxy.domain.tld:8474');
   });
 
@@ -40,9 +47,14 @@ describe('ToxiproxyLocator', () => {
     expect(hostname).toEqual('localhost');
   });
 
+  it('should getBrowserProtocol', () => {
+    let browserProtocol = toxiproxyLocator.getBrowserProtocol();
+    expect(browserProtocol).toEqual('http:');
+  });
+
   it('should verifyURL', () => {
     http.get.and.returnValue(of({"proxy":"test"}));
-    let url = 'http://localhost:8474';
+    let url = 'https://localhost:8474';
 
     let observable = toxiproxyLocator.verifyURL(url);
 
@@ -53,7 +65,7 @@ describe('ToxiproxyLocator', () => {
   });
 
   it('should setHostBasedOnContext when using browser domain', () => {
-    let browserURL = 'http://somename.host.tld:8474';
+    let browserURL = 'https://somename.host.tld:8474';
     spyOn(toxiproxyLocator, 'generateBrowserBasedURL').and.returnValue(browserURL);
     spyOn(toxiproxyLocator, 'verifyURL').and.returnValue(of('some text'));
 
@@ -63,7 +75,7 @@ describe('ToxiproxyLocator', () => {
   });
 
   it('should setHostBasedOnContext when using browser domain fails', function() {
-    let browserURL = 'http://somename.host.tld:8474';
+    let browserURL = 'https://somename.host.tld:8474';
     spyOn(toxiproxyLocator, 'generateBrowserBasedURL').and.returnValue(browserURL);
     spyOn(toxiproxyLocator, 'verifyURL').and.returnValue(throwError("failed verification"));
 
