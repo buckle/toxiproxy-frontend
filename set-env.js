@@ -4,7 +4,7 @@ const targetPath = `./src/environments/environment.prod.ts`;
 const envConfigFile = `
 export const environment = {
   production: true,
-  toxiproxyHost: "${process.env.toxiproxyHost != undefined ? process.env.toxiproxyHost : 'http://localhost:8474'}"
+  toxiproxyHost: "${process.env.TOXIPROXY_HOST != undefined ? process.env.TOXIPROXY_HOST : 'http://localhost:8474'}"
 };
 `;
 
