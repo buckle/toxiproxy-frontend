@@ -24,11 +24,11 @@ Run `ng build` to build for development purposes.
 
 ### Deployed Environments
 
-Run `npm run build -- --prod` for deployed environments. You'll need an environment variable set called `toxiproxyHost` for the build process to inject that so the appropriate
+Run `npm run build -- --prod` for deployed environments. You'll need an environment variable set called `TOXIPROXY_HOST` for the build process to inject so the appropriate
 toxiproxy server is configured. Otherwise it will default to `http://localhost:8474`. 
 
 Example:
-`toxiproxyHost=http://toxiproxy.domain.tld:8474 npm run build -- --prod`
+`TOXIPROXY_HOST=http://toxiproxy.domain.tld:8474 npm run build -- --prod`
 
 ## Running unit tests
 
