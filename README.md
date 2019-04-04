@@ -17,6 +17,18 @@ Being an Angular project, the [Angular recommended style](https://angular.io/gui
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+## Building
+### Development
+
+Run `ng build` to build for development purposes. 
+
+### Deployed Environments
+
+Run `npm run build -- --prod` for deployed environments. You'll need an environment variable set called `toxiproxyHost` for the build process to inject that so the appropriate
+toxiproxy server is configured. Otherwise it will default to `http://localhost:8474`. 
+
+Example:
+`toxiproxyHost=http://toxiproxy.domain.tld:8474 npm run build -- --prod`
 
 ## Running unit tests
 

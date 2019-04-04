@@ -35,7 +35,6 @@ import {ProxiesComponent} from './proxies/proxies.component';
 import {ProxyDetailComponent} from './proxies/proxy-detail/proxy-detail.component';
 import {ProxyCreateDialogComponent} from './proxies/proxy-create-dialog/proxy-create-dialog.component';
 import {ToxicCreateDialogComponent} from './proxies/proxy-detail/toxic-create-dialog/toxic-create-dialog.component';
-import {ToxiproxyLocator} from './services/toxiproxy-locator.service';
 
 const appRoutes: Routes = [
   {path: 'proxies', component: ProxiesComponent},
@@ -86,7 +85,7 @@ const appRoutes: Routes = [
     MatMenuModule
   ],
   entryComponents: [ProxyCreateDialogComponent, ToxicCreateDialogComponent],
-  providers: [ToxiproxyService, ToxiproxyLocator],
+  providers: [ToxiproxyService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
