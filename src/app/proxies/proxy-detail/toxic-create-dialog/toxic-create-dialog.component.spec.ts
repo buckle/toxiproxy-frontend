@@ -202,10 +202,12 @@ describe('ToxicCreateDialogComponent', () => {
   });
 
   it('should type select with no toxic', () => {
+    const toxicFormRemoveControlSpy = spyOn(component.toxicForm, 'removeControl');
+
     component.typeSelect(ToxicTypeConstants.LATENCY.value);
 
+    expect(toxicFormRemoveControlSpy).toHaveBeenCalledWith('attributes');
     const attributesControl = component.toxicForm.controls['attributes'];
-
     const latency = attributesControl.get('latency');
     expect(latency.value).toEqual('');
     expect(latency.validator).toEqual(Validators.required);
@@ -220,11 +222,12 @@ describe('ToxicCreateDialogComponent', () => {
     toxic1.type = ToxicTypeConstants.LATENCY.name;
     toxic1.attributes = {'latency':'100', 'jitter':'200'};
     component.toxic = toxic1;
+    const toxicFormRemoveControlSpy = spyOn(component.toxicForm, 'removeControl');
 
     component.typeSelect(ToxicTypeConstants.LATENCY.value);
 
+    expect(toxicFormRemoveControlSpy).toHaveBeenCalledWith('attributes');
     const attributesControl = component.toxicForm.controls['attributes'];
-
     const latency = attributesControl.get('latency');
     expect(latency.value).toEqual('100');
     expect(latency.validator).toEqual(Validators.required);
