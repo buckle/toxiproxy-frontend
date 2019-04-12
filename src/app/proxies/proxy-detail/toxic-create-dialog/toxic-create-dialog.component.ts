@@ -58,6 +58,7 @@ export class ToxicCreateDialogComponent implements OnInit {
 
   typeSelect(selectedToxicValue: string) {
     this.selectedType = ToxicTypeConstants.getToxicTypeByValue(selectedToxicValue);
+    this.toxicForm.removeControl('attributes');
     const attributeGroup = this.fb.group({});
 
     this.selectedType.attributes.forEach(attribute => {
