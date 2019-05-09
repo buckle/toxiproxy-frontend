@@ -1,4 +1,4 @@
 rootProject.name = 'toxiproxy'
 
-include 'java-app'
-include 'npm-app'
+include 'server'
+include 'frontend'

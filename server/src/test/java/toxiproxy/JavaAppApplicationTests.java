@@ -1,4 +1,4 @@
-package test.java;
+package test.java.toxiproxy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
