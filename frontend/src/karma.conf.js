@@ -16,15 +16,16 @@ module.exports = function(config) {
                client: {
                  clearContext: false // leave Jasmine Spec Runner output visible in browser
                },
-               coverageIstanbulReporter: {
+               istanbulThresholdReporter: {
                  dir: require('path').join(__dirname, '../coverage'),
-                 reports: ['html', 'lcovonly'],
+                 src: require('path').join(__dirname, '../coverage/coverage-final.json'),
+                 reports: ['html', 'lcovonly', 'json'],
                  fixWebpackSourcePaths: true,
                  thresholds: {
                    statements: 100,
                    branches: 100,
                    lines: 100,
-                   functions: 100,
+                   functions: 100
                  }
                },
                reporters: ['progress', 'kjhtml', 'coverage-istanbul', 'istanbul-threshold'],
