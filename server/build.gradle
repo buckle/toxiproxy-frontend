@@ -31,9 +31,15 @@ jacocoTestReport {
 jacocoTestCoverageVerification {
   violationRules {
     rule {
+      element = 'CLASS'
       limit {
-        minimum =1.0
+        counter = 'LINE'
+        value = 'COVEREDRATIO'
+        minimum = 1.0
       }
+      excludes = [
+          'toxiproxy.ServerApplication'
+      ]
     }
   }
 }

@@ -11,9 +11,4 @@ public class ServerApplicationTests {
   @Test
   public void contextLoads() {
   }
-
-  @Test
-  public void main() {
-    ServerApplication.main(new String[] {});
-  }
 }
