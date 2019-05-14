@@ -1,0 +1,4 @@
+rootProject.name = 'toxiproxy'
+
+include 'server'
+include 'frontend'

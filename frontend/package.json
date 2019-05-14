@@ -6,7 +6,7 @@
     "config": "node set-env.js",
     "start": "ng serve",
     "build": "npm run config && ng build",
-    "test": "ng test",
+    "test": "ng test --watch=false --progress=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
