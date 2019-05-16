@@ -1,13 +1,13 @@
 buildscript {
-    ext {
-        springBootVersion = '2.1.1.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
+  ext {
+    springBootVersion = '2.1.1.RELEASE'
+  }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+  }
 }
 
 apply plugin: 'java'
@@ -51,13 +51,21 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 11
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
-
 dependencies {
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+  implementation('org.springframework.boot:spring-boot-starter-web')
+  implementation('org.springframework.boot:spring-boot-starter-data-jpa')
 
-    runtimeOnly project(':frontend')
+  testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'junit'
+  }
+  testImplementation('org.mockito:mockito-core:2.27.0')
+  testImplementation('org.mockito:mockito-junit-jupiter:2.27.0')
+  testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
+  testImplementation('net.bytebuddy:byte-buddy:1.9.12')
+  testImplementation('org.apache.commons:commons-lang3:3.9')
+
+  runtimeOnly project(':frontend')
 }
