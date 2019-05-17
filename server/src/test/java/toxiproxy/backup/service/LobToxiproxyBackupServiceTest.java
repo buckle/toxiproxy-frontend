@@ -14,8 +14,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -38,7 +40,7 @@ public class LobToxiproxyBackupServiceTest {
     LobToxiproxyBackup currentBackup = (LobToxiproxyBackup) lobToxiproxyBackupService.getCurrentBackup();
 
     assertNotNull(currentBackup);
-    assertEquals(String.valueOf(toxiproxyLobEntity.getData()), currentBackup.getDataAsString());
+    assertEquals(String.valueOf(toxiproxyLobEntity.getData()), currentBackup.getData());
   }
 
   @Test
@@ -65,13 +67,13 @@ public class LobToxiproxyBackupServiceTest {
   void setBackupWhenNew() {
     doReturn(null).when(lobToxiproxyBackupService).getBackupEntity();
     LobToxiproxyBackup lobToxiproxyBackup = mock(LobToxiproxyBackup.class);
-    when(lobToxiproxyBackup.getDataAsString()).thenReturn(UUID.randomUUID().toString());
+    when(lobToxiproxyBackup.getData()).thenReturn(UUID.randomUUID().toString());
 
     lobToxiproxyBackupService.setBackup(lobToxiproxyBackup);
 
     ArgumentCaptor<ToxiproxyLobEntity> toxiproxyLobEntityArgumentCaptor = ArgumentCaptor.forClass(ToxiproxyLobEntity.class);
     verify(toxiproxyLobRepository, times(1)).save(toxiproxyLobEntityArgumentCaptor.capture());
-    assertEquals(lobToxiproxyBackup.getDataAsString(), toxiproxyLobEntityArgumentCaptor.getValue().getData());
+    assertEquals(lobToxiproxyBackup.getData(), toxiproxyLobEntityArgumentCaptor.getValue().getData());
   }
 
   @Test
@@ -79,14 +81,14 @@ public class LobToxiproxyBackupServiceTest {
     ToxiproxyLobEntity toxiproxyLobEntity = spy(ToxiproxyLobEntity.class);
     doReturn(toxiproxyLobEntity).when(lobToxiproxyBackupService).getBackupEntity();
     LobToxiproxyBackup lobToxiproxyBackup = mock(LobToxiproxyBackup.class);
-    when(lobToxiproxyBackup.getDataAsString()).thenReturn(UUID.randomUUID().toString());
+    when(lobToxiproxyBackup.getData()).thenReturn(UUID.randomUUID().toString());
 
     lobToxiproxyBackupService.setBackup(lobToxiproxyBackup);
 
     ArgumentCaptor<ToxiproxyLobEntity> toxiproxyLobEntityArgumentCaptor = ArgumentCaptor.forClass(ToxiproxyLobEntity.class);
     verify(toxiproxyLobRepository, times(1)).save(toxiproxyLobEntityArgumentCaptor.capture());
     assertEquals(toxiproxyLobEntity, toxiproxyLobEntityArgumentCaptor.getValue());
-    assertEquals(lobToxiproxyBackup.getDataAsString(), toxiproxyLobEntityArgumentCaptor.getValue().getData());
+    assertEquals(lobToxiproxyBackup.getData(), toxiproxyLobEntityArgumentCaptor.getValue().getData());
   }
 
   @Test
@@ -116,6 +118,41 @@ public class LobToxiproxyBackupServiceTest {
     ToxiproxyLobEntity backupEntity = lobToxiproxyBackupService.getBackupEntity();
 
     assertNull(backupEntity);
+  }
+
+  @Test
+  void backupsDifferWhenSame() {
+    LobToxiproxyBackup lobToxiproxyBackup = new LobToxiproxyBackup();
+    lobToxiproxyBackup.setData(UUID.randomUUID().toString());
+
+    LobToxiproxyBackup lobToxiproxyBackup1 = new LobToxiproxyBackup();
+    lobToxiproxyBackup1.setData(lobToxiproxyBackup.getData());
+
+    assertFalse(lobToxiproxyBackupService.backupsDiffer(lobToxiproxyBackup, lobToxiproxyBackup1));
+  }
+
+  @Test
+  void backupsDifferWhenNotSame() {
+    LobToxiproxyBackup lobToxiproxyBackup = new LobToxiproxyBackup();
+    lobToxiproxyBackup.setData(UUID.randomUUID().toString());
+
+    LobToxiproxyBackup lobToxiproxyBackup1 = new LobToxiproxyBackup();
+    lobToxiproxyBackup1.setData(UUID.randomUUID().toString());
+
+    assertTrue(lobToxiproxyBackupService.backupsDiffer(lobToxiproxyBackup, lobToxiproxyBackup1));
+  }
+
+  @Test
+  void backupsDifferWhenBothNull() {
+    assertFalse(lobToxiproxyBackupService.backupsDiffer(null, null));
+  }
+
+  @Test
+  void backupsDifferWhenOneNull() {
+    LobToxiproxyBackup lobToxiproxyBackup = new LobToxiproxyBackup();
+    lobToxiproxyBackup.setData(UUID.randomUUID().toString());
+
+    assertTrue(lobToxiproxyBackupService.backupsDiffer(lobToxiproxyBackup, null));
   }
 
   @Test

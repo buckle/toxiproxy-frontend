@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import toxiproxy.backup.entity.ToxiproxyLobEntity;
 import toxiproxy.backup.entity.ToxiproxyLobRepository;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +16,7 @@ public class LobToxiproxyBackupService implements ToxiproxyBackupService {
   @Autowired private ToxiproxyLobRepository toxiproxyLobRepository;
 
   @Override
-  public ToxiproxyBackup getCurrentBackup() {
+  public LobToxiproxyBackup getCurrentBackup() {
     ToxiproxyLobEntity backupEntity = getBackupEntity();
 
     if(backupEntity != null && backupEntity.getData() != null) {
@@ -34,14 +33,20 @@ public class LobToxiproxyBackupService implements ToxiproxyBackupService {
   public void setBackup(ToxiproxyBackup toxiproxyBackup) {
     ToxiproxyLobEntity backupEntity = getBackupEntity();
     backupEntity = backupEntity == null ? new ToxiproxyLobEntity() : backupEntity;
-    backupEntity.setData(((LobToxiproxyBackup) toxiproxyBackup).getDataAsString());
+    backupEntity.setData(((LobToxiproxyBackup) toxiproxyBackup).getData());
 
     toxiproxyLobRepository.save(backupEntity);
   }
 
   @Override
-  public boolean backupsDiffer(ToxiproxyBackup newBackup, ToxiproxyBackup existing) {
-    return false;
+  public boolean backupsDiffer(ToxiproxyBackup newBackup, ToxiproxyBackup existingBackup) {
+    if(newBackup == null && existingBackup == null) {
+      return false;
+    } else if(newBackup == null || existingBackup == null) {
+      return true;
+    }
+
+    return !newBackup.equals(existingBackup);
   }
 
   protected ToxiproxyLobEntity getBackupEntity() {
@@ -49,9 +54,9 @@ public class LobToxiproxyBackupService implements ToxiproxyBackupService {
 
     if(toxiproxyLobEntities != null && toxiproxyLobEntities.iterator().hasNext()) {
       List<ToxiproxyLobEntity> toxiproxyLobEntityList = StreamSupport.stream(toxiproxyLobEntities.spliterator(), false)
+                                                                     .sorted(Comparator.comparing(ToxiproxyLobEntity::getUpdateTimestamp).reversed())
                                                                      .collect(Collectors.toList());
 
-      Collections.sort(toxiproxyLobEntityList, Comparator.comparing(ToxiproxyLobEntity::getUpdateTimestamp).reversed());
       return toxiproxyLobEntityList.get(0);
     }
 

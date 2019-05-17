@@ -1,9 +1,9 @@
 package toxiproxy.backup.service;
 
-public interface ToxiproxyBackup {
+public interface ToxiproxyBackup<T> {
 
-  Object getData();
+  T getData();
 
-  void setData(Object data);
+  void setData(T data);
 
 }

@@ -18,7 +18,7 @@ public class ToxiproxyLobEntity {
   private Long id;
 
   @Lob
-  @Column
+  @Column(nullable = false)
   private String data;
 
   @CreationTimestamp
@@ -31,10 +31,6 @@ public class ToxiproxyLobEntity {
 
   public Long getId() {
     return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public String getData() {
