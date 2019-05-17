@@ -1,9 +1,11 @@
 package toxiproxy.backup.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toxiproxy.backup.entity.ToxiproxyLobEntity;
 import toxiproxy.backup.entity.ToxiproxyLobRepository;
+import toxiproxy.client.ToxiproxyClient;
 
 import java.util.Comparator;
 import java.util.List;
@@ -14,9 +16,10 @@ import java.util.stream.StreamSupport;
 public class LobToxiproxyBackupService implements ToxiproxyBackupService {
 
   @Autowired private ToxiproxyLobRepository toxiproxyLobRepository;
+  @Autowired private ToxiproxyClient toxiproxyClient;
 
   @Override
-  public LobToxiproxyBackup getCurrentBackup() {
+  public ToxiproxyBackup getCurrentBackup() {
     ToxiproxyLobEntity backupEntity = getBackupEntity();
 
     if(backupEntity != null && backupEntity.getData() != null) {
@@ -24,6 +27,20 @@ public class LobToxiproxyBackupService implements ToxiproxyBackupService {
       toxiproxyBackup.setData(backupEntity.getData());
 
       return toxiproxyBackup;
+    }
+
+    return null;
+  }
+
+  @Override
+  public ToxiproxyBackup constructBackupFromRemote() {
+    String proxiesRawString = toxiproxyClient.getProxiesRawString();
+
+    if(StringUtils.isNotEmpty(proxiesRawString)) {
+      LobToxiproxyBackup lobToxiproxyBackup = new LobToxiproxyBackup();
+      lobToxiproxyBackup.setData(proxiesRawString);
+
+      return lobToxiproxyBackup;
     }
 
     return null;

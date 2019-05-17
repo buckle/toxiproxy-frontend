@@ -57,9 +57,9 @@ repositories {
 dependencies {
   implementation('org.springframework.boot:spring-boot-starter-web')
   implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-
+  implementation('com.squareup.okhttp3:okhttp:3.14.1')
   implementation('org.flywaydb:flyway-core')
-  runtime('com.h2database:h2')
+  implementation('org.apache.commons:commons-lang3:3.9')
 
   testImplementation('org.springframework.boot:spring-boot-starter-test') {
     exclude group: 'junit'
@@ -68,7 +68,7 @@ dependencies {
   testImplementation('org.mockito:mockito-junit-jupiter:2.27.0')
   testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
   testImplementation('net.bytebuddy:byte-buddy:1.9.12')
-  testImplementation('org.apache.commons:commons-lang3:3.9')
 
+  runtime('com.h2database:h2')
   runtimeOnly project(':frontend')
 }

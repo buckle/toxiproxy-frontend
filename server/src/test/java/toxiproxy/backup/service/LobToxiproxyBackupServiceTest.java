@@ -9,6 +9,7 @@ import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toxiproxy.backup.entity.ToxiproxyLobEntity;
 import toxiproxy.backup.entity.ToxiproxyLobRepository;
+import toxiproxy.client.ToxiproxyClient;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -30,6 +32,7 @@ public class LobToxiproxyBackupServiceTest {
 
   @InjectMocks private LobToxiproxyBackupService lobToxiproxyBackupService = spy(LobToxiproxyBackupService.class);
   @Mock private ToxiproxyLobRepository toxiproxyLobRepository;
+  @Mock private ToxiproxyClient toxiproxyClient;
 
   @Test
   void getCurrentBackup() {
@@ -61,6 +64,42 @@ public class LobToxiproxyBackupServiceTest {
     LobToxiproxyBackup currentBackup = (LobToxiproxyBackup) lobToxiproxyBackupService.getCurrentBackup();
 
     assertNull(currentBackup);
+  }
+
+  @Test
+  void constructBackupFromRemote() {
+    String remoteProxies = UUID.randomUUID().toString();
+    when(toxiproxyClient.getProxiesRawString()).thenReturn(remoteProxies);
+
+    LobToxiproxyBackup toxiproxyBackup = (LobToxiproxyBackup) lobToxiproxyBackupService.constructBackupFromRemote();
+
+    assertNotNull(toxiproxyBackup);
+    assertEquals(remoteProxies, toxiproxyBackup.getData());
+  }
+
+  @Test
+  void constructBackupFromRemoteWhenNullProxies() {
+    when(toxiproxyClient.getProxiesRawString()).thenReturn(null);
+
+    LobToxiproxyBackup toxiproxyBackup = (LobToxiproxyBackup) lobToxiproxyBackupService.constructBackupFromRemote();
+
+    assertNull(toxiproxyBackup);
+  }
+
+  @Test
+  void constructBackupFromRemoteWhenEmptyProxies() {
+    when(toxiproxyClient.getProxiesRawString()).thenReturn("");
+
+    LobToxiproxyBackup toxiproxyBackup = (LobToxiproxyBackup) lobToxiproxyBackupService.constructBackupFromRemote();
+
+    assertNull(toxiproxyBackup);
+  }
+
+  @Test
+  void constructBackupFromRemoteWhenRemoteThrowsException() {
+    when(toxiproxyClient.getProxiesRawString()).thenThrow(RuntimeException.class);
+
+    assertThrows(RuntimeException.class, () -> lobToxiproxyBackupService.constructBackupFromRemote());
   }
 
   @Test
