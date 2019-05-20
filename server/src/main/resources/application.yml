@@ -4,4 +4,4 @@ spring:
       use-new-id-generator-mappings: false
 
 toxiproxy:
-  host: localhost:8474
+  url: http://localhost:8474

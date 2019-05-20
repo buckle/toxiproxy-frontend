@@ -4,7 +4,7 @@ public interface ToxiproxyBackupService {
 
   ToxiproxyBackup getCurrentBackup();
 
-  ToxiproxyBackup constructBackupFromRemote();
+  ToxiproxyBackup getBackupFromRemote();
 
   void setBackup(ToxiproxyBackup content);
 

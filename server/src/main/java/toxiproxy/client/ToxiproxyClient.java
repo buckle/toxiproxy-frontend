@@ -1,7 +1,11 @@
 package toxiproxy.client;
 
+import toxiproxy.client.dto.ClientProxy;
+
+import java.util.Set;
+
 public interface ToxiproxyClient {
 
-  String getProxiesRawString();
+  Set<ClientProxy> getProxies();
 
 }
