@@ -70,5 +70,6 @@ dependencies {
   testImplementation('net.bytebuddy:byte-buddy:1.9.12')
 
   runtime('com.h2database:h2')
+  runtime('mysql:mysql-connector-java')
   runtimeOnly project(':frontend')
 }

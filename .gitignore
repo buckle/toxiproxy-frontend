@@ -1,7 +1,6 @@
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
-stacyp.yml
 
 ### IntelliJ IDEA ###
 .idea
