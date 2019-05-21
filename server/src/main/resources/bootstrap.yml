@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: toxiproxy_frontend

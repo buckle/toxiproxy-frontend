@@ -1,6 +1,7 @@
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+*stacyp.yml
 
 ### STS ###
 .apt_generated
