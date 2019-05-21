@@ -3,9 +3,12 @@ package toxiproxy.backup.entity;
 import static toxiproxy.utils.BuilderUtils.getHostPortString;
 import static toxiproxy.utils.BuilderUtils.getRandPrependString;
 
-public class ProxyEntityBuilder extends ProxyEntity {
+public class ProxyEntityBuilder {
+
+  private ProxyEntity proxyEntity;
 
   private ProxyEntityBuilder() {
+    this.proxyEntity = new ProxyEntity();
     this.name(getRandPrependString("Name"));
     this.listen(getHostPortString("listen"));
     this.upstream(getHostPortString("upstream"));
@@ -13,22 +16,22 @@ public class ProxyEntityBuilder extends ProxyEntity {
   }
 
   public ProxyEntityBuilder name(String name) {
-    super.setName(name);
+    proxyEntity.setName(name);
     return this;
   }
 
   public ProxyEntityBuilder listen(String listen) {
-    super.setListen(listen);
+    proxyEntity.setListen(listen);
     return this;
   }
 
   public ProxyEntityBuilder upstream(String upstream) {
-    super.setUpstream(upstream);
+    proxyEntity.setUpstream(upstream);
     return this;
   }
 
   public ProxyEntityBuilder enabled(boolean enabled) {
-    super.setEnabled(enabled);
+    proxyEntity.setEnabled(enabled);
     return this;
   }
 
@@ -37,6 +40,6 @@ public class ProxyEntityBuilder extends ProxyEntity {
   }
 
   public ProxyEntity build() {
-    return this;
+    return proxyEntity;
   }
 }

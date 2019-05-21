@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -58,8 +59,8 @@ public class ToxiproxyClientImplTest {
     clientProxies.add(mock(ClientProxy.class));
 
     Set<ClientProxy> clientProxiesReturned = Sets.newHashSet();
-    ClientPopulateResponse clientPopulateResponse = mock(ClientPopulateResponse.class);
-    when(clientPopulateResponse.getProxies()).thenReturn(clientProxiesReturned);
+    ClientPopulateResponse clientPopulateResponse = new ClientPopulateResponse();
+    clientPopulateResponse.setProxies(clientProxiesReturned);
 
     when(restTemplate.postForObject(url + "/populate", clientProxies, ClientPopulateResponse.class)).thenReturn(clientPopulateResponse);
 
@@ -143,5 +144,11 @@ public class ToxiproxyClientImplTest {
     URI url = requestEntityArgumentCaptor.getValue().getUrl();
     assertEquals(hostname, url.getHost());
     assertEquals("/proxies", url.getPath());
+  }
+
+  @Test
+  void getURL() {
+    doCallRealMethod().when(toxiproxyClient).getURL();
+    assertNull(toxiproxyClient.getURL());
   }
 }

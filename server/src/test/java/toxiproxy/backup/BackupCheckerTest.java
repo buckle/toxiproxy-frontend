@@ -57,4 +57,20 @@ public class BackupCheckerTest {
     assertEquals(localBackup, toxiproxyBackupArgumentCaptor.getValue());
     verify(toxiproxyBackupService, never()).setBackup(any());
   }
+
+  @Test
+  void checkWhenBackupsDoNoDiffer() {
+    ToxiproxyBackup remoteBackup = mock(ToxiproxyBackup.class);
+    when(toxiproxyBackupService.getBackupFromRemote()).thenReturn(remoteBackup);
+
+    ToxiproxyBackup localBackup = mock(ToxiproxyBackup.class);
+    when(toxiproxyBackupService.getCurrentBackup()).thenReturn(localBackup);
+
+    when(toxiproxyBackupService.backupsDiffer(remoteBackup, localBackup)).thenReturn(false);
+
+    backupChecker.check();
+
+    verify(toxiproxyBackupService, never()).setBackup(any());
+    verify(toxiproxyBackupService, never()).restoreBackupToRemote(any());
+  }
 }

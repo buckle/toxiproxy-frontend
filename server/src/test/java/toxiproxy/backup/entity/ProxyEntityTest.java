@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProxyEntityTest {
@@ -51,5 +53,27 @@ public class ProxyEntityTest {
     proxyEntity1.setName(null);
 
     assertFalse(proxyEntity.equals(proxyEntity1));
+  }
+
+  @Test
+  void hashCodeWhenSameName() {
+    ProxyEntity proxyEntity = new ProxyEntity();
+    proxyEntity.setName(UUID.randomUUID().toString());
+
+    ProxyEntity proxyEntity1 = new ProxyEntity();
+    proxyEntity1.setName(proxyEntity.getName());
+
+    assertEquals(proxyEntity.hashCode(), proxyEntity1.hashCode());
+  }
+
+  @Test
+  void hashWhenDifferentName() {
+    ProxyEntity proxyEntity = new ProxyEntity();
+    proxyEntity.setName(UUID.randomUUID().toString());
+
+    ProxyEntity proxyEntity1 = new ProxyEntity();
+    proxyEntity1.setName(UUID.randomUUID().toString());
+
+    assertNotEquals(proxyEntity.hashCode(), proxyEntity1.hashCode());
   }
 }

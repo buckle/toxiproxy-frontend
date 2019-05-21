@@ -44,6 +44,7 @@ public class ProxyEntity {
     this.name = name;
   }
 
+
   public String getListen() {
     return listen;
   }
@@ -78,5 +79,10 @@ public class ProxyEntity {
     if(o == null || getClass() != o.getClass()) return false;
     ProxyEntity that = (ProxyEntity) o;
     return Objects.equals(name, that.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
   }
 }
