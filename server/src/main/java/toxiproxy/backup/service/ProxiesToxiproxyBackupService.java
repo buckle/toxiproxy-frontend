@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toxiproxy.backup.entity.ProxyEntity;
 import toxiproxy.backup.entity.ProxyEntityRepository;
+import toxiproxy.backup.mapper.ClientProxyToProxyEntityMapper;
 import toxiproxy.client.ToxiproxyClient;
+import toxiproxy.client.dto.ClientProxy;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +17,7 @@ public class ProxiesToxiproxyBackupService implements ToxiproxyBackupService {
 
   @Autowired private ProxyEntityRepository proxyEntityRepository;
   @Autowired private ToxiproxyClient toxiproxyClient;
+  @Autowired private ClientProxyToProxyEntityMapper clientProxyToProxyEntityMapper;
 
   @Override
   public ToxiproxyBackup getCurrentBackup() {
@@ -33,12 +36,32 @@ public class ProxiesToxiproxyBackupService implements ToxiproxyBackupService {
 
   @Override
   public ToxiproxyBackup getBackupFromRemote() {
+    Set<ClientProxy> proxies = toxiproxyClient.getProxies();
+
+    if(proxies != null && !proxies.isEmpty()) {
+      Set<ProxyEntity> proxyEntities = clientProxyToProxyEntityMapper.mapClientProxiesToProxyEntities(proxies);
+
+      if(proxyEntities != null && !proxyEntities.isEmpty()) {
+        ProxiesBackup proxiesBackup = new ProxiesBackup();
+        proxiesBackup.setData(proxyEntities);
+
+        return proxiesBackup;
+      }
+    }
+
     return null;
   }
 
   @Override
-  public void setBackup(ToxiproxyBackup content) {
+  public void setBackup(ToxiproxyBackup backup) {
+    if(backup != null && backup.getData() != null) {
+      Set<ProxyEntity> proxyEntities = ((ProxiesBackup) backup).getData();
 
+      if(!proxyEntities.isEmpty()) {
+        proxyEntityRepository.deleteAll();
+        proxyEntityRepository.saveAll(proxyEntities);
+      }
+    }
   }
 
   @Override
