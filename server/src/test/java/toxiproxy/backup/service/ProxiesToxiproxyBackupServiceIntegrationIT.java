@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ProxiesToxiproxyBackupServiceIT {
+public class ProxiesToxiproxyBackupServiceIntegrationIT {
 
   @Autowired private ProxiesToxiproxyBackupService proxiesToxiproxyBackupService;
   @Autowired private ProxyEntityRepository proxyEntityRepository;
