@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import toxiproxy.backup.entity.ProxyEntity;
 import toxiproxy.backup.entity.ProxyEntityRepository;
 import toxiproxy.backup.mapper.ClientProxyToProxyEntityMapper;
+import toxiproxy.backup.mapper.ProxyEntityMapperToClientProxyMapper;
 import toxiproxy.client.ToxiproxyClient;
 import toxiproxy.client.dto.ClientProxy;
 
@@ -18,6 +19,7 @@ public class ProxiesToxiproxyBackupService implements ToxiproxyBackupService {
   @Autowired private ProxyEntityRepository proxyEntityRepository;
   @Autowired private ToxiproxyClient toxiproxyClient;
   @Autowired private ClientProxyToProxyEntityMapper clientProxyToProxyEntityMapper;
+  @Autowired private ProxyEntityMapperToClientProxyMapper proxyEntityMapperToClientProxyMapper;
 
   @Override
   public ToxiproxyBackup getCurrentBackup() {
@@ -53,6 +55,16 @@ public class ProxiesToxiproxyBackupService implements ToxiproxyBackupService {
   }
 
   @Override
+  public void restoreBackupToRemote(ToxiproxyBackup backup) {
+    if(backup != null && backup.getData() != null) {
+      Set<ClientProxy> clientProxies = proxyEntityMapperToClientProxyMapper.mapProxyEntitiesToClientProxies(((ProxiesBackup) backup).getData());
+      if(clientProxies != null && !clientProxies.isEmpty()) {
+        toxiproxyClient.populate(clientProxies);
+      }
+    }
+  }
+
+  @Override
   public void setBackup(ToxiproxyBackup backup) {
     if(backup != null && backup.getData() != null) {
       Set<ProxyEntity> proxyEntities = ((ProxiesBackup) backup).getData();
@@ -65,7 +77,13 @@ public class ProxiesToxiproxyBackupService implements ToxiproxyBackupService {
   }
 
   @Override
-  public boolean backupsDiffer(ToxiproxyBackup newBackup, ToxiproxyBackup existing) {
-    return false;
+  public boolean backupsDiffer(ToxiproxyBackup newBackup, ToxiproxyBackup existingBackup) {
+    if(newBackup == null && existingBackup == null) {
+      return false;
+    } else if(newBackup == null) {
+      return true;
+    }
+
+    return !newBackup.equals(existingBackup);
   }
 }

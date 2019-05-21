@@ -7,6 +7,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
 
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,19 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   private String url;
 
   @Autowired private RestTemplate toxiproxyClientRestTemplate;
+
+  @Override
+  public Set<ClientProxy> populate(Set<ClientProxy> clientProxies) {
+    if(clientProxies != null && !clientProxies.isEmpty()) {
+      ClientPopulateResponse clientPopulateResponse = toxiproxyClientRestTemplate.postForObject(getURL() + "/populate",
+                                                                                                clientProxies,
+                                                                                                ClientPopulateResponse.class);
+
+      return clientPopulateResponse.getProxies();
+    }
+
+    return null;
+  }
 
   @Override
   public Set<ClientProxy> getProxies() {

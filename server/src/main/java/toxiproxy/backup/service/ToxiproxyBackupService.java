@@ -6,8 +6,10 @@ public interface ToxiproxyBackupService {
 
   ToxiproxyBackup getBackupFromRemote();
 
-  void setBackup(ToxiproxyBackup content);
+  void restoreBackupToRemote(ToxiproxyBackup backup);
 
-  boolean backupsDiffer(ToxiproxyBackup newBackup, ToxiproxyBackup existing);
+  void setBackup(ToxiproxyBackup backup);
+
+  boolean backupsDiffer(ToxiproxyBackup newBackup, ToxiproxyBackup existingBackup);
 
 }

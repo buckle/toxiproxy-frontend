@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import toxiproxy.backup.service.ToxiproxyBackup;
 import toxiproxy.backup.service.ToxiproxyBackupService;
-import toxiproxy.client.ToxiproxyClient;
 
 @Component
 public class BackupChecker {
 
   @Autowired private ToxiproxyBackupService toxiproxyBackupService;
-  @Autowired private ToxiproxyClient toxiproxyClient;
 
   public void check() {
     // Get remote proxies from toxiproxy service
@@ -25,7 +23,11 @@ public class BackupChecker {
     ToxiproxyBackup currentBackup = toxiproxyBackupService.getCurrentBackup();
 
     if(toxiproxyBackupService.backupsDiffer(currentRemote, currentBackup)) {
-      toxiproxyBackupService.setBackup(currentRemote);
+      if(currentBackup != null && currentRemote == null) {
+        toxiproxyBackupService.restoreBackupToRemote(currentBackup);
+      } else {
+        toxiproxyBackupService.setBackup(currentRemote);
+      }
     }
   }
 

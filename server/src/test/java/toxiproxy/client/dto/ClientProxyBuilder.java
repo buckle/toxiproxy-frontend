@@ -1,15 +1,14 @@
-package toxiproxy.client;
+package toxiproxy.client.dto;
 
-import toxiproxy.client.dto.ClientProxy;
-
-import java.util.UUID;
+import static toxiproxy.utils.BuilderUtils.getHostPortString;
+import static toxiproxy.utils.BuilderUtils.getRandPrependString;
 
 public class ClientProxyBuilder extends ClientProxy {
 
   private ClientProxyBuilder() {
-    this.name("Name" + UUID.randomUUID().toString());
-    this.listen("listen"+ UUID.randomUUID().toString()+":8474");
-    this.upstream("upstream"+ UUID.randomUUID().toString()+":8474");
+    this.name(getRandPrependString("Name"));
+    this.listen(getHostPortString("listen"));
+    this.upstream(getHostPortString("upstream"));
     this.enabled(true);
   }
 

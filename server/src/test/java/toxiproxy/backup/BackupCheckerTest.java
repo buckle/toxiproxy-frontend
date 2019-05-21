@@ -8,12 +8,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toxiproxy.backup.service.ToxiproxyBackup;
 import toxiproxy.backup.service.ToxiproxyBackupService;
-import toxiproxy.client.ToxiproxyClient;
-
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,12 +22,10 @@ public class BackupCheckerTest {
 
   @InjectMocks private BackupChecker backupChecker;
   @Mock private ToxiproxyBackupService toxiproxyBackupService;
-  @Mock private ToxiproxyClient toxiproxyClient;
 
   @Test
   void checkWhenChangesExistToPersist() {
     ToxiproxyBackup remoteBackup = mock(ToxiproxyBackup.class);
-    when(remoteBackup.getData()).thenReturn(UUID.randomUUID().toString());
     when(toxiproxyBackupService.getBackupFromRemote()).thenReturn(remoteBackup);
 
     ToxiproxyBackup localBackup = mock(ToxiproxyBackup.class);
@@ -40,7 +37,8 @@ public class BackupCheckerTest {
 
     ArgumentCaptor<ToxiproxyBackup> toxiproxyBackupArgumentCaptor = ArgumentCaptor.forClass(ToxiproxyBackup.class);
     verify(toxiproxyBackupService, times(1)).setBackup(toxiproxyBackupArgumentCaptor.capture());
-    assertEquals(remoteBackup.getData(), toxiproxyBackupArgumentCaptor.getValue().getData());
+    assertEquals(remoteBackup, toxiproxyBackupArgumentCaptor.getValue());
+    verify(toxiproxyBackupService, never()).restoreBackupToRemote(any());
   }
 
   @Test
@@ -48,7 +46,6 @@ public class BackupCheckerTest {
     when(toxiproxyBackupService.getBackupFromRemote()).thenReturn(null);
 
     ToxiproxyBackup localBackup = mock(ToxiproxyBackup.class);
-    when(localBackup.getData()).thenReturn(UUID.randomUUID().toString());
     when(toxiproxyBackupService.getCurrentBackup()).thenReturn(localBackup);
 
     when(toxiproxyBackupService.backupsDiffer(null, localBackup)).thenReturn(true);
@@ -56,6 +53,8 @@ public class BackupCheckerTest {
     backupChecker.check();
 
     ArgumentCaptor<ToxiproxyBackup> toxiproxyBackupArgumentCaptor = ArgumentCaptor.forClass(ToxiproxyBackup.class);
-    // TODO
+    verify(toxiproxyBackupService, times(1)).restoreBackupToRemote(toxiproxyBackupArgumentCaptor.capture());
+    assertEquals(localBackup, toxiproxyBackupArgumentCaptor.getValue());
+    verify(toxiproxyBackupService, never()).setBackup(any());
   }
 }

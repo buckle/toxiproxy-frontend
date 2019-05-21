@@ -1,5 +1,6 @@
 package toxiproxy.client;
 
+import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +12,12 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,8 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,6 +50,39 @@ public class ToxiproxyClientImplTest {
     hostname = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 5);
     url = "http://" + hostname + ":8474";
     doReturn(url).when(toxiproxyClient).getURL();
+  }
+
+  @Test
+  void populate() {
+    Set<ClientProxy> clientProxies = Sets.newHashSet();
+    clientProxies.add(mock(ClientProxy.class));
+
+    Set<ClientProxy> clientProxiesReturned = Sets.newHashSet();
+    ClientPopulateResponse clientPopulateResponse = mock(ClientPopulateResponse.class);
+    when(clientPopulateResponse.getProxies()).thenReturn(clientProxiesReturned);
+
+    when(restTemplate.postForObject(url + "/populate", clientProxies, ClientPopulateResponse.class)).thenReturn(clientPopulateResponse);
+
+    Set<ClientProxy> populatedClientProxies = toxiproxyClient.populate(clientProxies);
+
+    assertNotNull(populatedClientProxies);
+    assertEquals(clientProxiesReturned, populatedClientProxies);
+  }
+
+  @Test
+  void populateWhenNullClientProxies() {
+    Set<ClientProxy> populatedClientProxies = toxiproxyClient.populate(null);
+
+    assertNull(populatedClientProxies);
+    verify(restTemplate, never()).postForObject(anyString(), any(), eq(ClientPopulateResponse.class));
+  }
+
+  @Test
+  void populateWhenEmptyClientProxies() {
+    Set<ClientProxy> populatedClientProxies = toxiproxyClient.populate(new HashSet<>());
+
+    assertNull(populatedClientProxies);
+    verify(restTemplate, never()).postForObject(anyString(), any(), eq(ClientPopulateResponse.class));
   }
 
   @Test
