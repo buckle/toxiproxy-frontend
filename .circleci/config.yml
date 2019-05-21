@@ -5,4 +5,4 @@ jobs:
       - image: circleci/openjdk:11-jdk-browsers
     steps:
       - checkout
-      - run: ./gradlew clean test
+      - run: ./gradlew clean check
