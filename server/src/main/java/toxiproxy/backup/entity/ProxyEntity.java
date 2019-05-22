@@ -78,11 +78,14 @@ public class ProxyEntity {
     if(this == o) return true;
     if(o == null || getClass() != o.getClass()) return false;
     ProxyEntity that = (ProxyEntity) o;
-    return Objects.equals(name, that.name);
+    return enabled == that.enabled &&
+           Objects.equals(name, that.name) &&
+           Objects.equals(listen, that.listen) &&
+           Objects.equals(upstream, that.upstream);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name);
+    return Objects.hash(name, listen, upstream, enabled);
   }
 }

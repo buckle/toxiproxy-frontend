@@ -9,4 +9,4 @@ toxiproxy:
   url: http://localhost:8474
 
 backup:
-  cadence: 60000
+  cadence: 30000
