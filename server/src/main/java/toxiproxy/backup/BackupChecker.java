@@ -1,5 +1,6 @@
 package toxiproxy.backup;
 
+import net.javacrumbs.shedlock.core.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ public class BackupChecker {
   @Autowired private ToxiproxyBackupService toxiproxyBackupService;
 
   @Scheduled(fixedDelayString = "${backup.cadence}")
+  @SchedulerLock(name = "BACKUP_CHECKER", lockAtMostForString = "${backup.cadence}")
   public void check() {
     ToxiproxyBackup currentRemote = toxiproxyBackupService.getBackupFromRemote();
     ToxiproxyBackup currentBackup = toxiproxyBackupService.getCurrentBackup();
