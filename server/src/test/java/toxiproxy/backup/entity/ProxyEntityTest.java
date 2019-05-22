@@ -12,68 +12,69 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ProxyEntityTest {
 
   @Test
-  void equalsWhenNamesEqual() {
+  void equalsAndHashWhenObjectsSame() {
     ProxyEntity proxyEntity = new ProxyEntity();
-    proxyEntity.setName(UUID.randomUUID().toString());
 
-    ProxyEntity proxyEntity1 = new ProxyEntity();
-    proxyEntity1.setName(proxyEntity.getName());
+    assertTrue(proxyEntity.equals(proxyEntity));
+    assertEquals(proxyEntity.hashCode(), proxyEntity.hashCode());
+  }
+
+  @Test
+  void equalsAndHashWhenHaveSameData() {
+    ProxyEntity proxyEntity = ProxyEntityBuilder.builder().build();
+    ProxyEntity proxyEntity1 = createClone(proxyEntity);
 
     assertTrue(proxyEntity.equals(proxyEntity1));
-  }
-
-  @Test
-  void equalsWhenNamesDoNotEqual() {
-    ProxyEntity proxyEntity = new ProxyEntity();
-    proxyEntity.setName(UUID.randomUUID().toString());
-
-    ProxyEntity proxyEntity1 = new ProxyEntity();
-    proxyEntity1.setName(UUID.randomUUID().toString());
-
-    assertFalse(proxyEntity.equals(proxyEntity1));
-  }
-
-  @Test
-  void equalsWhenNamesBothNull() {
-    ProxyEntity proxyEntity = new ProxyEntity();
-    proxyEntity.setName(null);
-
-    ProxyEntity proxyEntity1 = new ProxyEntity();
-    proxyEntity1.setName(null);
-
-    assertTrue(proxyEntity.equals(proxyEntity1));
-  }
-
-  @Test
-  void equalsWhenOneNameNull() {
-    ProxyEntity proxyEntity = new ProxyEntity();
-    proxyEntity.setName(UUID.randomUUID().toString());
-
-    ProxyEntity proxyEntity1 = new ProxyEntity();
-    proxyEntity1.setName(null);
-
-    assertFalse(proxyEntity.equals(proxyEntity1));
-  }
-
-  @Test
-  void hashCodeWhenSameName() {
-    ProxyEntity proxyEntity = new ProxyEntity();
-    proxyEntity.setName(UUID.randomUUID().toString());
-
-    ProxyEntity proxyEntity1 = new ProxyEntity();
-    proxyEntity1.setName(proxyEntity.getName());
-
     assertEquals(proxyEntity.hashCode(), proxyEntity1.hashCode());
   }
 
   @Test
-  void hashWhenDifferentName() {
-    ProxyEntity proxyEntity = new ProxyEntity();
-    proxyEntity.setName(UUID.randomUUID().toString());
-
-    ProxyEntity proxyEntity1 = new ProxyEntity();
+  void equalsAndHashWhenNameDifferent() {
+    ProxyEntity proxyEntity = ProxyEntityBuilder.builder().build();
+    ProxyEntity proxyEntity1 = createClone(proxyEntity);
     proxyEntity1.setName(UUID.randomUUID().toString());
 
+    assertFalse(proxyEntity.equals(proxyEntity1));
     assertNotEquals(proxyEntity.hashCode(), proxyEntity1.hashCode());
+  }
+
+  @Test
+  void equalsAndHashWhenListenDifferent() {
+    ProxyEntity proxyEntity = ProxyEntityBuilder.builder().build();
+    ProxyEntity proxyEntity1 = createClone(proxyEntity);
+    proxyEntity1.setListen(UUID.randomUUID().toString());
+
+    assertFalse(proxyEntity.equals(proxyEntity1));
+    assertNotEquals(proxyEntity.hashCode(), proxyEntity1.hashCode());
+  }
+
+  @Test
+  void equalsAndHashWhenUpstreamDifferent() {
+    ProxyEntity proxyEntity = ProxyEntityBuilder.builder().build();
+    ProxyEntity proxyEntity1 = createClone(proxyEntity);
+    proxyEntity1.setUpstream(UUID.randomUUID().toString());
+
+    assertFalse(proxyEntity.equals(proxyEntity1));
+    assertNotEquals(proxyEntity.hashCode(), proxyEntity1.hashCode());
+  }
+
+  @Test
+  void equalsAndHashWhenEnabledDifferent() {
+    ProxyEntity proxyEntity = ProxyEntityBuilder.builder().build();
+    proxyEntity.setEnabled(true);
+    ProxyEntity proxyEntity1 = createClone(proxyEntity);
+    proxyEntity1.setEnabled(false);
+
+    assertFalse(proxyEntity.equals(proxyEntity1));
+    assertNotEquals(proxyEntity.hashCode(), proxyEntity1.hashCode());
+  }
+
+  private ProxyEntity createClone(ProxyEntity proxyEntity) {
+    ProxyEntity proxyEntityClone = new ProxyEntity();
+    proxyEntityClone.setName(proxyEntity.getName());
+    proxyEntityClone.setListen(proxyEntity.getListen());
+    proxyEntityClone.setUpstream(proxyEntity.getUpstream());
+    proxyEntityClone.setEnabled(proxyEntity.isEnabled());
+    return proxyEntityClone;
   }
 }
