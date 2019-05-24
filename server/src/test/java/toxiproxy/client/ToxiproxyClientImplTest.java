@@ -1,16 +1,18 @@
 package toxiproxy.client;
 
-import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
@@ -30,6 +32,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -41,7 +44,7 @@ import static org.mockito.Mockito.when;
 public class ToxiproxyClientImplTest {
 
   @InjectMocks private ToxiproxyClientImpl toxiproxyClient = spy(ToxiproxyClientImpl.class);
-  @Mock private RestTemplate restTemplate;
+  @Mock private RestTemplate toxiproxyClientRestTemplate;
 
   private String url;
   private String hostname;
@@ -55,14 +58,14 @@ public class ToxiproxyClientImplTest {
 
   @Test
   void populate() {
-    Set<ClientProxy> clientProxies = Sets.newHashSet();
+    Set<ClientProxy> clientProxies = Sets.newSet();
     clientProxies.add(mock(ClientProxy.class));
 
-    Set<ClientProxy> clientProxiesReturned = Sets.newHashSet();
+    Set<ClientProxy> clientProxiesReturned = Sets.newSet();
     ClientPopulateResponse clientPopulateResponse = new ClientPopulateResponse();
     clientPopulateResponse.setProxies(clientProxiesReturned);
 
-    when(restTemplate.postForObject(url + "/populate", clientProxies, ClientPopulateResponse.class)).thenReturn(clientPopulateResponse);
+    when(toxiproxyClientRestTemplate.postForObject(url + "/populate", clientProxies, ClientPopulateResponse.class)).thenReturn(clientPopulateResponse);
 
     Set<ClientProxy> populatedClientProxies = toxiproxyClient.populate(clientProxies);
 
@@ -75,7 +78,7 @@ public class ToxiproxyClientImplTest {
     Set<ClientProxy> populatedClientProxies = toxiproxyClient.populate(null);
 
     assertNull(populatedClientProxies);
-    verify(restTemplate, never()).postForObject(anyString(), any(), eq(ClientPopulateResponse.class));
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), any(), eq(ClientPopulateResponse.class));
   }
 
   @Test
@@ -83,7 +86,7 @@ public class ToxiproxyClientImplTest {
     Set<ClientProxy> populatedClientProxies = toxiproxyClient.populate(new HashSet<>());
 
     assertNull(populatedClientProxies);
-    verify(restTemplate, never()).postForObject(anyString(), any(), eq(ClientPopulateResponse.class));
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), any(), eq(ClientPopulateResponse.class));
   }
 
   @Test
@@ -95,7 +98,7 @@ public class ToxiproxyClientImplTest {
     ResponseEntity<HashMap<String, ClientProxy>> exchange = mock(ResponseEntity.class);
     when(exchange.getBody()).thenReturn(proxyHashMap);
 
-    when(restTemplate.exchange(any(RequestEntity.class), any(ParameterizedTypeReference.class))).thenReturn(exchange);
+    when(toxiproxyClientRestTemplate.exchange(any(RequestEntity.class), any(ParameterizedTypeReference.class))).thenReturn(exchange);
 
     Set<ClientProxy> proxies = toxiproxyClient.getProxies();
 
@@ -104,7 +107,7 @@ public class ToxiproxyClientImplTest {
     assertTrue(proxies.contains(clientProxy));
 
     ArgumentCaptor<RequestEntity> requestEntityArgumentCaptor = ArgumentCaptor.forClass(RequestEntity.class);
-    verify(restTemplate, times(1)).exchange(requestEntityArgumentCaptor.capture(), any(ParameterizedTypeReference.class));
+    verify(toxiproxyClientRestTemplate, times(1)).exchange(requestEntityArgumentCaptor.capture(), any(ParameterizedTypeReference.class));
     URI url = requestEntityArgumentCaptor.getValue().getUrl();
     assertEquals(hostname, url.getHost());
     assertEquals("/proxies", url.getPath());
@@ -115,14 +118,14 @@ public class ToxiproxyClientImplTest {
     ResponseEntity<HashMap<String, ClientProxy>> exchange = mock(ResponseEntity.class);
     when(exchange.getBody()).thenReturn(new HashMap<>());
 
-    when(restTemplate.exchange(any(RequestEntity.class), any(ParameterizedTypeReference.class))).thenReturn(exchange);
+    when(toxiproxyClientRestTemplate.exchange(any(RequestEntity.class), any(ParameterizedTypeReference.class))).thenReturn(exchange);
 
     Set<ClientProxy> proxies = toxiproxyClient.getProxies();
 
     assertNull(proxies);
 
     ArgumentCaptor<RequestEntity> requestEntityArgumentCaptor = ArgumentCaptor.forClass(RequestEntity.class);
-    verify(restTemplate, times(1)).exchange(requestEntityArgumentCaptor.capture(), any(ParameterizedTypeReference.class));
+    verify(toxiproxyClientRestTemplate, times(1)).exchange(requestEntityArgumentCaptor.capture(), any(ParameterizedTypeReference.class));
     URI url = requestEntityArgumentCaptor.getValue().getUrl();
     assertEquals(hostname, url.getHost());
     assertEquals("/proxies", url.getPath());
@@ -133,17 +136,122 @@ public class ToxiproxyClientImplTest {
     ResponseEntity<HashMap<String, ClientProxy>> exchange = mock(ResponseEntity.class);
     when(exchange.getBody()).thenReturn(null);
 
-    when(restTemplate.exchange(any(RequestEntity.class), any(ParameterizedTypeReference.class))).thenReturn(exchange);
+    when(toxiproxyClientRestTemplate.exchange(any(RequestEntity.class), any(ParameterizedTypeReference.class))).thenReturn(exchange);
 
     Set<ClientProxy> proxies = toxiproxyClient.getProxies();
 
     assertNull(proxies);
 
     ArgumentCaptor<RequestEntity> requestEntityArgumentCaptor = ArgumentCaptor.forClass(RequestEntity.class);
-    verify(restTemplate, times(1)).exchange(requestEntityArgumentCaptor.capture(), any(ParameterizedTypeReference.class));
+    verify(toxiproxyClientRestTemplate, times(1)).exchange(requestEntityArgumentCaptor.capture(), any(ParameterizedTypeReference.class));
     URI url = requestEntityArgumentCaptor.getValue().getUrl();
     assertEquals(hostname, url.getHost());
     assertEquals("/proxies", url.getPath());
+  }
+
+  @Test
+  void getProxy() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientProxy responseProxy = mock(ClientProxy.class);
+    when(toxiproxyClientRestTemplate.getForObject(url + "/proxies/{proxy-name}", ClientProxy.class, proxyName)).thenReturn(responseProxy);
+
+    ClientProxy proxy = toxiproxyClient.getProxy(proxyName);
+
+    assertNotNull(proxy);
+    assertEquals(responseProxy, proxy);
+  }
+
+  @Test
+  void getProxyWhenNotFound() {
+    String proxyName = UUID.randomUUID().toString();
+    when(toxiproxyClientRestTemplate.getForObject(url + "/proxies/{proxy-name}", ClientProxy.class, proxyName))
+        .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, null, null, null, null));
+
+    ClientProxy proxy = toxiproxyClient.getProxy(proxyName);
+
+    assertNull(proxy);
+  }
+
+  @Test
+  void getProxyWhenNullName() {
+    String name = null;
+
+    ClientProxy proxy = toxiproxyClient.getProxy(null);
+
+    assertNull(proxy);
+    verify(toxiproxyClientRestTemplate, never()).getForObject(anyString(), eq(ClientProxy.class), eq(name));
+  }
+
+  @Test
+  void createProxy() {
+    ClientProxy responseProxy = mock(ClientProxy.class);
+    ClientProxy newProxy = mock(ClientProxy.class);
+    when(toxiproxyClientRestTemplate.postForObject(url + "/proxies", newProxy, ClientProxy.class)).thenReturn(responseProxy);
+
+    ClientProxy proxy = toxiproxyClient.createProxy(newProxy);
+
+    assertNotNull(proxy);
+    assertEquals(responseProxy, proxy);
+  }
+
+  @Test
+  void createProxyWhenNullNewProxy() {
+    ClientProxy proxy = toxiproxyClient.createProxy(null);
+
+    assertNull(proxy);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), any(), eq(ClientProxy.class));
+  }
+
+  @Test
+  void deleteProxy() {
+    String proxyName = UUID.randomUUID().toString();
+
+    toxiproxyClient.deleteProxy(proxyName);
+
+    verify(toxiproxyClientRestTemplate, times(1)).delete(url + "/proxies/{proxy-name}", proxyName);
+  }
+
+  @Test
+  void deleteProxyWhenNotFound() {
+    String proxyName = UUID.randomUUID().toString();
+    doThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, null, null, null, null))
+        .when(toxiproxyClientRestTemplate).delete(url + "/proxies/{proxy-name}", proxyName);
+
+    toxiproxyClient.deleteProxy(proxyName); // Verify no exception thrown
+  }
+
+  @Test
+  void deleteProxyWhenNullName() {
+    String name = null;
+
+    toxiproxyClient.deleteProxy(name);
+
+    verify(toxiproxyClientRestTemplate, never()).delete(anyString(), eq(name));
+  }
+
+  @Test
+  void deleteAllProxies() {
+    ClientProxy clientProxy1 = mock(ClientProxy.class);
+    when(clientProxy1.getName()).thenReturn(UUID.randomUUID().toString());
+    ClientProxy clientProxy2 = mock(ClientProxy.class);
+    when(clientProxy2.getName()).thenReturn(UUID.randomUUID().toString());
+
+    Set<ClientProxy> proxies = Sets.newSet(clientProxy1, clientProxy2);
+    doReturn(proxies).when(toxiproxyClient).getProxies();
+
+    toxiproxyClient.deleteAllProxies();
+
+    verify(toxiproxyClient, times(1)).deleteProxy(clientProxy1.getName());
+    verify(toxiproxyClient, times(1)).deleteProxy(clientProxy2.getName());
+  }
+
+  @Test
+  void deleteAllProxiesWhenNone() {
+    doReturn(null).when(toxiproxyClient).getProxies();
+
+    toxiproxyClient.deleteAllProxies();
+
+    verify(toxiproxyClient, never()).deleteProxy(any());
   }
 
   @Test

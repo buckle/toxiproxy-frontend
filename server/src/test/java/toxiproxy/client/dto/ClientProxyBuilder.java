@@ -3,9 +3,12 @@ package toxiproxy.client.dto;
 import static toxiproxy.utils.BuilderUtils.getHostPortString;
 import static toxiproxy.utils.BuilderUtils.getRandPrependString;
 
-public class ClientProxyBuilder extends ClientProxy {
+public class ClientProxyBuilder {
+
+  private ClientProxy clientProxy;
 
   private ClientProxyBuilder() {
+    this.clientProxy = new ClientProxy();
     this.name(getRandPrependString("Name"));
     this.listen(getHostPortString("listen"));
     this.upstream(getHostPortString("upstream"));
@@ -13,22 +16,22 @@ public class ClientProxyBuilder extends ClientProxy {
   }
 
   public ClientProxyBuilder name(String name) {
-    super.setName(name);
+    clientProxy.setName(name);
     return this;
   }
 
   public ClientProxyBuilder listen(String listen) {
-    super.setListen(listen);
+    clientProxy.setListen(listen);
     return this;
   }
 
   public ClientProxyBuilder upstream(String upstream) {
-    super.setUpstream(upstream);
+    clientProxy.setUpstream(upstream);
     return this;
   }
 
   public ClientProxyBuilder enabled(boolean enabled) {
-    super.setEnabled(enabled);
+    clientProxy.setEnabled(enabled);
     return this;
   }
 
@@ -37,6 +40,6 @@ public class ClientProxyBuilder extends ClientProxy {
   }
 
   public ClientProxy build() {
-    return this;
+    return clientProxy;
   }
 }
