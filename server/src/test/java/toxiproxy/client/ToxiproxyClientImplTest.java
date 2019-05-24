@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
@@ -23,9 +24,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -217,7 +220,16 @@ public class ToxiproxyClientImplTest {
     doThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, null, null, null, null))
         .when(toxiproxyClientRestTemplate).delete(url + "/proxies/{proxy-name}", proxyName);
 
-    toxiproxyClient.deleteProxy(proxyName); // Verify no exception thrown
+    assertDoesNotThrow(() -> toxiproxyClient.deleteProxy(proxyName));
+  }
+
+  @Test
+  void deleteProxyWhenOtherException() {
+    String proxyName = UUID.randomUUID().toString();
+    doThrow(HttpClientErrorException.create(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, null))
+        .when(toxiproxyClientRestTemplate).delete(url + "/proxies/{proxy-name}", proxyName);
+
+    assertThrows(HttpClientErrorException.class, () -> toxiproxyClient.deleteProxy(proxyName));
   }
 
   @Test

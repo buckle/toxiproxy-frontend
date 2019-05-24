@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/toxiproxy_frontend.log}"/>
   <property name="FILE_LOG_PATTERN" value="%d{&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, America/Chicago} %5p %c{1}:%L - %m%n"/>
-
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
 
 </configuration>
