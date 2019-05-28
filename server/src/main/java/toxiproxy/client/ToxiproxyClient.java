@@ -10,4 +10,12 @@ public interface ToxiproxyClient {
 
   Set<ClientProxy> getProxies();
 
+  ClientProxy getProxy(String proxyName);
+
+  ClientProxy createProxy(ClientProxy clientProxy);
+
+  void deleteProxy(String proxyName);
+
+  void deleteAllProxies();
+
 }

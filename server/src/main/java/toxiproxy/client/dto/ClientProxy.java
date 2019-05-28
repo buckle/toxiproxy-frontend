@@ -1,5 +1,7 @@
 package toxiproxy.client.dto;
 
+import java.util.Objects;
+
 public class ClientProxy {
 
   private String name;
@@ -37,5 +39,21 @@ public class ClientProxy {
 
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if(this == o) return true;
+    if(o == null || getClass() != o.getClass()) return false;
+    ClientProxy that = (ClientProxy) o;
+    return enabled == that.enabled &&
+           Objects.equals(name, that.name) &&
+           Objects.equals(listen, that.listen) &&
+           Objects.equals(upstream, that.upstream);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, listen, upstream, enabled);
   }
 }

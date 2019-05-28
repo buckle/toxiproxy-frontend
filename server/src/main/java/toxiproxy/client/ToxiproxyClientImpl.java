@@ -6,6 +6,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
@@ -54,6 +55,51 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
     }
 
     return null;
+  }
+
+  @Override
+  public ClientProxy getProxy(String proxyName) {
+    if(proxyName != null) {
+      try {
+        return toxiproxyClientRestTemplate.getForObject(getURL() + "/proxies/{proxy-name}", ClientProxy.class, proxyName);
+      } catch(HttpClientErrorException hcee) {
+        if(hcee instanceof HttpClientErrorException.NotFound) {
+          return null;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  @Override
+  public ClientProxy createProxy(ClientProxy newProxy) {
+    if(newProxy != null) {
+      return toxiproxyClientRestTemplate.postForObject(getURL() + "/proxies", newProxy, ClientProxy.class);
+    }
+
+    return null;
+  }
+
+  @Override
+  public void deleteProxy(String proxyName) {
+    if(proxyName != null) {
+      try {
+        toxiproxyClientRestTemplate.delete(getURL() + "/proxies/{proxy-name}", proxyName);
+      } catch(HttpClientErrorException hcee) {
+        if(!(hcee instanceof HttpClientErrorException.NotFound)) {
+          throw hcee;
+        }
+      }
+    }
+  }
+
+  @Override
+  public void deleteAllProxies() {
+    Set<ClientProxy> proxies = getProxies();
+    if(proxies != null) {
+      proxies.forEach(clientProxy -> deleteProxy(clientProxy.getName()));
+    }
   }
 
   protected String getURL() {
