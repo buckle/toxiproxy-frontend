@@ -1,6 +1,7 @@
 package toxiproxy.client;
 
 import toxiproxy.client.dto.ClientProxy;
+import toxiproxy.client.dto.ClientToxic;
 
 import java.util.Set;
 
@@ -14,8 +15,13 @@ public interface ToxiproxyClient {
 
   ClientProxy createProxy(ClientProxy clientProxy);
 
+  ClientProxy updateProxy(ClientProxy clientProxy);
+
   void deleteProxy(String proxyName);
 
   void deleteAllProxies();
 
+  ClientToxic addToxic(String proxyName, ClientToxic toxic);
+
+  String getVersion();
 }

@@ -1,6 +1,7 @@
 package toxiproxy.client.dto;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class ClientProxy {
 
@@ -8,6 +9,7 @@ public class ClientProxy {
   private String listen;
   private String upstream;
   private boolean enabled;
+  private Set<ClientToxic> toxics;
 
   public String getName() {
     return name;
@@ -41,19 +43,28 @@ public class ClientProxy {
     this.enabled = enabled;
   }
 
+  public Set<ClientToxic> getToxics() {
+    return toxics;
+  }
+
+  public void setToxics(Set<ClientToxic> toxics) {
+    this.toxics = toxics;
+  }
+
   @Override
   public boolean equals(Object o) {
     if(this == o) return true;
     if(o == null || getClass() != o.getClass()) return false;
-    ClientProxy that = (ClientProxy) o;
-    return enabled == that.enabled &&
-           Objects.equals(name, that.name) &&
-           Objects.equals(listen, that.listen) &&
-           Objects.equals(upstream, that.upstream);
+    ClientProxy proxy = (ClientProxy) o;
+    return enabled == proxy.enabled &&
+           Objects.equals(name, proxy.name) &&
+           Objects.equals(listen, proxy.listen) &&
+           Objects.equals(upstream, proxy.upstream) &&
+           Objects.equals(toxics, proxy.toxics);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, listen, upstream, enabled);
+    return Objects.hash(name, listen, upstream, enabled, toxics);
   }
 }

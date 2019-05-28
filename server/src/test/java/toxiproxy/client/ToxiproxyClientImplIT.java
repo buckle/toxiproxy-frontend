@@ -1,5 +1,6 @@
 package toxiproxy.client;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -10,16 +11,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import toxiproxy.client.dto.ClientProxy;
 import toxiproxy.client.dto.ClientProxyBuilder;
+import toxiproxy.client.dto.ClientToxic;
+import toxiproxy.client.dto.ClientToxicBuilder;
+import toxiproxy.utils.BuilderUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static toxiproxy.utils.BuilderUtils.getRandPrependString;
 
 /**
  * ToxiproxyClientImplIT
@@ -91,6 +97,21 @@ public class ToxiproxyClientImplIT {
   }
 
   @Test
+  void updateProxy() {
+    ClientProxy newProxy = ClientProxyBuilder.builder().listen("localhost:5556").build();
+    ClientProxy proxy = toxiproxyClient.createProxy(newProxy);
+    proxy.setListen("127.0.0.1:5558");
+
+    ClientProxy updatedProxy = toxiproxyClient.updateProxy(proxy);
+
+    assertNotNull(updatedProxy);
+    assertEquals(newProxy.getName(), updatedProxy.getName());
+    assertEquals(newProxy.getUpstream(), updatedProxy.getUpstream());
+    assertEquals(newProxy.isEnabled(), updatedProxy.isEnabled());
+    assertEquals(proxy.getListen(), updatedProxy.getListen());
+  }
+
+  @Test
   void deleteProxy() {
     ClientProxy newProxy = ClientProxyBuilder.builder().listen("localhost:5556").build();
     ClientProxy proxy = toxiproxyClient.createProxy(newProxy);
@@ -113,5 +134,27 @@ public class ToxiproxyClientImplIT {
 
     proxies = toxiproxyClient.getProxies();
     assertNull(proxies);
+  }
+
+  @Test
+  void addToxic() {
+    ClientProxy proxy = toxiproxyClient.createProxy(ClientProxyBuilder.builder().listen("localhost:5556").build());
+    ClientToxic toxic = ClientToxicBuilder.builder().build();
+
+    ClientToxic clientToxic = toxiproxyClient.addToxic(proxy.getName(), toxic);
+
+    assertNotNull(clientToxic);
+    assertEquals(toxic.getName(), clientToxic.getName());
+
+    ClientProxy updatedProxy = toxiproxyClient.getProxy(proxy.getName());
+    assertTrue(updatedProxy.getToxics().contains(clientToxic));
+  }
+
+  @Test
+  void getVersion() {
+    String version = toxiproxyClient.getVersion();
+
+    assertFalse(StringUtils.isEmpty(version));
+    assertTrue(StringUtils.isAlphanumeric(version.replaceAll("-", "")));
   }
 }

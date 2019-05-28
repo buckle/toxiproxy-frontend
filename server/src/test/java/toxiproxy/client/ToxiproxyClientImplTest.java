@@ -13,10 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
+import toxiproxy.client.dto.ClientToxic;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -206,6 +206,40 @@ public class ToxiproxyClientImplTest {
   }
 
   @Test
+  void updateProxy() {
+    ClientProxy proxy = mock(ClientProxy.class);
+    when(proxy.getName()).thenReturn(UUID.randomUUID().toString());
+    ClientProxy updatedProxy = mock(ClientProxy.class);
+    when(toxiproxyClientRestTemplate.postForObject(url + "/proxies/{proxy-name}", proxy, ClientProxy.class, proxy.getName()))
+        .thenReturn(updatedProxy);
+
+    ClientProxy returnedProxy = toxiproxyClient.updateProxy(proxy);
+
+    assertNotNull(returnedProxy);
+    assertEquals(updatedProxy, returnedProxy);
+  }
+
+  @Test
+  void updateProxyWhenNullProxy() {
+    ClientProxy returnedProxy = toxiproxyClient.updateProxy(null);
+
+    assertNull(returnedProxy);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(null), eq(ClientProxy.class), anyString());
+  }
+
+  @Test
+  void updateProxyWhenNullProxyName() {
+    String proxyName = null;
+    ClientProxy proxy = mock(ClientProxy.class);
+    when(proxy.getName()).thenReturn(proxyName);
+
+    ClientProxy returnedProxy = toxiproxyClient.updateProxy(proxy);
+
+    assertNull(returnedProxy);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(proxy), eq(ClientProxy.class), eq(proxyName));
+  }
+
+  @Test
   void deleteProxy() {
     String proxyName = UUID.randomUUID().toString();
 
@@ -264,6 +298,49 @@ public class ToxiproxyClientImplTest {
     toxiproxyClient.deleteAllProxies();
 
     verify(toxiproxyClient, never()).deleteProxy(any());
+  }
+
+  @Test
+  void addToxic() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic toxic = mock(ClientToxic.class);
+    ClientToxic newToxic = mock(ClientToxic.class);
+    when(toxiproxyClientRestTemplate.postForObject(url + "/proxies/{proxy-name}/toxics", toxic, ClientToxic.class, proxyName)).thenReturn(newToxic);
+
+    ClientToxic returnedToxic = toxiproxyClient.addToxic(proxyName, toxic);
+
+    assertNotNull(returnedToxic);
+    assertEquals(newToxic, returnedToxic);
+  }
+
+  @Test
+  void addToxicWhenProxyNameNull() {
+    String proxyName = null;
+    ClientToxic toxic = mock(ClientToxic.class);
+
+    ClientToxic returnedToxic = toxiproxyClient.addToxic(proxyName, toxic);
+
+    assertNull(returnedToxic);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(toxic), eq(ClientToxic.class), eq(proxyName));
+  }
+
+  @Test
+  void addToxicWhenToxicNull() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic toxic = null;
+
+    ClientToxic returnedToxic = toxiproxyClient.addToxic(proxyName, toxic);
+
+    assertNull(returnedToxic);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(toxic), eq(ClientToxic.class), eq(proxyName));
+  }
+
+  @Test
+  void version() {
+    String version = UUID.randomUUID().toString();
+    when(toxiproxyClientRestTemplate.getForObject(url + "/version", String.class)).thenReturn(version);
+
+    assertEquals(version, toxiproxyClient.getVersion());
   }
 
   @Test

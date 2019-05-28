@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
+import toxiproxy.client.dto.ClientToxic;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
@@ -82,6 +83,15 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   }
 
   @Override
+  public ClientProxy updateProxy(ClientProxy clientProxy) {
+    if(clientProxy != null && clientProxy.getName() != null) {
+      return toxiproxyClientRestTemplate.postForObject(getURL() + "/proxies/{proxy-name}", clientProxy, ClientProxy.class, clientProxy.getName());
+    }
+
+    return null;
+  }
+
+  @Override
   public void deleteProxy(String proxyName) {
     if(proxyName != null) {
       try {
@@ -100,6 +110,20 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
     if(proxies != null) {
       proxies.forEach(clientProxy -> deleteProxy(clientProxy.getName()));
     }
+  }
+
+  @Override
+  public ClientToxic addToxic(String proxyName, ClientToxic toxic) {
+    if(proxyName != null && toxic != null) {
+      return toxiproxyClientRestTemplate.postForObject(getURL() + "/proxies/{proxy-name}/toxics", toxic, ClientToxic.class, proxyName);
+    }
+
+    return null;
+  }
+
+  @Override
+  public String getVersion() {
+    return toxiproxyClientRestTemplate.getForObject(getURL() + "/version", String.class);
   }
 
   protected String getURL() {
