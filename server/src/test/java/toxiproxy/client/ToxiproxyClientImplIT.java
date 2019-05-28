@@ -1,6 +1,8 @@
 package toxiproxy.client;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.util.Precision;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -148,6 +150,32 @@ public class ToxiproxyClientImplIT {
 
     ClientProxy updatedProxy = toxiproxyClient.getProxy(proxy.getName());
     assertTrue(updatedProxy.getToxics().contains(clientToxic));
+  }
+
+  @Test
+  void updateToxic() {
+    ClientProxy clientProxy = toxiproxyClient.createProxy(ClientProxyBuilder.builder().listen("localhost:5556").build());
+    ClientToxic clientToxic = toxiproxyClient.addToxic(clientProxy.getName(), ClientToxicBuilder.builder()
+                                                                                                .toxicity(RandomUtils.nextDouble(0, 1))
+                                                                                                .build());
+    clientToxic.setToxicity(Precision.round(RandomUtils.nextDouble(0, 1), 4));
+    ClientToxic updatedClientToxic = toxiproxyClient.updateToxic(clientProxy.getName(), clientToxic);
+
+    assertNotNull(updatedClientToxic);
+    assertEquals(clientToxic.getToxicity(), updatedClientToxic.getToxicity());
+  }
+
+  @Test
+  void deleteToxic() {
+    ClientProxy clientProxy = toxiproxyClient.createProxy(ClientProxyBuilder.builder().listen("localhost:5556").build());
+    ClientToxic clientToxic = toxiproxyClient.addToxic(clientProxy.getName(), ClientToxicBuilder.builder().build());
+    clientProxy = toxiproxyClient.getProxy(clientProxy.getName());
+    assertTrue(clientProxy.getToxics().contains(clientToxic));
+
+    toxiproxyClient.deleteToxic(clientProxy.getName(), clientToxic.getName());
+
+    clientProxy = toxiproxyClient.getProxy(clientProxy.getName());
+    assertFalse(clientProxy.getToxics().contains(clientToxic));
   }
 
   @Test

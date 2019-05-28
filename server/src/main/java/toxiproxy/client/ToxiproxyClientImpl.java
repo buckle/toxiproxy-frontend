@@ -42,7 +42,8 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
 
   @Override
   public Set<ClientProxy> getProxies() {
-    ParameterizedTypeReference<HashMap<String, ClientProxy>> parameterizedTypeReference = new ParameterizedTypeReference<>() {};
+    ParameterizedTypeReference<HashMap<String, ClientProxy>> parameterizedTypeReference = new ParameterizedTypeReference<>() {
+    };
 
     ResponseEntity<HashMap<String, ClientProxy>> exchange =
         toxiproxyClientRestTemplate.exchange(RequestEntity.get(URI.create(getURL() + "/proxies"))
@@ -63,10 +64,8 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
     if(proxyName != null) {
       try {
         return toxiproxyClientRestTemplate.getForObject(getURL() + "/proxies/{proxy-name}", ClientProxy.class, proxyName);
-      } catch(HttpClientErrorException hcee) {
-        if(hcee instanceof HttpClientErrorException.NotFound) {
-          return null;
-        }
+      } catch(HttpClientErrorException.NotFound notFound) {
+        return null;
       }
     }
 
@@ -96,10 +95,8 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
     if(proxyName != null) {
       try {
         toxiproxyClientRestTemplate.delete(getURL() + "/proxies/{proxy-name}", proxyName);
-      } catch(HttpClientErrorException hcee) {
-        if(!(hcee instanceof HttpClientErrorException.NotFound)) {
-          throw hcee;
-        }
+      } catch(HttpClientErrorException.NotFound notFound) {
+        // Do Nothing
       }
     }
   }
@@ -113,12 +110,36 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   }
 
   @Override
-  public ClientToxic addToxic(String proxyName, ClientToxic toxic) {
-    if(proxyName != null && toxic != null) {
-      return toxiproxyClientRestTemplate.postForObject(getURL() + "/proxies/{proxy-name}/toxics", toxic, ClientToxic.class, proxyName);
+  public ClientToxic addToxic(String proxyName, ClientToxic clientToxic) {
+    if(proxyName != null && clientToxic != null) {
+      return toxiproxyClientRestTemplate.postForObject(getURL() + "/proxies/{proxy-name}/toxics", clientToxic, ClientToxic.class, proxyName);
     }
 
     return null;
+  }
+
+  @Override
+  public ClientToxic updateToxic(String proxyName, ClientToxic clientToxic) {
+    if(proxyName != null && clientToxic != null && clientToxic.getName() != null) {
+      return toxiproxyClientRestTemplate.postForObject(getURL() + "/proxies/{proxy-name}/toxics/{toxic-name}",
+                                                       clientToxic,
+                                                       ClientToxic.class,
+                                                       proxyName,
+                                                       clientToxic.getName());
+    }
+
+    return null;
+  }
+
+  @Override
+  public void deleteToxic(String proxyName, String toxicName) {
+    if(proxyName != null && toxicName != null) {
+      try {
+        toxiproxyClientRestTemplate.delete(getURL() + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
+      } catch(HttpClientErrorException.NotFound notFound) {
+        // Do Nothing
+      }
+    }
   }
 
   @Override

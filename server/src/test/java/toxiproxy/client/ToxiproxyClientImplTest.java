@@ -258,15 +258,6 @@ public class ToxiproxyClientImplTest {
   }
 
   @Test
-  void deleteProxyWhenOtherException() {
-    String proxyName = UUID.randomUUID().toString();
-    doThrow(HttpClientErrorException.create(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null, null))
-        .when(toxiproxyClientRestTemplate).delete(url + "/proxies/{proxy-name}", proxyName);
-
-    assertThrows(HttpClientErrorException.class, () -> toxiproxyClient.deleteProxy(proxyName));
-  }
-
-  @Test
   void deleteProxyWhenNullName() {
     String name = null;
 
@@ -333,6 +324,100 @@ public class ToxiproxyClientImplTest {
 
     assertNull(returnedToxic);
     verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(toxic), eq(ClientToxic.class), eq(proxyName));
+  }
+
+  @Test
+  void updateToxic() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic toxic = mock(ClientToxic.class);
+    when(toxic.getName()).thenReturn(UUID.randomUUID().toString());
+    ClientToxic updatedToxic = mock(ClientToxic.class);
+    when(toxiproxyClientRestTemplate.postForObject(url + "/proxies/{proxy-name}/toxics/{toxic-name}",
+                                                   toxic,
+                                                   ClientToxic.class,
+                                                   proxyName,
+                                                   toxic.getName()))
+        .thenReturn(updatedToxic);
+
+    ClientToxic returnedToxic = toxiproxyClient.updateToxic(proxyName, toxic);
+
+    assertNotNull(returnedToxic);
+    assertEquals(updatedToxic, returnedToxic);
+  }
+
+  @Test
+  void updateToxicWhenProxyNameNull() {
+    String proxyName = null;
+    ClientToxic toxic = mock(ClientToxic.class);
+
+    ClientToxic returnedToxic = toxiproxyClient.updateToxic(proxyName, toxic);
+
+    assertNull(returnedToxic);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(toxic), eq(ClientToxic.class), eq(proxyName), anyString());
+  }
+
+  @Test
+  void updateToxicWhenToxicNull() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic toxic = null;
+
+    ClientToxic returnedToxic = toxiproxyClient.updateToxic(proxyName, toxic);
+
+    assertNull(returnedToxic);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(toxic), eq(ClientToxic.class), eq(proxyName), anyString());
+  }
+
+  @Test
+  void updateToxicWhenToxicNameNull() {
+    String proxyName = UUID.randomUUID().toString();
+    String toxicName = null;
+    ClientToxic toxic = mock(ClientToxic.class);
+    when(toxic.getName()).thenReturn(toxicName);
+
+    ClientToxic returnedToxic = toxiproxyClient.updateToxic(proxyName, toxic);
+
+    assertNull(returnedToxic);
+    verify(toxiproxyClientRestTemplate, never()).postForObject(anyString(), eq(toxic), eq(ClientToxic.class), eq(proxyName), eq(toxicName));
+  }
+
+  @Test
+  void deleteToxic() {
+    String proxyName = UUID.randomUUID().toString();
+    String toxicName = UUID.randomUUID().toString();
+
+    toxiproxyClient.deleteToxic(proxyName, toxicName);
+
+    verify(toxiproxyClientRestTemplate, times(1)).delete(url + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
+  }
+
+  @Test
+  void deleteToxicWhenNotFound() {
+    String proxyName = UUID.randomUUID().toString();
+    String toxicName = UUID.randomUUID().toString();
+    doThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, null, null, null, null))
+        .when(toxiproxyClientRestTemplate).delete(url + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
+
+    assertDoesNotThrow(() -> toxiproxyClient.deleteToxic(proxyName, toxicName));
+  }
+
+  @Test
+  void deleteToxicWhenProxyNameNull() {
+    String proxyName = null;
+    String toxicName = UUID.randomUUID().toString();
+
+    toxiproxyClient.deleteToxic(proxyName, toxicName);
+
+    verify(toxiproxyClientRestTemplate, never()).delete(url + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
+  }
+
+  @Test
+  void deleteToxicWhenToxicNameNull() {
+    String proxyName = UUID.randomUUID().toString();
+    String toxicName = null;
+
+    toxiproxyClient.deleteToxic(proxyName, toxicName);
+
+    verify(toxiproxyClientRestTemplate, never()).delete(url + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
   }
 
   @Test

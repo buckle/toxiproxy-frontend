@@ -63,6 +63,7 @@ dependencies {
   implementation('com.squareup.okhttp3:okhttp:3.14.1')
   implementation('org.flywaydb:flyway-core')
   implementation('org.apache.commons:commons-lang3:3.9')
+  implementation('org.apache.commons:commons-math3:3.6.1')
   implementation('net.javacrumbs.shedlock:shedlock-spring:2.5.0')
   implementation('net.javacrumbs.shedlock:shedlock-provider-jdbc-template:2.5.0')
 
