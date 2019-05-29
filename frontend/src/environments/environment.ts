@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  toxiproxyHost: 'http://localhost:8474'
+  toxiproxyHost: 'http://localhost:8080'
 };
 
 /*

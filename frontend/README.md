@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/buckle/toxiproxy-frontend/tree/master.svg?style=shield)](https://circleci.com/gh/buckle/toxiproxy-frontend/tree/master)
-# ToxiproxyFrontend
+# Toxiproxy - Frontend
 ToxiproxyFrontend is an Angular 7 application that is designed to make creating proxies and toxics easier. It is used in conjunction with 
 [Shopify's Toxiproxy](https://github.com/Shopify/toxiproxy) to make it easier to test varying network conditions.
 

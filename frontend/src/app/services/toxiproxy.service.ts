@@ -15,39 +15,39 @@ export class ToxiproxyService {
   }
 
   getProxyVersion(): Observable<string> {
-    return this.http.get(this.host + '/version', {responseType: 'text'});
+    return this.http.get(this.host + '/api/version', {responseType: 'text'});
   }
 
   getProxies(): Observable<object> {
-    return this.http.get<object>(this.host + '/proxies');
+    return this.http.get<object>(this.host + '/api/proxies');
   }
 
   getProxy(name: string): Observable<Proxy> {
-    return this.http.get<Proxy>(this.host + '/proxies/' + name);
+    return this.http.get<Proxy>(this.host + '/api/proxies/' + name);
   }
 
   createProxy(proxy: Proxy): Observable<Proxy> {
-    return this.http.post<Proxy>(this.host + '/proxies', proxy);
+    return this.http.post<Proxy>(this.host + '/api/proxies', proxy);
   }
 
   updateProxy(proxy: Proxy): Observable<Proxy> {
-    return this.http.post<Proxy>(this.host + '/proxies/' + proxy.name, proxy);
+    return this.http.post<Proxy>(this.host + '/api/proxies/' + proxy.name, proxy);
   }
 
   deleteProxy(proxy: Proxy): Observable<object> {
-    return this.http.delete(this.host + '/proxies/' + proxy.name);
+    return this.http.delete(this.host + '/api/proxies/' + proxy.name);
   }
 
   addToxic(proxy: Proxy, toxic: Toxic): Observable<Proxy> {
-    return this.http.post<Proxy>(this.host + '/proxies/' + proxy.name + '/toxics', toxic);
+    return this.http.post<Proxy>(this.host + '/api/proxies/' + proxy.name + '/toxics', toxic);
   }
 
   updateToxic(proxy: Proxy, toxic: Toxic): Observable<Proxy> {
-    return this.http.post<Proxy>(this.host + '/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
+    return this.http.post<Proxy>(this.host + '/api/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
   }
 
   deleteToxic(proxy: Proxy, toxic: Toxic): Observable<object> {
-    return this.http.delete(this.host + '/proxies/' + proxy.name + '/toxics/' + toxic.name);
+    return this.http.delete(this.host + '/api/proxies/' + proxy.name + '/toxics/' + toxic.name);
   }
 
   get host(): string {

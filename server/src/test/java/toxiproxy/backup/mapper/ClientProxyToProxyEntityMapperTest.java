@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toxiproxy.backup.entity.ProxyEntity;
-import toxiproxy.client.dto.ClientProxyBuilder;
 import toxiproxy.client.dto.ClientProxy;
+import toxiproxy.client.dto.ClientProxyBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
