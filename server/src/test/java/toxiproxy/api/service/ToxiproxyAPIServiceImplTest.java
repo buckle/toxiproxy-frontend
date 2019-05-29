@@ -10,6 +10,7 @@ import toxiproxy.client.ToxiproxyClient;
 import toxiproxy.client.dto.ClientProxy;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,5 +31,16 @@ public class ToxiproxyAPIServiceImplTest {
 
     assertNotNull(proxies);
     assertEquals(clientProxies, proxies);
+  }
+
+  @Test
+  void getServiceVersion() {
+    String serviceVersion = UUID.randomUUID().toString();
+    when(toxiproxyClient.getVersion()).thenReturn(serviceVersion);
+
+    String returnedServiceVersion = toxiproxyAPIService.getServiceVersion();
+
+    assertNotNull(returnedServiceVersion);
+    assertEquals(serviceVersion, returnedServiceVersion);
   }
 }

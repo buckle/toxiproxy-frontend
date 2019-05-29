@@ -15,6 +15,7 @@ public class ToxiproxyAPIController {
 
   public static final String API_ENDPOINT = "api";
   public static final String PROXIES_ENDPOINT = "proxies";
+  public static final String SERVICE_VERSION_ENDPOINT = "service-version";
 
   @Autowired private ToxiproxyAPIService toxiproxyAPIService;
 
@@ -22,4 +23,10 @@ public class ToxiproxyAPIController {
   public Set<ClientProxy> getProxies() {
     return toxiproxyAPIService.getProxies();
   }
+
+  @GetMapping(ToxiproxyAPIController.SERVICE_VERSION_ENDPOINT)
+  public String getServiceVersion() {
+    return toxiproxyAPIService.getServiceVersion();
+  }
+
 }

@@ -24,4 +24,9 @@ public class ToxiproxyAPIServiceImpl implements ToxiproxyAPIService {
   public Set<ClientProxy> getProxies() {
     return toxiproxyClient.getProxies();
   }
+
+  @Override
+  public String getServiceVersion() {
+    return toxiproxyClient.getVersion();
+  }
 }
