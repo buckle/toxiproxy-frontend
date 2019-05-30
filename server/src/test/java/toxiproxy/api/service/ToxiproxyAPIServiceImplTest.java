@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +32,30 @@ public class ToxiproxyAPIServiceImplTest {
 
     assertNotNull(proxies);
     assertEquals(clientProxies, proxies);
+  }
+
+  @Test
+  void getProxy() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientProxy foundProxy = mock(ClientProxy.class);
+    when(toxiproxyClient.getProxy(proxyName)).thenReturn(foundProxy);
+
+    ClientProxy returnedProxy = toxiproxyAPIService.getProxy(proxyName);
+
+    assertNotNull(returnedProxy);
+    assertEquals(foundProxy, returnedProxy);
+  }
+
+  @Test
+  void createProxy() {
+    ClientProxy clientProxy = mock(ClientProxy.class);
+    ClientProxy newProxy = mock(ClientProxy.class);
+    when(toxiproxyClient.createProxy(clientProxy)).thenReturn(newProxy);
+
+    ClientProxy returnedProxy = toxiproxyAPIService.createProxy(clientProxy);
+
+    assertNotNull(returnedProxy);
+    assertEquals(newProxy, returnedProxy);
   }
 
   @Test

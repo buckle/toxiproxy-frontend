@@ -8,5 +8,10 @@ public interface ToxiproxyAPIService {
 
   Set<ClientProxy> getProxies();
 
+  ClientProxy getProxy(String proxyName);
+
+  ClientProxy createProxy(ClientProxy clientProxy);
+
   String getServiceVersion();
+
 }
