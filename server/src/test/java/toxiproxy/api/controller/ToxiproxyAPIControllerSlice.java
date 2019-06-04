@@ -212,6 +212,73 @@ public class ToxiproxyAPIControllerSlice {
   }
 
   @Test
+  void updateToxic() throws Exception {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic clientToxic = ClientToxicBuilder.builder().build();
+    ClientToxic updatedClientToxic = ClientToxicBuilder.builder().build();
+    doReturn(updatedClientToxic).when(toxiproxyAPIService).updateToxic(proxyName, clientToxic);
+
+    String sReturnedClientToxic = mockMvc.perform(
+        post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, clientToxic.getName())
+            .content(objectMapper.writeValueAsString(clientToxic))
+            .contentType(MediaType.APPLICATION_JSON)
+            .secure(true))
+                                         .andExpect(status().isOk())
+                                         .andReturn()
+                                         .getResponse()
+                                         .getContentAsString();
+
+    ClientToxic returnedClientToxic = objectMapper.readValue(sReturnedClientToxic, ClientToxic.class);
+    assertNotNull(returnedClientToxic);
+    assertEquals(updatedClientToxic, returnedClientToxic);
+  }
+
+  @Test
+  void updateToxicWhenSomethingNotFound() throws Exception {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic clientToxic = ClientToxicBuilder.builder().build();
+    doThrow(HttpClientErrorException.NotFound.class).when(toxiproxyAPIService).updateToxic(proxyName, clientToxic);
+
+    mockMvc.perform(
+        post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, clientToxic.getName())
+            .content(objectMapper.writeValueAsString(clientToxic))
+            .contentType(MediaType.APPLICATION_JSON)
+            .secure(true))
+           .andExpect(status().isNotFound())
+           .andReturn();
+  }
+
+  @Test
+  void deleteToxic() throws Exception {
+    String proxyName = UUID.randomUUID().toString();
+    String toxicName = UUID.randomUUID().toString();
+    doNothing().when(toxiproxyAPIService).deleteToxic(proxyName, toxicName);
+
+    mockMvc.perform(
+        delete("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, toxicName)
+            .secure(true))
+           .andExpect(status().isOk())
+           .andReturn();
+
+    verify(toxiproxyAPIService, times(1)).deleteToxic(proxyName, toxicName);
+  }
+
+  @Test
+  void deleteToxicWhenSomethingNotFound() throws Exception {
+    String proxyName = UUID.randomUUID().toString();
+    String toxicName = UUID.randomUUID().toString();
+    doThrow(HttpClientErrorException.NotFound.class).when(toxiproxyAPIService).deleteToxic(proxyName, toxicName);
+
+    mockMvc.perform(
+        delete("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, toxicName)
+            .secure(true))
+           .andExpect(status().isNotFound())
+           .andReturn();
+
+    verify(toxiproxyAPIService, times(1)).deleteToxic(proxyName, toxicName);
+  }
+
+  @Test
   void getServiceVersion() throws Exception {
     String serviceVersion = UUID.randomUUID().toString();
     doReturn(serviceVersion).when(toxiproxyAPIService).getServiceVersion();

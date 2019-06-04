@@ -52,6 +52,16 @@ public class ToxiproxyAPIServiceImpl implements ToxiproxyAPIService {
   }
 
   @Override
+  public ClientToxic updateToxic(String proxyName, ClientToxic clientToxic) {
+    return toxiproxyClient.updateToxic(proxyName, clientToxic);
+  }
+
+  @Override
+  public void deleteToxic(String proxyName, String toxicName) {
+    toxiproxyClient.deleteToxic(proxyName, toxicName);
+  }
+
+  @Override
   public String getServiceVersion() {
     return toxiproxyClient.getVersion();
   }

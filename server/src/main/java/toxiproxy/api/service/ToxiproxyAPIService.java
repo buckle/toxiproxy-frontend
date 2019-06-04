@@ -19,6 +19,10 @@ public interface ToxiproxyAPIService {
 
   ClientToxic addToxic(String proxyName, ClientToxic clientToxic);
 
+  ClientToxic updateToxic(String proxyName, ClientToxic clientToxic);
+
+  void deleteToxic(String proxyName, String toxicName);
+
   String getServiceVersion();
 
 }

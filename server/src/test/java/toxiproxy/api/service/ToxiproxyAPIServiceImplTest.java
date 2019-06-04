@@ -96,6 +96,29 @@ public class ToxiproxyAPIServiceImplTest {
   }
 
   @Test
+  void updateToxic() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic clientToxic = mock(ClientToxic.class);
+    ClientToxic updatedClientToxic = mock(ClientToxic.class);
+    when(toxiproxyClient.updateToxic(proxyName, clientToxic)).thenReturn(updatedClientToxic);
+
+    ClientToxic returnedClientToxic = toxiproxyAPIService.updateToxic(proxyName, clientToxic);
+
+    assertNotNull(returnedClientToxic);
+    assertEquals(updatedClientToxic, returnedClientToxic);
+  }
+
+  @Test
+  void deleteToxic() {
+    String proxyName = UUID.randomUUID().toString();
+    String toxicName = UUID.randomUUID().toString();
+
+    toxiproxyAPIService.deleteToxic(proxyName, toxicName);
+
+    verify(toxiproxyClient, times(1)).deleteToxic(proxyName, toxicName);
+  }
+
+  @Test
   void getServiceVersion() {
     String serviceVersion = UUID.randomUUID().toString();
     when(toxiproxyClient.getVersion()).thenReturn(serviceVersion);

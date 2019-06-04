@@ -55,6 +55,16 @@ public class ToxiproxyAPIController {
     return toxiproxyAPIService.addToxic(proxyName, clientToxic);
   }
 
+  @PostMapping(ToxiproxyAPIController.PROXIES_ENDPOINT + "/{proxyName}/" + ToxiproxyAPIController.TOXICS_ENDPOINT + "/{toxicName}")
+  public ClientToxic updateToxic(@PathVariable String proxyName, @PathVariable String toxicName, @RequestBody ClientToxic clientToxic) {
+    return toxiproxyAPIService.updateToxic(proxyName, clientToxic);
+  }
+
+  @DeleteMapping(ToxiproxyAPIController.PROXIES_ENDPOINT + "/{proxyName}/" + ToxiproxyAPIController.TOXICS_ENDPOINT + "/{toxicName}")
+  public void deleteToxic(@PathVariable String proxyName, @PathVariable String toxicName) {
+    toxiproxyAPIService.deleteToxic(proxyName, toxicName);
+  }
+
   @GetMapping(ToxiproxyAPIController.SERVICE_VERSION_ENDPOINT)
   public String getServiceVersion() {
     return toxiproxyAPIService.getServiceVersion();
