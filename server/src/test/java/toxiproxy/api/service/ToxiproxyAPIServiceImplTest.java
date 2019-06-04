@@ -8,6 +8,7 @@ import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toxiproxy.client.ToxiproxyClient;
 import toxiproxy.client.dto.ClientProxy;
+import toxiproxy.client.dto.ClientToxic;
 
 import java.util.Set;
 import java.util.UUID;
@@ -15,6 +16,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,6 +59,40 @@ public class ToxiproxyAPIServiceImplTest {
 
     assertNotNull(returnedProxy);
     assertEquals(newProxy, returnedProxy);
+  }
+
+  @Test
+  void updateProxy() {
+    ClientProxy clientProxy = mock(ClientProxy.class);
+    ClientProxy updatedClientProxy = mock(ClientProxy.class);
+    when(toxiproxyClient.updateProxy(clientProxy)).thenReturn(updatedClientProxy);
+
+    ClientProxy returnedClientProxy = toxiproxyAPIService.updateProxy(clientProxy);
+
+    assertNotNull(returnedClientProxy);
+    assertEquals(updatedClientProxy, returnedClientProxy);
+  }
+
+  @Test
+  void deleteProxy() {
+    String proxyName = UUID.randomUUID().toString();
+
+    toxiproxyAPIService.deleteProxy(proxyName);
+
+    verify(toxiproxyClient, times(1)).deleteProxy(proxyName);
+  }
+
+  @Test
+  void addToxic() {
+    String proxyName = UUID.randomUUID().toString();
+    ClientToxic clientToxic = mock(ClientToxic.class);
+    ClientToxic newClientToxic = mock(ClientToxic.class);
+    when(toxiproxyClient.addToxic(proxyName, clientToxic)).thenReturn(newClientToxic);
+
+    ClientToxic returnedClientToxic = toxiproxyAPIService.addToxic(proxyName, clientToxic);
+
+    assertNotNull(returnedClientToxic);
+    assertEquals(newClientToxic, returnedClientToxic);
   }
 
   @Test

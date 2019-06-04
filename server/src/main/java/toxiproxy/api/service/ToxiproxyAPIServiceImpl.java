@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import toxiproxy.client.ToxiproxyClient;
 import toxiproxy.client.dto.ClientProxy;
+import toxiproxy.client.dto.ClientToxic;
 
 import java.util.Set;
 
@@ -33,6 +34,21 @@ public class ToxiproxyAPIServiceImpl implements ToxiproxyAPIService {
   @Override
   public ClientProxy createProxy(ClientProxy clientProxy) {
     return toxiproxyClient.createProxy(clientProxy);
+  }
+
+  @Override
+  public ClientProxy updateProxy(ClientProxy clientProxy) {
+    return toxiproxyClient.updateProxy(clientProxy);
+  }
+
+  @Override
+  public void deleteProxy(String proxyName) {
+    toxiproxyClient.deleteProxy(proxyName);
+  }
+
+  @Override
+  public ClientToxic addToxic(String proxyName, ClientToxic clientToxic) {
+    return toxiproxyClient.addToxic(proxyName, clientToxic);
   }
 
   @Override

@@ -108,12 +108,12 @@ describe('ToxiproxyService', () => {
     let proxy = new Proxy();
     proxy.name = 'bob';
     let toxic = new Toxic();
-    http.post.and.returnValue(of(proxy));
+    http.post.and.returnValue(of(toxic));
 
     let proxyObservable = toxiproxyService.addToxic(proxy, toxic);
 
-    proxyObservable.subscribe(returnedProxy => {
-      expect(returnedProxy).toEqual(proxy);
+    proxyObservable.subscribe(returnedToxic => {
+      expect(returnedToxic).toEqual(toxic);
     });
     expect(http.post).toHaveBeenCalledWith(toxiproxyService.host + '/api/proxies/' + proxy.name + '/toxics', toxic);
   });
@@ -123,12 +123,12 @@ describe('ToxiproxyService', () => {
     proxy.name = 'bob';
     let toxic = new Toxic();
     toxic.name = 'bob toxic';
-    http.post.and.returnValue(of(proxy));
+    http.post.and.returnValue(of(toxic));
 
     let proxyObservable = toxiproxyService.updateToxic(proxy, toxic);
 
-    proxyObservable.subscribe(returnedProxy => {
-      expect(returnedProxy).toEqual(proxy);
+    proxyObservable.subscribe(returnedToxic => {
+      expect(returnedToxic).toEqual(toxic);
     });
     expect(http.post).toHaveBeenCalledWith(toxiproxyService.host + '/api/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
   });

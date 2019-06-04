@@ -164,17 +164,6 @@ public class ToxiproxyClientImplTest {
   }
 
   @Test
-  void getProxyWhenNotFound() {
-    String proxyName = UUID.randomUUID().toString();
-    when(toxiproxyClientRestTemplate.getForObject(url + "/proxies/{proxy-name}", ClientProxy.class, proxyName))
-        .thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, null, null, null, null));
-
-    ClientProxy proxy = toxiproxyClient.getProxy(proxyName);
-
-    assertNull(proxy);
-  }
-
-  @Test
   void getProxyWhenNullName() {
     String name = null;
 
@@ -245,15 +234,6 @@ public class ToxiproxyClientImplTest {
     toxiproxyClient.deleteProxy(proxyName);
 
     verify(toxiproxyClientRestTemplate, times(1)).delete(url + "/proxies/{proxy-name}", proxyName);
-  }
-
-  @Test
-  void deleteProxyWhenNotFound() {
-    String proxyName = UUID.randomUUID().toString();
-    doThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, null, null, null, null))
-        .when(toxiproxyClientRestTemplate).delete(url + "/proxies/{proxy-name}", proxyName);
-
-    assertDoesNotThrow(() -> toxiproxyClient.deleteProxy(proxyName));
   }
 
   @Test
@@ -387,16 +367,6 @@ public class ToxiproxyClientImplTest {
     toxiproxyClient.deleteToxic(proxyName, toxicName);
 
     verify(toxiproxyClientRestTemplate, times(1)).delete(url + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
-  }
-
-  @Test
-  void deleteToxicWhenNotFound() {
-    String proxyName = UUID.randomUUID().toString();
-    String toxicName = UUID.randomUUID().toString();
-    doThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, null, null, null, null))
-        .when(toxiproxyClientRestTemplate).delete(url + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
-
-    assertDoesNotThrow(() -> toxiproxyClient.deleteToxic(proxyName, toxicName));
   }
 
   @Test

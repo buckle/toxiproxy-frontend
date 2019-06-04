@@ -38,12 +38,12 @@ export class ToxiproxyService {
     return this.http.delete(this.host + '/api/proxies/' + proxy.name);
   }
 
-  addToxic(proxy: Proxy, toxic: Toxic): Observable<Proxy> {
-    return this.http.post<Proxy>(this.host + '/api/proxies/' + proxy.name + '/toxics', toxic);
+  addToxic(proxy: Proxy, toxic: Toxic): Observable<Toxic> {
+    return this.http.post<Toxic>(this.host + '/api/proxies/' + proxy.name + '/toxics', toxic);
   }
 
-  updateToxic(proxy: Proxy, toxic: Toxic): Observable<Proxy> {
-    return this.http.post<Proxy>(this.host + '/api/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
+  updateToxic(proxy: Proxy, toxic: Toxic): Observable<Toxic> {
+    return this.http.post<Toxic>(this.host + '/api/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
   }
 
   deleteToxic(proxy: Proxy, toxic: Toxic): Observable<object> {

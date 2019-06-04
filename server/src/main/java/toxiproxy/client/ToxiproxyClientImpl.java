@@ -6,7 +6,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
@@ -62,11 +61,7 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   @Override
   public ClientProxy getProxy(String proxyName) {
     if(proxyName != null) {
-      try {
-        return toxiproxyClientRestTemplate.getForObject(getURL() + "/proxies/{proxy-name}", ClientProxy.class, proxyName);
-      } catch(HttpClientErrorException.NotFound notFound) {
-        return null;
-      }
+      return toxiproxyClientRestTemplate.getForObject(getURL() + "/proxies/{proxy-name}", ClientProxy.class, proxyName);
     }
 
     return null;
@@ -93,11 +88,7 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   @Override
   public void deleteProxy(String proxyName) {
     if(proxyName != null) {
-      try {
-        toxiproxyClientRestTemplate.delete(getURL() + "/proxies/{proxy-name}", proxyName);
-      } catch(HttpClientErrorException.NotFound notFound) {
-        // Do Nothing
-      }
+      toxiproxyClientRestTemplate.delete(getURL() + "/proxies/{proxy-name}", proxyName);
     }
   }
 
@@ -134,11 +125,7 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   @Override
   public void deleteToxic(String proxyName, String toxicName) {
     if(proxyName != null && toxicName != null) {
-      try {
-        toxiproxyClientRestTemplate.delete(getURL() + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
-      } catch(HttpClientErrorException.NotFound notFound) {
-        // Do Nothing
-      }
+      toxiproxyClientRestTemplate.delete(getURL() + "/proxies/{proxy-name}/toxics/{toxic-name}", proxyName, toxicName);
     }
   }
 
