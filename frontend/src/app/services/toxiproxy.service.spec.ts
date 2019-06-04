@@ -29,7 +29,6 @@ describe('ToxiproxyService', () => {
 
   it('should be created', () => {
     expect(toxiproxyService).toBeTruthy();
-    expect(toxiproxyService.host).toEqual('http://localhost:8474');
   });
 
   it('should get proxy version', () => {
@@ -40,7 +39,7 @@ describe('ToxiproxyService', () => {
     proxyVersionObservable.subscribe(version => {
       expect(version).toEqual('4.3.2.1');
     });
-    expect(http.get).toHaveBeenCalledWith(toxiproxyService.host + '/version', {responseType: 'text'});
+    expect(http.get).toHaveBeenCalledWith('/api/service-version', {responseType: 'text'});
   });
 
   it('should get proxies', () => {
@@ -51,7 +50,7 @@ describe('ToxiproxyService', () => {
     proxiesObservable.subscribe(proxies => {
       expect(proxies).toEqual({'proxy': 'test'});
     });
-    expect(http.get).toHaveBeenCalledWith(toxiproxyService.host + '/proxies');
+    expect(http.get).toHaveBeenCalledWith('/api/proxies');
   });
 
   it('should get proxy', () => {
@@ -63,7 +62,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(foundProxy => {
       expect(foundProxy).toEqual(proxy);
     });
-    expect(http.get).toHaveBeenCalledWith(toxiproxyService.host + '/proxies/bob');
+    expect(http.get).toHaveBeenCalledWith('/api/proxies/bob');
   });
 
   it('should create proxy', () => {
@@ -75,7 +74,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(returnedProxy => {
       expect(returnedProxy).toEqual(proxy);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.host + '/proxies', proxy);
+    expect(http.post).toHaveBeenCalledWith('/api/proxies', proxy);
   });
 
   it('should update proxy', () => {
@@ -88,7 +87,7 @@ describe('ToxiproxyService', () => {
     proxyObservable.subscribe(returnedProxy => {
       expect(returnedProxy).toEqual(proxy);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.host + '/proxies/' + proxy.name, proxy);
+    expect(http.post).toHaveBeenCalledWith('/api/proxies/' + proxy.name, proxy);
   });
 
   it('should delete proxy', () => {
@@ -101,21 +100,21 @@ describe('ToxiproxyService', () => {
     observable.subscribe(value => {
       expect(value).toEqual({});
     });
-    expect(http.delete).toHaveBeenCalledWith(toxiproxyService.host + '/proxies/' + proxy.name);
+    expect(http.delete).toHaveBeenCalledWith('/api/proxies/' + proxy.name);
   });
 
   it('should add toxic', () => {
     let proxy = new Proxy();
     proxy.name = 'bob';
     let toxic = new Toxic();
-    http.post.and.returnValue(of(proxy));
+    http.post.and.returnValue(of(toxic));
 
     let proxyObservable = toxiproxyService.addToxic(proxy, toxic);
 
-    proxyObservable.subscribe(returnedProxy => {
-      expect(returnedProxy).toEqual(proxy);
+    proxyObservable.subscribe(returnedToxic => {
+      expect(returnedToxic).toEqual(toxic);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.host + '/proxies/' + proxy.name + '/toxics', toxic);
+    expect(http.post).toHaveBeenCalledWith('/api/proxies/' + proxy.name + '/toxics', toxic);
   });
 
   it('should update toxic', () => {
@@ -123,14 +122,14 @@ describe('ToxiproxyService', () => {
     proxy.name = 'bob';
     let toxic = new Toxic();
     toxic.name = 'bob toxic';
-    http.post.and.returnValue(of(proxy));
+    http.post.and.returnValue(of(toxic));
 
     let proxyObservable = toxiproxyService.updateToxic(proxy, toxic);
 
-    proxyObservable.subscribe(returnedProxy => {
-      expect(returnedProxy).toEqual(proxy);
+    proxyObservable.subscribe(returnedToxic => {
+      expect(returnedToxic).toEqual(toxic);
     });
-    expect(http.post).toHaveBeenCalledWith(toxiproxyService.host + '/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
+    expect(http.post).toHaveBeenCalledWith('/api/proxies/' + proxy.name + '/toxics/' + toxic.name, toxic);
   });
 
   it('should delete toxic', () => {
@@ -145,6 +144,6 @@ describe('ToxiproxyService', () => {
     observable.subscribe(value => {
       expect(value).toEqual({});
     });
-    expect(http.delete).toHaveBeenCalledWith(toxiproxyService.host + '/proxies/' + proxy.name + '/toxics/' + toxic.name);
+    expect(http.delete).toHaveBeenCalledWith('/api/proxies/' + proxy.name + '/toxics/' + toxic.name);
   });
 });

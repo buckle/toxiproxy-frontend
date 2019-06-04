@@ -15,19 +15,16 @@ import toxiproxy.client.dto.ClientProxy;
 import toxiproxy.client.dto.ClientProxyBuilder;
 import toxiproxy.client.dto.ClientToxic;
 import toxiproxy.client.dto.ClientToxicBuilder;
-import toxiproxy.utils.BuilderUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static toxiproxy.utils.BuilderUtils.getRandPrependString;
 
 /**
  * ToxiproxyClientImplIT
