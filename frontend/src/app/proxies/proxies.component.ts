@@ -15,7 +15,7 @@ export class ProxiesComponent implements OnInit {
   proxies: MatTableDataSource<Proxy>;
   filter: string;
   displayedColumns: string[] = ['name', 'enabled', 'listen', 'upstream'];
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort,  {static: true}) sort: MatSort;
   pageSize: number = 25;
   pageIndex: number = 0;
   totalItems: number = 0;
