@@ -19,16 +19,18 @@ public class BackupChecker {
   @Scheduled(fixedDelayString = "${backup.cadence}")
   @SchedulerLock(name = "BACKUP_CHECKER", lockAtMostForString = "${backup.cadence}")
   public void check() {
-    ToxiproxyBackup currentRemote = toxiproxyBackupService.getBackupFromRemote();
-    ToxiproxyBackup currentBackup = toxiproxyBackupService.getCurrentBackup();
+    if(toxiproxyBackupService.backupEnabled()) {
+      ToxiproxyBackup currentRemote = toxiproxyBackupService.getBackupFromRemote();
+      ToxiproxyBackup currentBackup = toxiproxyBackupService.getCurrentBackup();
 
-    if(toxiproxyBackupService.backupsDiffer(currentRemote, currentBackup)) {
-      if(currentBackup != null && currentRemote == null) {
-        toxiproxyBackupService.restoreBackupToRemote(currentBackup);
-        logger.info("Restoring backup to Toxiproxy service.");
-      } else {
-        toxiproxyBackupService.setBackup(currentRemote);
-        logger.info("Updating backup from changes in Toxiproxy service.");
+      if(toxiproxyBackupService.backupsDiffer(currentRemote, currentBackup)) {
+        if(currentBackup != null && currentRemote == null) {
+          toxiproxyBackupService.restoreBackupToRemote(currentBackup);
+          logger.info("Restoring backup to Toxiproxy service.");
+        } else {
+          toxiproxyBackupService.setBackup(currentRemote);
+          logger.info("Updating backup from changes in Toxiproxy service.");
+        }
       }
     }
   }

@@ -12,4 +12,6 @@ public interface ToxiproxyBackupService {
 
   boolean backupsDiffer(ToxiproxyBackup newBackup, ToxiproxyBackup existingBackup);
 
+  boolean backupEnabled();
+
 }
