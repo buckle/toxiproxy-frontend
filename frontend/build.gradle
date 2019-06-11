@@ -33,7 +33,7 @@ node {
     download = true
 }
 
-npm_run_build {
+npm_run_buildProd {
     // make sure the build task is executed only when appropriate files change
     inputs.files fileTree('public')
     inputs.files fileTree('src')
@@ -48,7 +48,7 @@ npm_run_build {
 
 // pack output of the build into JAR file
 task packageNpmApp(type: Zip) {
-    dependsOn npm_run_build
+    dependsOn npm_run_buildProd
     baseName 'frontend'
     extension 'jar'
     destinationDir file("${projectDir}/build")

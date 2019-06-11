@@ -50,7 +50,6 @@ jacocoTestReport {
 check.dependsOn jacocoTestCoverageVerification
 
 group = 'toxiproxy'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 11
 
 repositories {
@@ -78,6 +77,10 @@ dependencies {
   runtime('com.h2database:h2')
   runtime('mysql:mysql-connector-java')
   runtimeOnly project(':frontend')
+}
+
+bootJar {
+  baseName = 'server'
 }
 
 test {

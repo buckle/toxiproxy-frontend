@@ -1,0 +1,8 @@
+TOXIPROXY_URL=http://toxiproxy-service.domain.tld:8474
+BACKUP_ENABLED=true
+SPRING_DATASOURCE_URL=jdbc:mysql://some.db.host:3306/toxiproxy_frontend?autoReconnect=true&useSSL=false
+SPRING_DATASOURCE_USERNAME=db-username
+SPRING_DATASOURCE_PASSWORD=db-password
+SERVER_SSL_KEYSTORE=/cert/path/file.pkcs12
+SERVER_SSL_KEYSTOREPASSWORD=cert-password
+SERVER_SSL_KEYSTORETYPE=PKCS12
