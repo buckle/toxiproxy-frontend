@@ -25,6 +25,7 @@ public class BackupCheckerTest {
 
   @Test
   void checkWhenChangesExistToPersist() {
+    when(toxiproxyBackupService.backupEnabled()).thenReturn(true);
     ToxiproxyBackup remoteBackup = mock(ToxiproxyBackup.class);
     when(toxiproxyBackupService.getBackupFromRemote()).thenReturn(remoteBackup);
 
@@ -43,6 +44,7 @@ public class BackupCheckerTest {
 
   @Test
   void checkWhenBackupNeedsRestored() {
+    when(toxiproxyBackupService.backupEnabled()).thenReturn(true);
     when(toxiproxyBackupService.getBackupFromRemote()).thenReturn(null);
 
     ToxiproxyBackup localBackup = mock(ToxiproxyBackup.class);
@@ -60,6 +62,7 @@ public class BackupCheckerTest {
 
   @Test
   void checkWhenBackupsDoNoDiffer() {
+    when(toxiproxyBackupService.backupEnabled()).thenReturn(true);
     ToxiproxyBackup remoteBackup = mock(ToxiproxyBackup.class);
     when(toxiproxyBackupService.getBackupFromRemote()).thenReturn(remoteBackup);
 
@@ -70,6 +73,17 @@ public class BackupCheckerTest {
 
     backupChecker.check();
 
+    verify(toxiproxyBackupService, never()).setBackup(any());
+    verify(toxiproxyBackupService, never()).restoreBackupToRemote(any());
+  }
+
+  @Test
+  void checkWhenBackupsNotEnabled() {
+    // No need to mock, by default backupsEnabled will return false
+
+    verify(toxiproxyBackupService, never()).backupsDiffer(any(), any());
+    verify(toxiproxyBackupService, never()).getBackupFromRemote();
+    verify(toxiproxyBackupService, never()).getCurrentBackup();
     verify(toxiproxyBackupService, never()).setBackup(any());
     verify(toxiproxyBackupService, never()).restoreBackupToRemote(any());
   }

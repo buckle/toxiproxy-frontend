@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
+import toxiproxy.backup.BackupProperties;
 import toxiproxy.backup.entity.ProxyEntity;
 import toxiproxy.backup.entity.ProxyEntityRepository;
 import toxiproxy.backup.mapper.ClientProxyToProxyEntityMapper;
@@ -40,6 +41,7 @@ public class ProxiesToxiproxyBackupServiceTest {
   @Mock private ToxiproxyClient toxiproxyClient;
   @Mock private ClientProxyToProxyEntityMapper clientProxyToProxyEntityMapper;
   @Mock private ProxyEntityMapperToClientProxyMapper proxyEntityMapperToClientProxyMapper;
+  @Mock private BackupProperties backupProperties;
 
   @Test
   void getCurrentBackup() {
@@ -304,5 +306,14 @@ public class ProxiesToxiproxyBackupServiceTest {
     proxiesBackup1.setData(proxyEntities);
 
     assertTrue(proxiesToxiproxyBackupService.backupsDiffer(proxiesBackup1, null));
+  }
+
+  @Test
+  void backupsEnabled() {
+    when(backupProperties.isEnabled()).thenReturn(true);
+    assertTrue(proxiesToxiproxyBackupService.backupEnabled());
+
+    when(backupProperties.isEnabled()).thenReturn(false);
+    assertFalse(proxiesToxiproxyBackupService.backupEnabled());
   }
 }

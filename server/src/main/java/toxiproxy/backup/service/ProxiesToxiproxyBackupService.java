@@ -2,6 +2,7 @@ package toxiproxy.backup.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import toxiproxy.backup.BackupProperties;
 import toxiproxy.backup.entity.ProxyEntity;
 import toxiproxy.backup.entity.ProxyEntityRepository;
 import toxiproxy.backup.mapper.ClientProxyToProxyEntityMapper;
@@ -20,6 +21,7 @@ public class ProxiesToxiproxyBackupService implements ToxiproxyBackupService {
   @Autowired private ToxiproxyClient toxiproxyClient;
   @Autowired private ClientProxyToProxyEntityMapper clientProxyToProxyEntityMapper;
   @Autowired private ProxyEntityMapperToClientProxyMapper proxyEntityMapperToClientProxyMapper;
+  @Autowired private BackupProperties backupProperties;
 
   @Override
   public ToxiproxyBackup getCurrentBackup() {
@@ -85,5 +87,10 @@ public class ProxiesToxiproxyBackupService implements ToxiproxyBackupService {
     }
 
     return !newBackup.equals(existingBackup);
+  }
+
+  @Override
+  public boolean backupEnabled() {
+    return backupProperties.isEnabled();
   }
 }
