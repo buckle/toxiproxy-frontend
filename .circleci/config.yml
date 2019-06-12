@@ -1,18 +1,8 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/toxiproxy-fronent
     docker:
-      # specify the version you desire here
-      # see https://hub.docker.com/r/circleci/node/tags/
-      - image: circleci/node:8-browsers
+      - image: circleci/openjdk:11-jdk-browsers
     steps:
       - checkout
-      - restore_cache:
-          key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
-      - run: npm install
-      - save_cache:
-          key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
-          paths:
-            - "node_modules"
-      - run: npm run test -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+      - run: ./gradlew clean check

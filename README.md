@@ -1,42 +1,37 @@
 [![CircleCI](https://circleci.com/gh/buckle/toxiproxy-frontend/tree/master.svg?style=shield)](https://circleci.com/gh/buckle/toxiproxy-frontend/tree/master)
-# ToxiproxyFrontend
-ToxiproxyFrontend is an Angular 7 application that is designed to make creating proxies and toxics easier. It is used in conjunction with 
-[Shopify's Toxiproxy](https://github.com/Shopify/toxiproxy) to make it easier to test varying network conditions.
+# Toxiproxy Frontend
+**Toxiproxy Frontend** is an application that provides a GUI to [Shopify's Toxiproxy](https://github.com/Shopify/toxiproxy) as well as other functionality
+such as backing up proxies if you want them persisted.
 
-## Contributions
+## Screenshots
+![Proxy Listing](screenshots/proxies.png)
 
-#### Code Coverage
-We place heavy emphasis on code that is clean, tested, and maintainable. The start of the project boasts 100% test coverage and the build will fail
-if the coverage decreases. 
+![Proxy Details](screenshots/proxy-detail.png) 
+ 
+## Docker
+### Getting Image
+```
+docker pull buckle/toxiproxy-frontend
+```
 
-#### Style
-Being an Angular project, the [Angular recommended style](https://angular.io/guide/styleguide) should be followed.
+### Running
+#### Arguments
 
+These are docker standard arguments, just going over why they are needed for the Toxiproxy Frontend application.
 
-## Development server
+* `-p`: Maps the external listening port to the internal port. `8080` is always the internal port.
+* `--env-file`: The environment variables used in the docker image. It's what configures the running application. 
+  * Example file: [example.list](docker/example.list)
+* `--mount`: If you want to use HTTPS and have it terminate at the service you need to mount a cert file to be used. *Not required.
+  * The `destination` part of the mount will need to be configured correctly in the environment variables used in the `env-file` argument. 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Fully Configured Docker Command
+```
+docker run -tid -p 8080:8080 --env-file environment.list --mount type=bind,source=/cert/path/file.pkcs12,destination=/docker/cert/path/file.pkcs12,readonly=true buckle/toxiproxy-frontend
+```
 
-## Building
-### Development
-
-Run `ng build` to build for development purposes. 
-
-### Deployed Environments
-
-Run `npm run build -- --prod` for deployed environments. You'll need an environment variable set called `TOXIPROXY_HOST` for the build process to inject so the appropriate
-toxiproxy server is configured. Otherwise it will default to `http://localhost:8474`. 
-
-Example:
-`TOXIPROXY_HOST=http://toxiproxy.domain.tld:8474 npm run build -- --prod`
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-Run `ng test --code-coverage` to view code coverage. 
-
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Building / Running 
+* Download and install Java 11 OpenJDK.
+* Run `./gradlew build -x test -x jacocoTestCoverageVerification`
+* Grab jar from `server/build/libs/server.jar`, it'll have the frontend content included. 
+* Run the jar using `java -jar server.jar`
