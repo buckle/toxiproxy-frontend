@@ -38,15 +38,17 @@ export class ProxiesComponent implements OnInit {
       .getProxies()
       .subscribe(value => {
         let serviceProxies = new ProxyResponse(value).proxies;
-        this.totalItems = serviceProxies.length;
+        if(serviceProxies) {
+          this.totalItems = serviceProxies.length;
 
-        let multiplier = this.pageIndex + 1;
-        const beginIndex = (this.pageSize * multiplier) - this.pageSize;
-        const endIndex = this.pageSize * multiplier;
+          let multiplier = this.pageIndex + 1;
+          const beginIndex = (this.pageSize * multiplier) - this.pageSize;
+          const endIndex = this.pageSize * multiplier;
 
-        let filteredProxies = serviceProxies.slice(beginIndex, endIndex);
-        this.proxies = new MatTableDataSource(filteredProxies);
-        this.proxies.sort = this.sort;
+          let filteredProxies = serviceProxies.slice(beginIndex, endIndex);
+          this.proxies = new MatTableDataSource(filteredProxies);
+          this.proxies.sort = this.sort;
+        }
       });
   }
 
