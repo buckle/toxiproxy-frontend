@@ -4,9 +4,9 @@
 such as backing up proxies if you want them persisted.
 
 ## Screenshots
-![Proxy Listing](screenshots/proxies.png)
+[Proxy Listing](screenshots/proxies.png)
 
-![Proxy Details](screenshots/proxy-detail.png) 
+[Proxy Details](screenshots/proxy-detail.png) 
  
 ## Docker
 ### Getting Image
@@ -32,6 +32,6 @@ docker run -tid -p 8080:8080 --env-file environment.list --mount type=bind,sourc
 
 ## Building / Running 
 * Download and install Java 11 OpenJDK.
-* Run `./gradlew build -x test -x jacocoTestCoverageVerification`
+* Run `./gradlew clean build -x test -x jacocoTestCoverageVerification`
 * Grab jar from `server/build/libs/server.jar`, it'll have the frontend content included. 
 * Run the jar using `java -jar server.jar`

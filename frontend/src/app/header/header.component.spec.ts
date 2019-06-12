@@ -42,7 +42,8 @@ describe('HeaderComponent', () => {
 
   it('render version when version lookup fails', () => {
     proxyService.getProxyVersion.and.returnValue(throwError("Failed to retrieve version"));
-    fixture.detectChanges();
+
+    expect(fixture.detectChanges).toThrow();
 
     let textContent = fixture.nativeElement.querySelector('.header-version').textContent;
     expect(textContent).toBe('Version: ');
