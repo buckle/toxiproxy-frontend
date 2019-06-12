@@ -1,4 +1,12 @@
-# Toxiproxy
+[![CircleCI](https://circleci.com/gh/buckle/toxiproxy-frontend/tree/master.svg?style=shield)](https://circleci.com/gh/buckle/toxiproxy-frontend/tree/master)
+# Toxiproxy Frontend
+**Toxiproxy Frontend** is an application that provides a GUI to [Shopify's Toxiproxy](https://github.com/Shopify/toxiproxy) as well as other functionality
+such as backing up proxies if you want them persisted.
+
+## Screenshots
+![Proxy Listing](screenshots/proxies.png)
+
+![Proxy Details](screenshots/proxy-detail.png) 
  
 ## Docker
 ### Getting Image
