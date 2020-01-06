@@ -30,6 +30,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -74,6 +75,7 @@ public class ToxiproxyAPIControllerSlice {
     doReturn(foundProxy).when(toxiproxyAPIService).getProxy(proxyName);
 
     String sProxy = mockMvc.perform(get("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}", proxyName)
+                                        .with(csrf())
                                         .secure(true))
                            .andExpect(status().isOk())
                            .andReturn()
@@ -91,6 +93,7 @@ public class ToxiproxyAPIControllerSlice {
     doThrow(HttpClientErrorException.NotFound.class).when(toxiproxyAPIService).getProxy(proxyName);
 
     mockMvc.perform(get("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}", proxyName)
+                        .with(csrf())
                         .secure(true))
            .andExpect(status().isNotFound())
            .andReturn();
@@ -104,6 +107,7 @@ public class ToxiproxyAPIControllerSlice {
     doReturn(newClientProxy).when(toxiproxyAPIService).createProxy(eq(clientProxy));
 
     String sReturnedProxy = mockMvc.perform(post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT)
+                                                .with(csrf())
                                                 .content(objectMapper.writeValueAsString(clientProxy))
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .secure(true))
@@ -124,6 +128,7 @@ public class ToxiproxyAPIControllerSlice {
     doReturn(updatedClientProxy).when(toxiproxyAPIService).updateProxy(clientProxy);
 
     String sReturnedProxy = mockMvc.perform(post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}", clientProxy.getName())
+                                                .with(csrf())
                                                 .content(objectMapper.writeValueAsString(clientProxy))
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .secure(true))
@@ -143,6 +148,7 @@ public class ToxiproxyAPIControllerSlice {
     doThrow(HttpClientErrorException.NotFound.class).when(toxiproxyAPIService).updateProxy(clientProxy);
 
     mockMvc.perform(post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}", clientProxy.getName())
+                        .with(csrf())
                         .content(objectMapper.writeValueAsString(clientProxy))
                         .contentType(MediaType.APPLICATION_JSON)
                         .secure(true))
@@ -156,6 +162,7 @@ public class ToxiproxyAPIControllerSlice {
     doNothing().when(toxiproxyAPIService).deleteProxy(proxyName);
 
     mockMvc.perform(delete("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}", proxyName)
+                        .with(csrf())
                         .secure(true))
            .andExpect(status().isOk())
            .andReturn();
@@ -169,6 +176,7 @@ public class ToxiproxyAPIControllerSlice {
     doThrow(HttpClientErrorException.NotFound.class).when(toxiproxyAPIService).deleteProxy(proxyName);
 
     mockMvc.perform(delete("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}", proxyName)
+                        .with(csrf())
                         .secure(true))
            .andExpect(status().isNotFound())
            .andReturn();
@@ -184,6 +192,7 @@ public class ToxiproxyAPIControllerSlice {
     doReturn(newClientToxic).when(toxiproxyAPIService).addToxic(proxyName, clientToxic);
 
     String sReturnedClientToxic = mockMvc.perform(post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT, proxyName)
+                                                      .with(csrf())
                                                       .content(objectMapper.writeValueAsString(clientToxic))
                                                       .contentType(MediaType.APPLICATION_JSON)
                                                       .secure(true))
@@ -204,6 +213,7 @@ public class ToxiproxyAPIControllerSlice {
     doThrow(HttpClientErrorException.NotFound.class).when(toxiproxyAPIService).addToxic(proxyName, clientToxic);
 
     mockMvc.perform(post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT, proxyName)
+                        .with(csrf())
                         .content(objectMapper.writeValueAsString(clientToxic))
                         .contentType(MediaType.APPLICATION_JSON)
                         .secure(true))
@@ -220,6 +230,7 @@ public class ToxiproxyAPIControllerSlice {
 
     String sReturnedClientToxic = mockMvc.perform(
         post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, clientToxic.getName())
+            .with(csrf())
             .content(objectMapper.writeValueAsString(clientToxic))
             .contentType(MediaType.APPLICATION_JSON)
             .secure(true))
@@ -241,6 +252,7 @@ public class ToxiproxyAPIControllerSlice {
 
     mockMvc.perform(
         post("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, clientToxic.getName())
+            .with(csrf())
             .content(objectMapper.writeValueAsString(clientToxic))
             .contentType(MediaType.APPLICATION_JSON)
             .secure(true))
@@ -256,6 +268,7 @@ public class ToxiproxyAPIControllerSlice {
 
     mockMvc.perform(
         delete("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, toxicName)
+            .with(csrf())
             .secure(true))
            .andExpect(status().isOk())
            .andReturn();
@@ -271,6 +284,7 @@ public class ToxiproxyAPIControllerSlice {
 
     mockMvc.perform(
         delete("/" + API_ENDPOINT + "/" + PROXIES_ENDPOINT + "/{proxyName}/" + TOXICS_ENDPOINT + "/{toxicName}", proxyName, toxicName)
+            .with(csrf())
             .secure(true))
            .andExpect(status().isNotFound())
            .andReturn();
@@ -284,6 +298,7 @@ public class ToxiproxyAPIControllerSlice {
     doReturn(serviceVersion).when(toxiproxyAPIService).getServiceVersion();
 
     String returnedServiceVersion = mockMvc.perform(get("/" + API_ENDPOINT + "/" + SERVICE_VERSION_ENDPOINT)
+                                                        .with(csrf())
                                                         .secure(true))
                                            .andExpect(status().isOk())
                                            .andReturn()
