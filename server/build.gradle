@@ -1,19 +1,10 @@
-buildscript {
-  ext {
-    springBootVersion = '2.1.1.RELEASE'
-  }
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-  }
+plugins {
+  id 'org.springframework.boot' version '2.5.6'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'java'
+  id 'org.asciidoctor.jvm.convert' version '3.3.0'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 
 jacoco {
@@ -38,12 +29,9 @@ jacocoTestCoverageVerification {
 
 jacocoTestReport {
   afterEvaluate {
-    classDirectories = files(classDirectories.files.collect {
-      fileTree(dir: it,
-          excludes: [
-              'toxiproxy/ServerApplication*'
-          ])
-    })
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: 'toxiproxy/ServerApplication*')
+    }))
   }
 }
 
@@ -78,13 +66,13 @@ dependencies {
   testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
   testImplementation('net.bytebuddy:byte-buddy:1.9.12')
 
-  runtime('com.h2database:h2')
-  runtime('mysql:mysql-connector-java')
+  runtimeOnly('com.h2database:h2')
+  runtimeOnly('mysql:mysql-connector-java')
   runtimeOnly project(':frontend')
 }
 
 bootJar {
-  baseName = 'server'
+  archiveName 'server.jar'
 }
 
 test {

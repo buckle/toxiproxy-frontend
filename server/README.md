@@ -28,6 +28,12 @@ The server framework is a Java Spring Boot application. It's a REST based applic
   * If needed, the password for the keystore above. 
 * `server.ssl.keyStoreType`
   * The type of keystore used. (PKCS12, plus others)
+* `logging.file.name`
+  * Full path and name of the file
+  * Default: /var/log/toxiproxy_frontend.log
+* `logging.pattern.file`
+  * Logging pattern used in the file
+  * Default: `%d{&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, America/Chicago} %5p %c{1}:%L - %m%n`
  
 - There's other properties that can be set in Spring Boot applications but the ones above are the most applicable ones. These properties when used in
 a Docker instance will be set as an environment variable with Spring Boot will pick up. 

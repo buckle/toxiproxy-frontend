@@ -1,5 +1,6 @@
 package toxiproxy.client;
 
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,7 +12,6 @@ import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
 import toxiproxy.client.dto.ClientToxic;
 
-import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
