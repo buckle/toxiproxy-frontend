@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.HttpClientErrorException;
 import toxiproxy.client.dto.ClientProxy;
 import toxiproxy.client.dto.ClientProxyBuilder;
 import toxiproxy.client.dto.ClientToxic;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -118,7 +120,7 @@ public class ToxiproxyClientImplIT {
 
     toxiproxyClient.deleteProxy(newProxy.getName());
 
-    assertNull(toxiproxyClient.getProxy(newProxy.getName()));
+    assertThrows(HttpClientErrorException.class, () -> toxiproxyClient.getProxy(newProxy.getName()));
   }
 
   @Test
@@ -180,6 +182,6 @@ public class ToxiproxyClientImplIT {
     String version = toxiproxyClient.getVersion();
 
     assertFalse(StringUtils.isEmpty(version));
-    assertTrue(StringUtils.isAlphanumeric(version.replaceAll("-", "")));
+    assertTrue(StringUtils.isAlphanumeric(version.replaceAll("[-\\.]", "")));
   }
 }
