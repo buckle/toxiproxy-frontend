@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {HeaderComponent} from './header.component';
-import {MatToolbarModule} from '@angular/material';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import {ToxiproxyService} from '../services/toxiproxy.service';
 import {of, throwError} from 'rxjs';
 import SpyObj = jasmine.SpyObj;

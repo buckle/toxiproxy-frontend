@@ -1,16 +1,12 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ToxicCreateDialogComponent} from './toxic-create-dialog.component';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatSelectModule, MatSnackBar,
-  MatSnackBarModule,
-  MatTooltipModule
-} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ToxiproxyService} from '../../../services/toxiproxy.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';

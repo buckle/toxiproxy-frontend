@@ -1,16 +1,12 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ProxyCreateDialogComponent} from './proxy-create-dialog.component';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-  MatFormFieldModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatRadioModule, MatSnackBar,
-  MatSnackBarModule
-} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ToxiproxyService} from '../../services/toxiproxy.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
