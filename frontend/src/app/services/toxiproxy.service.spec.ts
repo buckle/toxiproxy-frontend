@@ -23,8 +23,8 @@ describe('ToxiproxyService', () => {
         HttpHandler]
     });
 
-    toxiproxyService = TestBed.get(ToxiproxyService);
-    http = TestBed.get(HttpClient);
+    toxiproxyService = TestBed.inject(ToxiproxyService) as jasmine.SpyObj<ToxiproxyService>;
+    http = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
   });
 
   it('should be created', () => {

@@ -1,12 +1,12 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ProxyDetailComponent} from './proxy-detail.component';
 import {AppModule} from '../../app.module';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ToxiproxyService} from '../../services/toxiproxy.service';
 import {of, throwError} from 'rxjs';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Proxy} from '../../services/proxy';
 import {ProxyCreateDialogComponent} from '../proxy-create-dialog/proxy-create-dialog.component';
@@ -27,7 +27,7 @@ describe('ProxyDetailComponent', () => {
   let proxy: Proxy;
   let proxyWithoutToxic: Proxy;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const toxiProxySpy = createSpyObj('ToxiproxyService', ['getProxy', 'deleteProxy', 'deleteToxic']);
     const snackBarSpy = createSpyObj('MatSnackBar', ['open']);
     const dialogSpy = createSpyObj('MatDialog', ['afterClosed', 'open']);
@@ -44,17 +44,15 @@ describe('ProxyDetailComponent', () => {
         {provide: MatDialog, useValue: dialogSpy},
         {provide: ActivatedRoute, useValue: activatedRouteStub}
       ]
-    }).compileComponents();
-  }));
+    });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ProxyDetailComponent);
     component = fixture.componentInstance;
-    proxyService = TestBed.get(ToxiproxyService);
-    snackBar = TestBed.get(MatSnackBar);
-    router = TestBed.get(Router);
-    dialog = TestBed.get(MatDialog);
-    route = TestBed.get(ActivatedRoute);
+    proxyService = TestBed.inject(ToxiproxyService) as jasmine.SpyObj<ToxiproxyService>;
+    snackBar = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
+    router = TestBed.inject(Router);
+    dialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
+    route = TestBed.inject(ActivatedRoute) as unknown as ActivatedRouteStub;
 
     let matDialogRef = <SpyObj<MatDialogRef<any, any>>>createSpyObj('MatDialogRef', ['afterClosed']);
     matDialogRef.afterClosed.and.returnValue(of({}));

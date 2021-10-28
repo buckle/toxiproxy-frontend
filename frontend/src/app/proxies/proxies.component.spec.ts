@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ProxiesComponent} from './proxies.component';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -31,7 +31,7 @@ describe('ProxiesComponent', () => {
   let dialog: SpyObj<MatDialog>;
   let proxies;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const toxiProxySpy = createSpyObj('ToxiproxyService', ['getProxies']);
     const dialogSpy = createSpyObj('MatDialog', ['afterClosed', 'open']);
 
@@ -63,14 +63,12 @@ describe('ProxiesComponent', () => {
       set: {
         entryComponents: [ProxyCreateDialogComponent],
       }
-    }).compileComponents();
-  }));
+    });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ProxiesComponent);
     component = fixture.componentInstance;
-    proxyService = TestBed.get(ToxiproxyService);
-    dialog = TestBed.get(MatDialog);
+    proxyService = TestBed.inject(ToxiproxyService) as jasmine.SpyObj<ToxiproxyService>;
+    dialog = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog> ;
 
     const matDialogRef = <SpyObj<MatDialogRef<any, any>>>createSpyObj('MatDialogRef', ['afterClosed']);
     matDialogRef.afterClosed.and.returnValue(of({}));

@@ -1,12 +1,12 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ToxicCreateDialogComponent} from './toxic-create-dialog.component';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatInputModule} from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ToxiproxyService} from '../../../services/toxiproxy.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
@@ -23,14 +23,14 @@ describe('ToxicCreateDialogComponent', () => {
   let component: ToxicCreateDialogComponent;
   let fixture: ComponentFixture<ToxicCreateDialogComponent>;
   let proxyService: SpyObj<ToxiproxyService>;
-  let dialog: SpyObj<MatDialogRef<any, any>>;
+  let dialog: SpyObj<MatDialogRef<any>>;
   let snackBar: SpyObj<MatSnackBar>;
   let proxy: Proxy;
   let toxic: Toxic;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     const toxiProxySpy = createSpyObj('ToxiproxyService', ['updateToxic', 'addToxic']);
-    const matDialogRef = <SpyObj<MatDialogRef<any, any>>>createSpyObj('MatDialogRef', ['close']);
+    const matDialogRef = <SpyObj<MatDialogRef<any>>>createSpyObj('MatDialogRef', ['close']);
     const snackBarSpy = createSpyObj('MatSnackBar', ['open']);
 
     TestBed.configureTestingModule({
@@ -55,17 +55,14 @@ describe('ToxicCreateDialogComponent', () => {
         {provide: ToxiproxyService, useValue: toxiProxySpy},
         {provide: MatSnackBar, useValue: snackBarSpy}
       ]
-    })
-      .compileComponents();
-  }));
+    });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ToxicCreateDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    proxyService = TestBed.get(ToxiproxyService);
-    dialog = TestBed.get(MatDialogRef);
-    snackBar = TestBed.get(MatSnackBar);
+    proxyService = TestBed.inject(ToxiproxyService) as jasmine.SpyObj<ToxiproxyService>;
+    dialog = TestBed.inject(MatDialogRef) as jasmine.SpyObj<MatDialogRef<any>>;
+    snackBar = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
 
     proxy = {
       'name': 'BarkerProxy',
