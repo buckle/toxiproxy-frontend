@@ -1,5 +1,5 @@
 # Toxiproxy UI - Frontend
-ToxiproxyFrontend is an Angular 8 application that is designed to make creating proxies and toxics easier.
+ToxiproxyFrontend is an Angular 12 application that is designed to make creating proxies and toxics easier.
 
 ## Contributions
 #### Code Coverage
