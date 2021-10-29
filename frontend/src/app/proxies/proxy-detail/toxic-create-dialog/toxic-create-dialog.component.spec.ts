@@ -279,7 +279,7 @@ describe('ToxicCreateDialogComponent', () => {
   it('should update toxic', () => {
     component.proxy = proxy;
     component.inProgress = true;
-    proxyService.updateToxic.and.returnValue(of(new Proxy()));
+    proxyService.updateToxic.and.returnValue(of(new Toxic()));
 
     component.updateToxic(toxic);
 
@@ -304,7 +304,7 @@ describe('ToxicCreateDialogComponent', () => {
   it('should create toxic', () => {
     component.proxy = proxy;
     component.inProgress = true;
-    proxyService.addToxic.and.returnValue(of(new Proxy()));
+    proxyService.addToxic.and.returnValue(of(new Toxic()));
 
     component.createToxic(toxic);
 

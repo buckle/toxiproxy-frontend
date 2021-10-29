@@ -39,7 +39,7 @@ describe('ToxiproxyService', () => {
     proxyVersionObservable.subscribe(version => {
       expect(version).toEqual('4.3.2.1');
     });
-    expect(http.get).toHaveBeenCalledWith('/api/service-version', {responseType: 'text'});
+    expect(http.get).toHaveBeenCalledWith('/api/service-version', jasmine.objectContaining({responseType: 'text'}));
   });
 
   it('should get proxies', () => {
