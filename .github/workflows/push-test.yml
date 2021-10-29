@@ -16,6 +16,6 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Setup Chrome Headless
-        - run: sudo apt-get install xvfb
+        run: sudo apt-get install xvfb
       - name: Test With Gradle
         run: ./gradlew clean check
