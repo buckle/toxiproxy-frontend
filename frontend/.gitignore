@@ -5,6 +5,8 @@
 /tmp
 /out-tsc
 /build
+src/coverage
+src/coverage/*
 
 # dependencies
 /node_modules

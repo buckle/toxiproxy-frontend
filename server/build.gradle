@@ -38,7 +38,7 @@ jacocoTestReport {
 check.dependsOn jacocoTestCoverageVerification
 
 group = 'toxiproxy'
-sourceCompatibility = 11
+sourceCompatibility = 17
 
 repositories {
   mavenCentral()
