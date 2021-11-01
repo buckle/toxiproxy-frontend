@@ -80,9 +80,6 @@ String testsExecutedMarkerName = "${projectDir}/.tests.executed"
 task test(type: NpmTask) {
     dependsOn assemble
 
-    // force Jest test runner to execute tests once and finish the process instead of starting watch mode
-    //environment CI: 'true'
-
     args = ['run', 'test']
 
     inputs.files fileTree('src')
