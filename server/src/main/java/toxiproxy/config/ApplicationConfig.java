@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 
 @EnableScheduling
 @Configuration
-@PropertySource("classpath:default.properties")
 @EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class ApplicationConfig {
 

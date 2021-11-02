@@ -2,7 +2,10 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ToxiproxyService} from '../services/toxiproxy.service';
 import {ProxyResponse} from '../services/proxy-response';
 import {ProxyCreateDialogComponent} from './proxy-create-dialog/proxy-create-dialog.component';
-import {MatDialog, MatSort, MatTableDataSource, PageEvent} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import {Proxy} from '../services/proxy';
 
 @Component({

@@ -6,3 +6,5 @@ SPRING_DATASOURCE_PASSWORD=db-password
 SERVER_SSL_KEYSTORE=/cert/path/file.pkcs12
 SERVER_SSL_KEYSTOREPASSWORD=cert-password
 SERVER_SSL_KEYSTORETYPE=PKCS12
+LOGGING_FILE_NAME=/var/log/toxiproxy_frontend.log
+LOGGING_PATTERN_FILE=%d{&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, America/Chicago} %5p %c{1}:%L - %m%n

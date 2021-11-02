@@ -5,6 +5,8 @@
 /tmp
 /out-tsc
 /build
+src/coverage
+src/coverage/*
 
 # dependencies
 /node_modules
@@ -38,3 +40,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/.tests.executed

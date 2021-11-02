@@ -7,33 +7,41 @@ module.exports = function(config) {
                frameworks: ['jasmine', '@angular-devkit/build-angular'],
                plugins: [
                  require('karma-jasmine'),
+                 require('karma-coverage'),
                  require('karma-chrome-launcher'),
                  require('karma-jasmine-html-reporter'),
-                 require('karma-coverage-istanbul-reporter'),
-                 require('karma-istanbul-threshold'),
                  require('@angular-devkit/build-angular/plugins/karma')
                ],
                client: {
                  clearContext: false // leave Jasmine Spec Runner output visible in browser
                },
-               istanbulThresholdReporter: {
-                 dir: require('path').join(__dirname, '../coverage'),
-                 src: require('path').join(__dirname, '../coverage/coverage-final.json'),
-                 reports: ['html', 'lcovonly', 'json'],
-                 fixWebpackSourcePaths: true,
-                 thresholds: {
-                   statements: 100,
-                   branches: 100,
-                   lines: 100,
-                   functions: 100
+               jasmineHtmlReporter: {
+                 suppressAll: true // removes the duplicated traces
+               },
+               coverageReporter: {
+                 dir: require('path').join(__dirname, './coverage/test-ng'),
+                 subdir: '.',
+                 reporters: [
+                   { type: 'html' },
+                   { type: 'text-summary' }
+                 ],
+                 check: {
+                   emitWarning: false,
+                   global: {
+                     statements: 100,
+                     branches: 100,
+                     functions: 100,
+                     lines: 100,
+                     excludes: []
+                   }
                  }
                },
-               reporters: ['progress', 'kjhtml', 'coverage-istanbul', 'istanbul-threshold'],
+               reporters: ['progress', 'kjhtml'],
                port: 9876,
                colors: true,
                logLevel: config.LOG_INFO,
                autoWatch: true,
-               browsers: ['Chrome'],
+               browsers: ['ChromeHeadless'],
                customLaunchers: {
                  ChromeHeadlessCI: {
                    base: 'ChromeHeadless',

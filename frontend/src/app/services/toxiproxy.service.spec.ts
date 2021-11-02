@@ -23,8 +23,8 @@ describe('ToxiproxyService', () => {
         HttpHandler]
     });
 
-    toxiproxyService = TestBed.get(ToxiproxyService);
-    http = TestBed.get(HttpClient);
+    toxiproxyService = TestBed.inject(ToxiproxyService) as jasmine.SpyObj<ToxiproxyService>;
+    http = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
   });
 
   it('should be created', () => {
@@ -39,7 +39,7 @@ describe('ToxiproxyService', () => {
     proxyVersionObservable.subscribe(version => {
       expect(version).toEqual('4.3.2.1');
     });
-    expect(http.get).toHaveBeenCalledWith('/api/service-version', {responseType: 'text'});
+    expect(http.get).toHaveBeenCalledWith('/api/service-version', jasmine.objectContaining({responseType: 'text'}));
   });
 
   it('should get proxies', () => {
