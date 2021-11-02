@@ -18,6 +18,6 @@ jobs:
       - name: Debug
         run: whoami
       - name: Setup File Permissions
-        run: chmod +rw /var/log/
+        run: sudo chown runner /var/log/
       - name: Test With Gradle
         run: ./gradlew clean check --debug
