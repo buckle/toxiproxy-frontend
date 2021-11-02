@@ -15,5 +15,7 @@ jobs:
           distribution: 'temurin'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
+      - name: Setup File Permissions
+        run: chmod +rw /var/log/
       - name: Test With Gradle
-        run: sudo ./gradlew clean check --debug
+        run: ./gradlew clean check --debug
