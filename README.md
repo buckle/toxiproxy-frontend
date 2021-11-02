@@ -43,7 +43,7 @@ docker run -tid -p 8080:8080 --env-file environment.list --mount type=bind,sourc
 ```
 
 ### Manual Build
-* Download and install Java 71 OpenJDK.
+* Download and install Java 17 OpenJDK.
 * Run `./gradlew clean build -x test -x jacocoTestCoverageVerification`
 * Grab jar from `server/build/libs/server.jar`, it'll have the frontend content included. 
 * Run the jar using `java -jar server.jar`
