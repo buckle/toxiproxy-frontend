@@ -30,10 +30,10 @@ The server framework is a Java Spring Boot application. It's a REST based applic
   * The type of keystore used. (PKCS12, plus others)
 * `logging.file.name`
   * Full path and name of the file
-  * Default: /var/log/toxiproxy_frontend.log
+  * Default: Console output
 * `logging.pattern.file`
   * Logging pattern used in the file
-  * Default: `%d{&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, America/Chicago} %5p %c{1}:%L - %m%n`
+  * Default: Default Spring
  
 - There's other properties that can be set in Spring Boot applications but the ones above are the most applicable ones. These properties when used in
 a Docker instance will be set as an environment variable with Spring Boot will pick up. 
@@ -41,7 +41,7 @@ a Docker instance will be set as an environment variable with Spring Boot will p
 ## Running
 ### Environment
 
-You'll need Java 11 installed to run the application and any of its build tools. This is a Spring Boot project so any profiles or environment property 
+You'll need Java 17 installed to run the application and any of its build tools. This is a Spring Boot project so any profiles or environment property 
 inheritance will be applied. There is plenty of documentation around Spring Boot and how it works.   
 
 #### IDE (Intellij + others)
