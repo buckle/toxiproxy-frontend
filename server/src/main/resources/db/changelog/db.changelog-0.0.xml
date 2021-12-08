@@ -46,4 +46,10 @@
       </column>
     </createTable>
   </changeSet>
+  <changeSet author="jonathank (generated)" id="1638998150715-3">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="flyway_schema_history"/>
+    </preConditions>
+    <dropTable tableName="flyway_schema_history"/>
+  </changeSet>
 </databaseChangeLog>
