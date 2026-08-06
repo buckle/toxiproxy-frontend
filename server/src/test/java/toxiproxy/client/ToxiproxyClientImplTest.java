@@ -1,6 +1,6 @@
 package toxiproxy.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +45,7 @@ public class ToxiproxyClientImplTest {
 
   @InjectMocks private ToxiproxyClientImpl toxiproxyClient = spy(ToxiproxyClientImpl.class);
   @Mock private RestTemplate toxiproxyClientRestTemplate;
-  @Mock private ObjectMapper objectMapper;
+  @Mock private JsonMapper objectMapper;
 
   private String url;
   private String hostname;
@@ -402,7 +402,7 @@ public class ToxiproxyClientImplTest {
     String jsonVersion = "{\"version\": \"" + version + "\"}";
     when(toxiproxyClientRestTemplate.getForObject(url + "/version", String.class)).thenReturn(jsonVersion);
 
-    ObjectMapper mapper = new ObjectMapper();
+    JsonMapper mapper = new JsonMapper();
     when(objectMapper.readTree(jsonVersion)).thenReturn(mapper.readTree(jsonVersion));
 
     assertEquals(version, toxiproxyClient.getVersion());

@@ -1,5 +1,5 @@
 plugins {
-  id 'org.springframework.boot' version '3.4.1'
+  id 'org.springframework.boot' version '4.1.0'
   id 'io.spring.dependency-management' version '1.1.6'
   id 'java'
 }
@@ -21,7 +21,8 @@ jacocoTestCoverageVerification {
       }
       excludes = [
           'toxiproxy.ServerApplication',
-          'toxiproxy.config.SecurityConfig'
+          'toxiproxy.config.SecurityConfig',
+          'toxiproxy.backup.BackupProperties'
       ]
     }
   }
@@ -30,7 +31,7 @@ jacocoTestCoverageVerification {
 jacocoTestReport {
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
-      fileTree(dir: it, exclude: ['toxiproxy/ServerApplication*', 'toxiproxy/config/SecurityConfig*'])
+      fileTree(dir: it, exclude: ['toxiproxy/ServerApplication*', 'toxiproxy/config/SecurityConfig*', 'toxiproxy/backup/BackupProperties*'])
     }))
   }
 }
@@ -62,6 +63,7 @@ dependencies {
   implementation('org.springframework.boot:spring-boot-starter-actuator')
   implementation('org.springframework.boot:spring-boot-starter-security')
   implementation('org.springframework.boot:spring-boot-starter-validation')
+  implementation('org.springframework.boot:spring-boot-starter-json')
 
   implementation('com.squareup.okhttp3:okhttp:4.12.0')
   implementation('org.liquibase:liquibase-core:4.30.0')
@@ -72,6 +74,7 @@ dependencies {
   testImplementation('org.apache.commons:commons-math3:3.6.1')
   testImplementation('org.springframework.security:spring-security-test')
   testImplementation('org.springframework.boot:spring-boot-starter-test')
+  testImplementation('org.springframework.boot:spring-boot-starter-webmvc-test')
 
   runtimeOnly('com.h2database:h2')
   runtimeOnly('com.mysql:mysql-connector-j')

@@ -56,6 +56,10 @@ export class ToxicCreateDialogComponent implements OnInit {
       stream: ['', Validators.required],
       toxicity: ['1.0', Validators.required]
     });
+
+    if (this.selectedType) {
+      this.typeSelect(this.selectedType.value);
+    }
   }
 
   typeSelect(selectedToxicValue: string) {

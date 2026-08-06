@@ -1,7 +1,7 @@
 package toxiproxy.client;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   private String url;
 
   @Autowired private RestTemplate toxiproxyClientRestTemplate;
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired private JsonMapper objectMapper;
 
   @Override
   public Set<ClientProxy> populate(Set<ClientProxy> clientProxies) {

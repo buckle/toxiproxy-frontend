@@ -176,7 +176,7 @@ describe('ToxicCreateDialogComponent', () => {
 
     const nameControl = component.toxicForm.controls['name'];
     expect(nameControl.value).toEqual('');
-    expect(nameControl.disabled).toBeTruthy();
+    expect(nameControl.disabled).toBeFalsy();
 
     const typeControl = component.toxicForm.controls['type'];
     expect(typeControl.value).toEqual('');
