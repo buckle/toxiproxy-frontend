@@ -1,6 +1,8 @@
 package toxiproxy.client;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -25,6 +27,7 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
   private String url;
 
   @Autowired private RestTemplate toxiproxyClientRestTemplate;
+  @Autowired private ObjectMapper objectMapper;
 
   @Override
   public Set<ClientProxy> populate(Set<ClientProxy> clientProxies) {
@@ -131,7 +134,18 @@ public class ToxiproxyClientImpl implements ToxiproxyClient {
 
   @Override
   public String getVersion() {
-    return toxiproxyClientRestTemplate.getForObject(getURL() + "/version", String.class);
+    String response = toxiproxyClientRestTemplate.getForObject(getURL() + "/version", String.class);
+
+    try {
+      JsonNode node = objectMapper.readTree(response);
+      if(node != null && node.has("version")) {
+        return node.get("version").asText();
+      }
+    } catch(Exception e) {
+      // Ignore and return the raw response for backwards compatibility
+    }
+
+    return response;
   }
 
   protected String getURL() {

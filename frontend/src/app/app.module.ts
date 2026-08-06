@@ -55,11 +55,10 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(appRoutes),
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule,
     FlexLayoutModule,
     MatToolbarModule,
     MatListModule,
@@ -82,7 +81,6 @@ const appRoutes: Routes = [
     MatDividerModule,
     MatMenuModule
   ],
-  entryComponents: [ProxyCreateDialogComponent, ToxicCreateDialogComponent],
   providers: [ToxiproxyService],
   bootstrap: [AppComponent]
 })

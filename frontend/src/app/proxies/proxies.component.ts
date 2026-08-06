@@ -11,7 +11,8 @@ import {Proxy} from '../services/proxy';
 @Component({
   selector: 'app-proxies',
   templateUrl: './proxies.component.html',
-  styleUrls: ['./proxies.component.scss']
+  styleUrls: ['./proxies.component.scss'],
+  standalone: false
 })
 export class ProxiesComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {ToxiproxyService} from '../../services/toxiproxy.service';
 import {Proxy} from '../../services/proxy';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -12,7 +12,8 @@ import {ProxyCreateDialogComponent} from '../proxy-create-dialog/proxy-create-di
 @Component({
   selector: 'app-proxy-detail',
   templateUrl: './proxy-detail.component.html',
-  styleUrls: ['./proxy-detail.component.scss']
+  styleUrls: ['./proxy-detail.component.scss'],
+  standalone: false
 })
 export class ProxyDetailComponent implements OnInit {
 
@@ -25,7 +26,8 @@ export class ProxyDetailComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private snackBar: MatSnackBar,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -42,8 +44,10 @@ export class ProxyDetailComponent implements OnInit {
             value => {
               this.proxy = value;
               this.toxicDataSource = new MatTableDataSource(value.toxics);
+              this.cdr.detectChanges();
             },
-            () => {
+            (error) => {
+              console.error('Error loading proxy:', error);
               this.snackBar.open(
                 'Unable to load proxy.',
                 'Close',

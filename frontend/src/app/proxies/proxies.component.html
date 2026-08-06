@@ -11,7 +11,7 @@
   <div fxFlex>
     <mat-form-field>
       <input matInput (keyup)="applyFilter()" placeholder="Filter" autocomplete="off" [(ngModel)]="filter">
-      <button mat-button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="filter=''; applyFilter()">
+      <button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="filter=''; applyFilter()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>

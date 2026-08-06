@@ -19,7 +19,6 @@ import {HttpClient, HttpHandler} from '@angular/common/http';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {of} from 'rxjs';
 import {By} from '@angular/platform-browser';
-import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 import {ProxyCreateDialogComponent} from './proxy-create-dialog/proxy-create-dialog.component';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
@@ -59,10 +58,6 @@ describe('ProxiesComponent', () => {
         HttpClient,
         HttpHandler
       ]
-    }).overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [ProxyCreateDialogComponent],
-      }
     });
 
     fixture = TestBed.createComponent(ProxiesComponent);
@@ -108,12 +103,15 @@ describe('ProxiesComponent', () => {
     expect(component.proxies.data.filter(proxy => {proxy.name === 'Bobs Burgers';})).toBeTruthy();
   });
 
-  it('renders table with no proxies', () => {
+  it('renders table with no proxies', async () => {
     proxyService.getProxies.and.returnValue(of(null));
     fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
     const page: HTMLElement = fixture.nativeElement;
     const table = page.querySelector('.proxy-table');
-    const tableRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+    const tableRows = table.querySelectorAll('tr.mat-mdc-row');
 
     // Table header
     expect(table.querySelector('.mat-column-name').textContent).toMatch('Name');
@@ -125,12 +123,15 @@ describe('ProxiesComponent', () => {
     expect(tableRows.length).toBe(0);
   });
 
-  it('renders table with proxies', () => {
+  it('renders table with proxies', async () => {
     proxyService.getProxies.and.returnValue(of(proxies));
     fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
     const page: HTMLElement = fixture.nativeElement;
     const table = page.querySelector('.proxy-table');
-    const tableRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+    const tableRows = table.querySelectorAll('tr.mat-mdc-row');
 
     // Table header
     expect(table.querySelector('.mat-column-name').textContent).toMatch('Name');
@@ -155,12 +156,15 @@ describe('ProxiesComponent', () => {
     expect(secondRow.querySelector('.mat-column-upstream').textContent).toMatch('somdomain.com:8000');
   });
 
-  it('renders table with filtered proxies', () => {
+  it('renders table with filtered proxies', async () => {
     proxyService.getProxies.and.returnValue(of(proxies));
     fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
     const page: HTMLElement = fixture.nativeElement;
     const table = page.querySelector('.proxy-table');
-    const tableRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+    const tableRows = table.querySelectorAll('tr.mat-mdc-row');
 
     // Table header
     expect(table.querySelector('.mat-column-name').textContent).toMatch('Name');
@@ -188,8 +192,10 @@ describe('ProxiesComponent', () => {
     component.filter = 'Burgers';
     component.applyFilter();
     fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
 
-    const filteredRows = table.querySelectorAll('.proxy-table tbody .mat-row');
+    const filteredRows = table.querySelectorAll('tr.mat-mdc-row');
     expect(filteredRows.length).toBe(1);
 
     const filteredRow = filteredRows[0];
