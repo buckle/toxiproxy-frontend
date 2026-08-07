@@ -176,21 +176,21 @@ describe('ToxicCreateDialogComponent', () => {
 
     const nameControl = component.toxicForm.controls['name'];
     expect(nameControl.value).toEqual('');
-    expect(nameControl.disabled).toBeFalsy();
+    expect(nameControl.enabled).toBeTruthy();
 
     const typeControl = component.toxicForm.controls['type'];
     expect(typeControl.value).toEqual('');
-    expect(typeControl.disabled).toBeFalsy();
+    expect(typeControl.enabled).toBeTruthy();
     expect(typeControl.validator).toEqual(Validators.required);
 
     const streamControl = component.toxicForm.controls['stream'];
     expect(streamControl.value).toEqual('');
-    expect(streamControl.disabled).toBeFalsy();
+    expect(streamControl.enabled).toBeTruthy();
     expect(streamControl.validator).toEqual(Validators.required);
 
     const toxicityControl = component.toxicForm.controls['toxicity'];
     expect(toxicityControl.value).toEqual('1.0');
-    expect(toxicityControl.disabled).toBeFalsy();
+    expect(toxicityControl.enabled).toBeTruthy();
     expect(toxicityControl.validator).toEqual(Validators.required);
   });
 
