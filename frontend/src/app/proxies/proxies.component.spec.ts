@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -95,9 +95,8 @@ describe('ProxiesComponent', () => {
     fixture.detectChanges();
 
     expect(component.pageSize).toBe(25);
-    expect(component.pageIndex).toBe(0);
-    expect(component.totalItems).toBe(2);
-    expect(component.proxies.sort).toBeFalsy();
+    expect(component.proxies.sort).toEqual(component.sort);
+    expect(component.proxies.paginator).toEqual(component.paginator);
     expect(component.proxies.filter).toBeFalsy();
     expect(component.proxies.data.filter(proxy => {proxy.name === 'BarkerProxy';})).toBeTruthy();
     expect(component.proxies.data.filter(proxy => {proxy.name === 'Bobs Burgers';})).toBeTruthy();
@@ -206,30 +205,89 @@ describe('ProxiesComponent', () => {
     expect(filteredRow.querySelector('.mat-column-upstream').textContent).toMatch('somdomain.com:8000');
   });
 
-  it('should load proxies with page size', () => {
-    proxyService.getProxies.and.returnValue(of(proxies));
-    const event = new PageEvent();
-    event.pageSize = 1;
-    event.pageIndex = 0;
+  it('should filter results even if they are not on the current page', async () => {
+    const manyProxies = {};
+    for (let i = 0; i < 30; i++) {
+      const name = `Proxy ${i.toString().padStart(2, '0')}`;
+      manyProxies[name] = {
+        name: name,
+        enabled: true,
+        listen: `localhost:${5000 + i}`,
+        upstream: `localhost:${6000 + i}`,
+        toxics: []
+      };
+    }
+    manyProxies['TargetProxy'] = {
+      name: 'TargetProxy',
+      enabled: true,
+      listen: 'localhost:9999',
+      upstream: 'localhost:9998',
+      toxics: []
+    };
 
-    component.loadProxies(event);
+    proxyService.getProxies.and.returnValue(of(manyProxies));
+    component.pageSize = 10;
 
-    expect(component.proxies.data.length).toBe(1);
-    expect(component.proxies.data.filter(proxy => {proxy.name === 'BarkerProxy';})).toBeTruthy();
-    expect(component.pageSize).toBe(1);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const page: HTMLElement = fixture.nativeElement;
+    expect(page.textContent).not.toContain('TargetProxy');
+
+    component.filter = 'Target';
+    component.applyFilter();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(page.textContent).toContain('TargetProxy');
+
+    const tableRows = page.querySelectorAll('tr.mat-mdc-row');
+    expect(tableRows.length).toBe(1);
+    expect(tableRows[0].textContent).toContain('TargetProxy');
   });
 
-  it('should load proxies with page index', () => {
+  it('should reset to first page when applying filter', async () => {
+    const manyProxies = {};
+    for (let i = 0; i < 30; i++) {
+      const name = `Proxy ${i.toString().padStart(2, '0')}`;
+      manyProxies[name] = {
+        name: name,
+        enabled: true,
+        listen: `localhost:${5000 + i}`,
+        upstream: `localhost:${6000 + i}`,
+        toxics: []
+      };
+    }
+
+    proxyService.getProxies.and.returnValue(of(manyProxies));
+    component.pageSize = 10;
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    component.proxies.paginator.pageIndex = 2;
+    fixture.detectChanges();
+
+    expect(component.proxies.paginator.pageIndex).toBe(2);
+
+    component.filter = 'Proxy 0';
+    component.applyFilter();
+    fixture.detectChanges();
+
+    expect(component.proxies.paginator.pageIndex).toBe(0);
+  });
+
+  it('should load proxies', () => {
     proxyService.getProxies.and.returnValue(of(proxies));
-    const event = new PageEvent();
-    event.pageSize = 1;
-    event.pageIndex = 1;
 
-    component.loadProxies(event);
+    component.loadProxies();
 
-    expect(component.proxies.data.length).toBe(1);
-    expect(component.proxies.data.filter(proxy => {proxy.name === 'Bobs Burgers';})).toBeTruthy();
-    expect(component.pageSize).toBe(1);
+    expect(component.proxies.data.length).toBe(2);
+    expect(component.proxies.data.find(proxy => proxy.name === 'BarkerProxy')).toBeTruthy();
+    expect(component.proxies.data.find(proxy => proxy.name === 'Bobs Burgers')).toBeTruthy();
   });
 
   it('should load proxies and apply sort', () => {
@@ -237,7 +295,7 @@ describe('ProxiesComponent', () => {
     const sort = new MatSort();
     component.sort = sort;
 
-    component.loadProxies(null);
+    component.loadProxies();
 
     expect(component.proxies.sort).toEqual(sort);
   });
@@ -266,7 +324,7 @@ describe('ProxiesComponent', () => {
     component.openProxyCreate();
 
     expect(dialog.open).toHaveBeenCalledWith(ProxyCreateDialogComponent, {width: '500px'});
-    expect(componentLoadProxySpy).toHaveBeenCalledWith(null);
+    expect(componentLoadProxySpy).toHaveBeenCalledWith();
   });
 
   it('render should call create proxy', () => {

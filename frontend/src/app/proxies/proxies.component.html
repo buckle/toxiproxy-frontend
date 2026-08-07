@@ -43,10 +43,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/proxies/{{row.name}}"></tr>
   </table>
 
-  <mat-paginator *ngIf="proxies"
-                 [length]="totalItems"
+  <mat-paginator [hidden]="!proxies"
                  [pageSize]="pageSize"
-                 [pageSizeOptions]="[25,50,75]"
-                 (page)="loadProxies($event)">
+                 [pageSizeOptions]="[25,50,75]">
   </mat-paginator>
 </div>
