@@ -1,13 +1,13 @@
 package toxiproxy.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +34,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static toxiproxy.api.controller.ToxiproxyAPIController.API_ENDPOINT;
 import static toxiproxy.api.controller.ToxiproxyAPIController.PROXIES_ENDPOINT;
@@ -46,8 +47,8 @@ import static toxiproxy.api.controller.ToxiproxyAPIController.TOXICS_ENDPOINT;
 public class ToxiproxyAPIControllerSlice {
 
   @Autowired private MockMvc mockMvc;
-  @Autowired private ObjectMapper objectMapper;
-  @SpyBean private ToxiproxyAPIService toxiproxyAPIService;
+  @Autowired private JsonMapper objectMapper;
+  @MockitoBean private ToxiproxyAPIService toxiproxyAPIService;
 
   @Test
   void getProxies() throws Exception {
@@ -296,11 +297,12 @@ public class ToxiproxyAPIControllerSlice {
   void getServiceVersion() throws Exception {
     String serviceVersion = UUID.randomUUID().toString();
     doReturn(serviceVersion).when(toxiproxyAPIService).getServiceVersion();
-
+    
     String returnedServiceVersion = mockMvc.perform(get("/" + API_ENDPOINT + "/" + SERVICE_VERSION_ENDPOINT)
                                                         .with(csrf())
                                                         .secure(true))
                                            .andExpect(status().isOk())
+                                           .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                                            .andReturn()
                                            .getResponse()
                                            .getContentAsString();

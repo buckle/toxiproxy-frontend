@@ -1,7 +1,7 @@
 import {ToxicType} from './toxic-type';
 import {AbstractControl} from '@angular/forms';
 
-export module ToxicTypeConstants {
+export namespace ToxicTypeConstants {
 
   export const LATENCY = <ToxicType> {
     'name': 'Latency',

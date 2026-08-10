@@ -1,5 +1,6 @@
 package toxiproxy.client;
 
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,10 +10,8 @@ import org.mockito.Mock;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import toxiproxy.client.dto.ClientPopulateResponse;
 import toxiproxy.client.dto.ClientProxy;
@@ -24,7 +23,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -47,6 +45,7 @@ public class ToxiproxyClientImplTest {
 
   @InjectMocks private ToxiproxyClientImpl toxiproxyClient = spy(ToxiproxyClientImpl.class);
   @Mock private RestTemplate toxiproxyClientRestTemplate;
+  @Mock private JsonMapper objectMapper;
 
   private String url;
   private String hostname;
@@ -393,6 +392,27 @@ public class ToxiproxyClientImplTest {
   void version() {
     String version = UUID.randomUUID().toString();
     when(toxiproxyClientRestTemplate.getForObject(url + "/version", String.class)).thenReturn(version);
+
+    assertEquals(version, toxiproxyClient.getVersion());
+  }
+
+  @Test
+  void versionWithJson() throws Exception {
+    String version = "2.12.0";
+    String jsonVersion = "{\"version\": \"" + version + "\"}";
+    when(toxiproxyClientRestTemplate.getForObject(url + "/version", String.class)).thenReturn(jsonVersion);
+
+    JsonMapper mapper = new JsonMapper();
+    when(objectMapper.readTree(jsonVersion)).thenReturn(mapper.readTree(jsonVersion));
+
+    assertEquals(version, toxiproxyClient.getVersion());
+  }
+
+  @Test
+  void versionWithInvalidJson() throws Exception {
+    String version = "Invalid JSON";
+    when(toxiproxyClientRestTemplate.getForObject(url + "/version", String.class)).thenReturn(version);
+    when(objectMapper.readTree(version)).thenThrow(new RuntimeException("Invalid JSON"));
 
     assertEquals(version, toxiproxyClient.getVersion());
   }

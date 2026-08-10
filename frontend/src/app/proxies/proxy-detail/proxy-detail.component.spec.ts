@@ -140,16 +140,18 @@ describe('ProxyDetailComponent', () => {
     expect(detailSectionValues[2].textContent).toMatch('Enabled: ' + proxy.enabled);
   });
 
-  it('renders toxics section with toxics', () => {
+  it('renders toxics section with toxics', async () => {
     route.setParamMap({name: 'haha'});
     proxyService.getProxy.and.returnValue(of(proxy));
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const toxicsSection = fixture.nativeElement.querySelector('.toxics');
     const toxicsSectionTitleText = toxicsSection.querySelector('.mat-title').textContent;
-    const tableHeaderSection = toxicsSection.querySelectorAll('.mat-header-cell');
-    const tableEntry = toxicsSection.querySelectorAll('.mat-row');
-    const tableEntryValues = toxicsSection.querySelectorAll('.mat-cell');
+    const tableHeaderSection = toxicsSection.querySelectorAll('th.mat-mdc-header-cell');
+    const tableEntry = toxicsSection.querySelectorAll('tr.mat-mdc-row');
+    const tableEntryValues = toxicsSection.querySelectorAll('td.mat-mdc-cell');
 
     expect(toxicsSectionTitleText).toMatch('Toxics');
 

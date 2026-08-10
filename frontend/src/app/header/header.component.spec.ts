@@ -30,11 +30,11 @@ describe('HeaderComponent', () => {
   });
 
   it('render correct version', () => {
-    proxyService.getProxyVersion.and.returnValue(of('1.0.0'));
+    proxyService.getProxyVersion.and.returnValue(of('1.2.3'));
     fixture.detectChanges();
 
     let textContent = fixture.nativeElement.querySelector('.header-version').textContent;
-    expect(textContent).toBe('Version: 1.0.0');
+    expect(textContent).toBe('Version: 1.2.3');
   });
 
 });

@@ -1,13 +1,13 @@
 plugins {
-  id 'org.springframework.boot' version '2.5.6'
-  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'org.springframework.boot' version '4.1.0'
+  id 'io.spring.dependency-management' version '1.1.6'
   id 'java'
 }
 
 apply plugin: 'jacoco'
 
 jacoco {
-  toolVersion = "0.8.7"
+  toolVersion = "0.8.12"
 }
 
 jacocoTestCoverageVerification {
@@ -20,7 +20,9 @@ jacocoTestCoverageVerification {
         minimum = 1.0
       }
       excludes = [
-          'toxiproxy.ServerApplication'
+          'toxiproxy.ServerApplication',
+          'toxiproxy.config.SecurityConfig',
+          'toxiproxy.backup.BackupProperties'
       ]
     }
   }
@@ -29,7 +31,7 @@ jacocoTestCoverageVerification {
 jacocoTestReport {
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
-      fileTree(dir: it, exclude: 'toxiproxy/ServerApplication*')
+      fileTree(dir: it, exclude: ['toxiproxy/ServerApplication*', 'toxiproxy/config/SecurityConfig*', 'toxiproxy/backup/BackupProperties*'])
     }))
   }
 }
@@ -37,7 +39,19 @@ jacocoTestReport {
 check.dependsOn jacocoTestCoverageVerification
 
 group = 'toxiproxy'
-sourceCompatibility = 17
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
+}
+
+testing {
+  suites {
+    test {
+      useJUnitJupiter()
+    }
+  }
+}
 
 repositories {
   mavenCentral()
@@ -48,24 +62,27 @@ dependencies {
   implementation('org.springframework.boot:spring-boot-starter-data-jpa')
   implementation('org.springframework.boot:spring-boot-starter-actuator')
   implementation('org.springframework.boot:spring-boot-starter-security')
+  implementation('org.springframework.boot:spring-boot-starter-validation')
+  implementation('org.springframework.boot:spring-boot-starter-json')
 
-  implementation('com.squareup.okhttp3:okhttp:4.9.2')
-  implementation('org.liquibase:liquibase-core:4.3.4')
-  implementation('net.javacrumbs.shedlock:shedlock-spring:4.29.0')
-  implementation('net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.29.0')
+  implementation('com.squareup.okhttp3:okhttp:4.12.0')
+  implementation('org.liquibase:liquibase-core:4.30.0')
+  implementation('net.javacrumbs.shedlock:shedlock-spring:5.16.0')
+  implementation('net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.16.0')
 
-  testImplementation('org.apache.commons:commons-lang3:3.12.0')
+  implementation('org.apache.commons:commons-lang3:3.17.0')
   testImplementation('org.apache.commons:commons-math3:3.6.1')
   testImplementation('org.springframework.security:spring-security-test')
   testImplementation('org.springframework.boot:spring-boot-starter-test')
+  testImplementation('org.springframework.boot:spring-boot-starter-webmvc-test')
 
   runtimeOnly('com.h2database:h2')
-  runtimeOnly('mysql:mysql-connector-java')
+  runtimeOnly('com.mysql:mysql-connector-j')
   runtimeOnly project(':frontend')
 }
 
 bootJar {
-  archiveName 'server.jar'
+  archiveFileName = 'server.jar'
 }
 
 test {

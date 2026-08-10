@@ -11,7 +11,7 @@
   <div fxFlex>
     <mat-form-field>
       <input matInput (keyup)="applyFilter()" placeholder="Filter" autocomplete="off" [(ngModel)]="filter">
-      <button mat-button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="filter=''; applyFilter()">
+      <button *ngIf="filter" matSuffix mat-icon-button aria-label="Clear" (click)="filter=''; applyFilter()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
@@ -43,10 +43,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/proxies/{{row.name}}"></tr>
   </table>
 
-  <mat-paginator *ngIf="proxies"
-                 [length]="totalItems"
+  <mat-paginator [hidden]="!proxies"
                  [pageSize]="pageSize"
-                 [pageSizeOptions]="[25,50,75]"
-                 (page)="loadProxies($event)">
+                 [pageSizeOptions]="[25,50,75]">
   </mat-paginator>
 </div>

@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ToxiproxyService} from '../../services/toxiproxy.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,7 +7,8 @@ import {Proxy} from '../../services/proxy';
 
 @Component({
   templateUrl: './proxy-create-dialog.component.html',
-  styleUrls: ['./proxy-create-dialog.component.scss']
+  styleUrls: ['./proxy-create-dialog.component.scss'],
+  standalone: false
 })
 export class ProxyCreateDialogComponent implements OnInit {
 

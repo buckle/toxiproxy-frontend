@@ -11,7 +11,8 @@ import {ToxicType} from './toxic-type/toxic-type';
 
 @Component({
   templateUrl: './toxic-create-dialog.component.html',
-  styleUrls: ['./toxic-create-dialog.component.scss']
+  styleUrls: ['./toxic-create-dialog.component.scss'],
+  standalone: false
 })
 export class ToxicCreateDialogComponent implements OnInit {
 
@@ -50,11 +51,15 @@ export class ToxicCreateDialogComponent implements OnInit {
 
   createFormForNew() {
     this.toxicForm = this.fb.group({
-      name: [{'value': '', 'disabled': true}],
+      name: [''],
       type: ['', Validators.required],
       stream: ['', Validators.required],
       toxicity: ['1.0', Validators.required]
     });
+
+    if (this.selectedType) {
+      this.typeSelect(this.selectedType.value);
+    }
   }
 
   typeSelect(selectedToxicValue: string) {
@@ -62,10 +67,12 @@ export class ToxicCreateDialogComponent implements OnInit {
     this.toxicForm.removeControl('attributes');
     const attributeGroup = this.fb.group({});
 
-    this.selectedType.attributes.forEach(attribute => {
-      let value = this.toxic && this.toxic.attributes[attribute.value] ? this.toxic.attributes[attribute.value] : '';
-      attributeGroup.addControl(attribute.value, new FormControl(value + '', Validators.required));
-    });
+    if (this.selectedType && this.selectedType.attributes) {
+      this.selectedType.attributes.forEach(attribute => {
+        let value = this.toxic && this.toxic.attributes[attribute.value] ? this.toxic.attributes[attribute.value] : '';
+        attributeGroup.addControl(attribute.value, new FormControl(value + '', Validators.required));
+      });
+    }
 
     this.toxicForm.addControl('attributes', attributeGroup);
   }
